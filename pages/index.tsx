@@ -1,4 +1,5 @@
 import { GetStaticProps } from "next"
+import prisma from '../lib/prisma';
 
 function Home() {
   return <h1>Home Page</h1>
