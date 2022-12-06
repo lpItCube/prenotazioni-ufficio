@@ -1,0 +1,146 @@
+.office-container {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.office-margin {
+  display: flex;
+  height: 500px;
+  width: 600px;
+  border-radius: 10px;
+  margin: auto;
+  flex-wrap: wrap;
+}
+
+.r-border {
+  border: rgb(101, 101, 101) solid 2px;
+}
+
+.boss-room {
+  width: 30%;
+  height: 34%;
+}
+
+.hr-room {
+  width: 40%;
+  height: 22%;
+}
+
+.toilette {
+  width: 30%;
+  height: 22%;
+}
+
+.it-room {
+  display: flex;
+  width: 65%;
+  height: 33%;
+}
+
+.cafe {
+  width: 20%;
+  height: 20%;
+}
+
+.meeting-room {
+  display: flex;
+  width: 50%;
+  height: 33%;
+}
+
+.hall {
+  width: 30%;
+  height: 33%;
+}
+
+.sgabu {
+  width: 20%;
+  height: 33%;
+}
+
+.desk {
+  display: flex;
+  margin: auto;
+  border-radius: 10px;
+  width: 70%;
+  height: 70%;
+  background-color: #d4d4d4;
+  flex-wrap: wrap;
+}
+
+.it-desk .desk {
+  justify-content: space-around;
+}
+
+.desk-row {
+  display: flex;
+  width: 100%;
+}
+
+.meet-desk-first-row {
+  height: 33%;
+  justify-content: space-around;
+}
+
+.meet-desk-third-row {
+  height: 33%;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.meet-desk-second-row {
+  height: 34%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meet-seat {
+  width: 13%;
+  height: 70%;
+  border: white solid 2px;
+  border-radius: 20%;
+  background-color: rgb(88, 169, 88);
+}
+
+.it-desk-first-row {
+  height: 50%;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.it-desk-second-row {
+  height: 50%;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.it-seat {
+  width: 10%;
+  height: 48%;
+  border: white solid 2px;
+  border-radius: 20%;
+  background-color: rgb(88, 169, 88);
+  margin-left: 7%;
+  margin-right: 7%;
+}
+
+.it-seat.busy {
+  background-color: rgb(231, 88, 88);
+}
+
+.seat:hover {
+  background-color: grey;
+  cursor: pointer;
+}
+
+.it-seat.busy:hover {
+  background-color: rgb(231, 88, 88); ;
+}
+
+@media (max-width:400px){
+  .office-margin {
+    height: 250px;
+    width: 300px;
+  }
+}
