@@ -23,7 +23,7 @@ function Modal({seatId}: any) {
     <div className="modal-content">
       <span className="close">&times;</span>
       <div className="modal-body">
-        <p>Vuoi procedere con la prenotazione?</p>
+        <p>Vuoi procedere con la prenotazione del posto <b>{seatId}</b>?</p>
         <Link className="modal-button" href={`/prenota/${seatId}`}>Conferma</Link>
       </div>
     </div>

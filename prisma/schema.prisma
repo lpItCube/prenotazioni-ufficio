@@ -13,25 +13,19 @@ datasource db {
 model User {
   id       String   @id @default(uuid())
   username String
-  reserve  Reserve?
-  seats    Seat[]
 }
 
 model Seat {
   id      String    @id @default(uuid())
   name    String    @unique
-  type    String
-  busy    Boolean
-  user    User      @relation(fields: [userId], references: [id])
-  userId  String    
+  type    String   
   reserve Reserve[]
 }
 
 model Reserve {
   id           String @id @default(uuid())
-  user         User   @relation(fields: [userId], references: [id])
-  userId       String @unique
+  userId       String
   seat         Seat   @relation(fields: [seatId], references: [id])
-  seatId       String @unique
-  reservedDays Int[]
+  seatId       String
+  reservedDays String[]
 }

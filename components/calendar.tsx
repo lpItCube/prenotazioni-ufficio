@@ -101,7 +101,7 @@ function Calendar() {
           <ul className="days"></ul>
         </div>
       </div>
-      <a href={"/prenota/" + selectedDate} className="calendar-button">Prosegui</a>
+      <a href={`/prenota/${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()}`} className="calendar-button">Prosegui</a>
     </div>
     </>
   )

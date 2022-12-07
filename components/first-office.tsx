@@ -1,7 +1,7 @@
 import { useEffect, useState} from "react"
 import Modal from "./modal"
 
-function FirstOffice({ seatsData }: any) {
+function FirstOffice({ reserveData }: any) {
 
   const [seatId, setSeatId] = useState("")
 
@@ -24,12 +24,12 @@ function FirstOffice({ seatsData }: any) {
         <div className="hr-room r-border"></div>
         <div className="toilette r-border"></div>
         <div className="meeting-room r-border">
-          <MeetDesk itSeatsData={seatsData}/>
+          <MeetDesk reserveData={reserveData}/>
         </div>
         <div className="hall"></div>
         <div className="cafe r-border"></div>
         <div className="it-room r-border">
-          <ItDesk itSeatsData={seatsData}/>
+          <ItDesk reserveData={reserveData}/>
         </div>
         <div className="sgabu r-border"></div>
       </div>
@@ -38,68 +38,67 @@ function FirstOffice({ seatsData }: any) {
   )
 }
 
-function MeetDesk({ itSeatsData }: any) {
-  const meetSeats = itSeatsData.filter((seat: any) => seat.type === "meet")
+function MeetDesk({ reserveData }: any) {
+  const busySeats = reserveData.filter((reserve: any) => reserve.seat.type === "meet").map((s: any) => s.seat.name)
+  const seats = ["meet-1", "meet-2", "meet-3", "meet-4", "meet-5", "meet-6", "meet-7", "meet-8"]
+
+  const seatsElements = seats.map((seat) => {
+    var elClass = busySeats.includes(seat) ? "meet-seat seat busy" : "meet-seat seat"
+    return <div
+      id={seat} key={seat}
+      className={elClass}
+    ></div>
+  })
 
   return(
     <div className="meet-desk desk">
       <div className="meet-desk-first-row desk-row">
-        {meetSeats.map((seat: any, k: number) => {
+        {seatsElements.map((seat: any, k: number) => {
           if(k < 3)
-            return <div
-              id={seat.name}
-              key={seat.name} 
-              className={seat.busy ? "meet-seat seat busy" : "meet-seat seat"}>
-            </div>
+            return seat
         })}
       </div>
       <div className="meet-desk-second-row desk-row">
-        {meetSeats.map((seat: any, k: number) => {
+        {seatsElements.map((seat: any, k: number) => {
           if(k > 2 && k < 5) 
-            return <div
-              id={seat.name}
-              key={seat.name} 
-              className={seat.busy ? "meet-seat seat busy" : "meet-seat seat"}>
-            </div>
+            return seat
         })}
       </div>
       <div className="meet-desk-third-row desk-row">
-        {meetSeats.map((seat: any, k: number) => {
+        {seatsElements.map((seat: any, k: number) => {
           if (k >= 5)
-            return <div
-            id={seat.name}
-            key={seat.name} 
-            className={seat.busy ? "meet-seat seat busy" : "meet-seat seat"}>
-          </div>
+            return seat
         })}
       </div>
     </div>
   )
 }
 
-function ItDesk({ itSeatsData }: any) {
-  const itSeats = itSeatsData.filter((seat: any) => seat.type === "it")
+function ItDesk({ reserveData }: any) {
+  const busySeats = reserveData.filter((reserve: any) => reserve.seat.type === "it").map((s: any) => s.seat.name)
+  const seats = ["it-1", "it-2", "it-3", "it-4", "it-5", "it-6", "it-7", "it-8"]
+
+  const seatsElements = seats.map((seat) => {
+    var elClass = busySeats.includes(seat) ? "it-seat seat busy" : "it-seat seat"
+    return <div
+      id={seat} key={seat}
+      className={elClass}
+    ></div>
+  })
+
 
   return (
     <div className="it-desk desk">
       <div className="it-desk-first-row desk-row">
-        {itSeats.map((seat: any, k: number) => {
+        {seatsElements.map((seat: any, k: number) => {
           if(k < 4)
-            return <div
-              id={seat.name}
-              key={seat.name} 
-              className={seat.busy ? "it-seat seat busy" : "it-seat seat"}>
-            </div>
+            return seat
         })}
       </div>
       <div className="it-desk-second-row desk-row">
-        {itSeats.map((seat: any, k: number) => {
+        {seatsElements.map((seat: any, k: number) => {
           if(k >= 4)
-            return <div
-              id={seat.name}
-              key={seat.name} 
-              className={seat.busy ? "it-seat seat busy" : "it-seat seat"}>
-            </div>
+            return seat
         })}
       </div>
     </div>

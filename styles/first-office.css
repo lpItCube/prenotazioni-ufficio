@@ -123,7 +123,7 @@
   margin-right: 7%;
 }
 
-.it-seat.busy {
+.seat.busy {
   background-color: rgb(231, 88, 88);
 }
 
@@ -132,7 +132,7 @@
   cursor: pointer;
 }
 
-.it-seat.busy:hover {
+.seat.busy:hover {
   background-color: rgb(231, 88, 88); ;
 }
 
