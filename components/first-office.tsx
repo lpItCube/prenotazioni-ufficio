@@ -1,23 +1,23 @@
 import { useEffect, useState} from "react"
 import Modal from "./modal"
 
-function FirstOffice({ reserveData }: any) {
-
+function FirstOffice({ reserveData, date }: any) {
   const [seatId, setSeatId] = useState("")
 
   useEffect(() => {
-    const seats: HTMLCollection = document.getElementsByClassName("seat")
-    for (var i = 0; i < seats.length; i++) {
-      seats[i].addEventListener("click", (e: Event) => {
+    const seats: any = document.querySelectorAll(".seat:not(.busy)")
+
+    seats.forEach((seat: any) => {
+      seat.addEventListener("click", (e: Event) => {
         setSeatId((e.target as HTMLElement).id);
         (document.getElementById("myModal") as HTMLElement).style.display = "flex"
       })
-    }
+    })
   }, [])
 
   return (
     <>
-    <Modal seatId={seatId} />
+    <Modal seatId={seatId} reserveData={reserveData} date={date} />
     <div className="office-container">
       <div className="office-margin">
         <div className="boss-room r-border r-border-no-bottom">

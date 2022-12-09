@@ -26,7 +26,7 @@ a {
   }
   body {
     color: black;
-    background: white;
+    background: rgb(52, 62, 78);
   }
 }
 
@@ -59,7 +59,7 @@ a {
 }
 
 .navbar-links li:hover {
-  background-color: rgb(58, 71, 92);
+  background-color: rgb(88, 91, 99);
 }
 
 .toggle-button {
@@ -81,7 +81,7 @@ a {
 }
 
 .navbar-links li.active {
-  background-color: rgb(58, 71, 92);
+  background-color: rgb(52, 62, 78);
 }
 
 .confirm-btn {

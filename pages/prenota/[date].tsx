@@ -2,27 +2,28 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import FirstOffice from "../../components/first-office"
 import prisma from '../../lib/prisma'
 
-function PrenotaDate({ reserveData }: any) {
+function PrenotaDate({ reserveData, date }: any) {
   return (
-    <FirstOffice reserveData={reserveData}/>
+    <FirstOffice reserveData={reserveData} date={date}/>
   )
 }
 
 export default PrenotaDate
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async (context: any) => {
+  const date = context.params.date
   const reserveData = await prisma.reserve.findMany({
     include: {
       seat: true
     },
     where: {
       reservedDays: {
-        has: "2022-12-07"
+        has: date
       }
     }
   })
   return {
-    props: { reserveData }
+    props: { reserveData, date }
   }
 }
 
