@@ -12,7 +12,7 @@
 }
 
 .r-border {
-  border: rgb(101, 101, 101) solid 2px;
+  border: rgb(170, 158, 158) solid 2px;
 }
 
 .boss-room {
@@ -134,6 +134,7 @@
 
 .seat.busy:hover {
   background-color: rgb(231, 88, 88); ;
+  cursor: auto;
 }
 
 @media (max-width:400px){

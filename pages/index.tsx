@@ -57,9 +57,9 @@ export const getStaticProps: GetStaticProps = async () => {
   const ca = await prisma.reserve.createMany(
     {
       data: [
-        { userId: user.id, seatId: seat.id, reservedDays: ["2022-12-06", "2022-12-07", "2022-12-08"] },
-        { userId: user.id, seatId: seat2.id, reservedDays: ["2022-12-07"] },
-        { userId: user.id, seatId: seat3.id, reservedDays: ["2022-12-07", "2022-12-08"] }
+        { userId: user.id, seatId: seat.id, reservedDays: ["2022-12-6", "2022-12-7", "2022-12-8"] },
+        { userId: user.id, seatId: seat2.id, reservedDays: ["2022-12-7"] },
+        { userId: user.id, seatId: seat3.id, reservedDays: ["2022-12-7", "2022-12-8"] }
       ]
     }
   )
