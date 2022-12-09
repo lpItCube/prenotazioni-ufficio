@@ -15,6 +15,18 @@
   border: rgb(101, 101, 101) solid 2px;
 }
 
+.r-border-no-bottom {
+  border-bottom: none !important;
+}
+
+.r-border-no-left {
+  border-left: none !important;
+}
+
+.r-border-no-right {
+  border-right: none !important;
+}
+
 .boss-room {
   width: 30%;
   height: 34%;
@@ -31,7 +43,6 @@
 }
 
 .it-room {
-  display: flex;
   width: 65%;
   height: 33%;
 }
@@ -42,7 +53,6 @@
 }
 
 .meeting-room {
-  display: flex;
   width: 50%;
   height: 33%;
 }
@@ -59,7 +69,7 @@
 
 .desk {
   display: flex;
-  margin: auto;
+  margin: 10px auto;
   border-radius: 10px;
   width: 70%;
   height: 70%;
@@ -141,4 +151,13 @@
     height: 250px;
     width: 300px;
   }
+}
+
+
+.text-name-room {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: rgb(78 78 81 / 71%);
+  margin: 3px;
+  color: white;
 }

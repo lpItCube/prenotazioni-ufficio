@@ -20,18 +20,32 @@ function FirstOffice({ reserveData }: any) {
     <Modal seatId={seatId} />
     <div className="office-container">
       <div className="office-margin">
-        <div className="boss-room r-border"></div>
-        <div className="hr-room r-border"></div>
-        <div className="toilette r-border"></div>
-        <div className="meeting-room r-border">
+        <div className="boss-room r-border r-border-no-bottom">
+          <span className="text-name-room">boss-room</span>
+        </div>
+        <div className="hr-room r-border r-border-no-left r-border-no-right">
+          <span className="text-name-room">hr-room</span>
+        </div>
+        <div className="toilette r-border ">
+          <span className="text-name-room">toilette</span>
+        </div>
+        <div className="meeting-room r-border r-border-no-bottom">
+          <span className="text-name-room">meeting-room</span>
           <MeetDesk reserveData={reserveData}/>
         </div>
-        <div className="hall"></div>
-        <div className="cafe r-border"></div>
-        <div className="it-room r-border">
+        <div className="hall ">
+          <span className="text-name-room">hall</span>
+        </div>
+        <div className="cafe r-border ">
+          <span className="text-name-room">cafe</span>
+        </div>
+        <div className="it-room r-border r-border-no-right">
+          <span className="text-name-room">it-room</span>
           <ItDesk reserveData={reserveData}/>
         </div>
-        <div className="sgabu r-border"></div>
+        <div className="sgabu r-border">
+          <span className="text-name-room">sgabu</span>
+        </div>
       </div>
     </div>
     </>
@@ -60,7 +74,7 @@ function MeetDesk({ reserveData }: any) {
       </div>
       <div className="meet-desk-second-row desk-row">
         {seatsElements.map((seat: any, k: number) => {
-          if(k > 2 && k < 5) 
+          if(k > 2 && k < 5)
             return seat
         })}
       </div>
