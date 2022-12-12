@@ -6,7 +6,7 @@ function FirstOffice({ reserveData, date }: any) {
   const [seatId, setSeatId] = useState("")
 
   useEffect(() => {
-    const seats: any = document.querySelectorAll(".seat:not(.busy)")
+    const seats: any = document.querySelectorAll(".seat:not(.busy)");
 
     seats.forEach((seat: any) => {
       seat.addEventListener("click", (e: Event) => {
@@ -14,6 +14,7 @@ function FirstOffice({ reserveData, date }: any) {
         (document.getElementById("myModal") as HTMLElement).style.display = "flex"
       })
     })
+
   }, [])
 
   return (
@@ -22,30 +23,41 @@ function FirstOffice({ reserveData, date }: any) {
     <div className="office-container">
       <div className="office-margin">
         <div className="boss-room r-border r-border-no-bottom">
-          <span className="text-name-room">boss-room</span>
+          <span className="text-name-room">Direzione</span>
         </div>
         <div className="hr-room r-border r-border-no-left r-border-no-right">
-          <span className="text-name-room">hr-room</span>
+          <span className="text-name-room">Hr</span>
         </div>
         <div className="toilette r-border ">
           <span className="text-name-room">toilette</span>
         </div>
         <div className="meeting-room r-border r-border-no-bottom">
-          <span className="text-name-room">meeting-room</span>
+          <div className="prenotazione-all">
+            <span className="text-name-room">Sala riunione</span>
+            <span id="meetAll" className="button-all" onClick={() =>{
+              setSeatId("all");
+              (document.getElementById("myModal") as HTMLElement).style.display = "flex"
+            }}>Prenotazione unica</span>
+          </div>
+
           <MeetDesk reserveData={reserveData}/>
         </div>
         <div className="hall ">
-          <span className="text-name-room">hall</span>
+
+          { /*
+          <span className="text-name-room">Hall</span>
+          */
+          }
         </div>
         <div className="cafe r-border ">
-          <span className="text-name-room">cafe</span>
+          <span className="text-name-room">Caffe</span>
         </div>
         <div className="it-room r-border r-border-no-right">
-          <span className="text-name-room">it-room</span>
+          <span className="text-name-room">Stanza it</span>
           <ItDesk reserveData={reserveData}/>
         </div>
         <div className="sgabu r-border">
-          <span className="text-name-room">sgabu</span>
+          <span className="text-name-room">Ripostiglio</span>
         </div>
       </div>
     </div>

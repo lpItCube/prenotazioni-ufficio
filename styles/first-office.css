@@ -162,3 +162,22 @@
   margin: 3px;
   color: white;
 }
+
+.prenotazione-all {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button-all{
+  padding: 2px 8px;
+  margin: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.button-all:hover{
+  color: black;
+  background: #fff;
+}
