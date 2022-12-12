@@ -34,3 +34,29 @@ input[type=text], input[type=password] {
   width: 100%;  
   cursor: pointer;
 }
+
+.invalidLogin {
+  margin: 5px;
+  margin-bottom: 15px;
+  width: 100%;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.invalidLogin p {
+  background-color: rgb(177, 18, 18);
+  width: 100%;
+  color: white;
+  text-align: center;
+  padding: 13px;
+}
+
+.invalidLogin p:first-child {
+  border-radius: 3px 3px 0px 0px;
+}
+
+.invalidLogin p:last-child {
+  width: 100%;
+  background-color: rgb(157, 36, 36);
+  border-radius: 0px 0px 3px 3px;
+}

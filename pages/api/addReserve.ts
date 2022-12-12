@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const result = await prisma.reserve.create({
       data: {
-        userId: data.userId, seatId: data.seatId, reservedDays: data.reservedDays
+        ...data
       }
     })
     res.status(200).json(result)

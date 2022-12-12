@@ -23,8 +23,6 @@ function Modal({seatId, reserveData, date}: any) {
   async function reserveSeat() {
 
     await axios.get(`/api/seats/${seatId}`).then((seat: any) => {
-      console.log(typeof seat.data.id);
-
       const seatIdentifier = seat.data.id
       
       axios.post("/api/addReserve", {
