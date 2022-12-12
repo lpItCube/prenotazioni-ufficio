@@ -40,7 +40,7 @@ function FirstOffice({ reserveData, date }: any) {
 }
 
 function MeetDesk({ reserveData }: any) {
-  const busySeats = reserveData.filter((reserve: any) => reserve.seat.type === "meet").map((s: any) => s.seat.name)
+  const busySeats = reserveData.filter((reserve: any) => reserve.seat .type === "meet").map((s: any) => s.seat.name)
   const seats = ["meet-1", "meet-2", "meet-3", "meet-4", "meet-5", "meet-6", "meet-7", "meet-8"]
 
   const seatsElements = seats.map((seat) => {

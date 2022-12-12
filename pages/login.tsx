@@ -22,7 +22,9 @@ function Login() {
       console.log("Credenziali errate")
     }
     
-    else Router.replace("/prenota")
+    else {
+      Router.replace("/prenota")
+    }
   }
 
   return (

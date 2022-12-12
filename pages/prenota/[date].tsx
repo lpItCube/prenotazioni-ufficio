@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next"
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next"
 import FirstOffice from "../../components/first-office"
 import prisma from '../../lib/prisma'
 
@@ -10,7 +10,7 @@ function PrenotaDate({ reserveData, date }: any) {
 
 export default PrenotaDate
 
-export const getStaticProps: GetStaticProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
   const date = context.params.date
   const reserveData = await prisma.reserve.findMany({
     include: {
@@ -24,12 +24,5 @@ export const getStaticProps: GetStaticProps = async (context: any) => {
   })
   return {
     props: { reserveData, date }
-  }
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: "blocking"
   }
 }
