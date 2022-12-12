@@ -1,3 +1,4 @@
+import Router from "next/router"
 import { useEffect, useState} from "react"
 import Modal from "./modal"
 
