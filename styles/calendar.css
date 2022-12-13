@@ -123,3 +123,19 @@ header .icons span:last-child{
   background: #fff;
 }
 
+.content-test-info{
+  margin-bottom: 20px;
+  color: #fff ;
+  max-width: 500px;
+  text-align: center;
+}
+
+.separator{
+  height: 2px;
+  width: 300px;
+  margin-left: 100px;
+  background: #fff;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+

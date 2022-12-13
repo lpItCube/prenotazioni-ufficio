@@ -61,6 +61,64 @@ function FirstOffice({ reserveData, date }: any) {
         </div>
       </div>
     </div>
+
+    <div className="office-container-mobile">
+
+      <div className="separator"> </div>
+
+      <div className="office-margin">
+        <div className="boss-room r-border r-border-no-bottom">
+          <span className="text-name-room">Direzione</span>
+        </div>
+        <div className="hr-room r-border r-border-no-left r-border-no-right">
+          <span className="text-name-room">Hr</span>
+        </div>
+        <div className="toilette r-border ">
+          <span className="text-name-room">toilette</span>
+        </div>
+        <div className="meeting-room r-border r-border-no-bottom">
+          <div className="prenotazione-all">
+            <span className="text-name-room">Sala riunione</span>
+          </div>
+        </div>
+        <div className="hall "> </div>
+        <div className="cafe r-border ">
+          <span className="text-name-room">Caffe</span>
+        </div>
+        <div className="it-room r-border r-border-no-right">
+          <span className="text-name-room">Stanza it</span>
+        </div>
+        <div className="sgabu r-border">
+          <span className="text-name-room">Ripostiglio</span>
+        </div>
+      </div>
+
+      <div className="separator"> </div>
+
+      <div className="office-margin">
+
+        <div className="border-detail">
+          <div className="prenotazione-all">
+            <span className="text-name-room">Sala riunione</span>
+            <span id="meetAll" className="button-all" onClick={() =>{
+              setSeatId("all");
+              (document.getElementById("myModal") as HTMLElement).style.display = "flex"
+            }}>Prenotazione unica</span>
+          </div>
+
+          <MeetDesk reserveData={reserveData}/>
+        </div>
+
+        <div className="separator"> </div>
+
+        <div className="border-detail">
+          <span className="text-name-room">Stanza it</span>
+          <ItDesk reserveData={reserveData}/>
+        </div>
+
+      </div>
+
+    </div>
     </>
   )
 }
