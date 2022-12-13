@@ -35,9 +35,9 @@ function FirstOffice({ reserveData, date }: any) {
           <div className="prenotazione-all">
             <span className="text-name-room">Sala riunione</span>
             <span id="meetAll" className="button-all" onClick={() =>{
-              setSeatId("all");
+              setSeatId("meet-room");
               (document.getElementById("myModal") as HTMLElement).style.display = "flex"
-            }}>Prenotazione unica</span>
+            }}>Prenota stanza</span>
           </div>
 
           <MeetDesk reserveData={reserveData}/>
@@ -124,11 +124,13 @@ function FirstOffice({ reserveData, date }: any) {
 }
 
 function MeetDesk({ reserveData }: any) {
+  const wholeRoom = reserveData.find((reserve: any) => reserve.seat.type === "meet-whole")
+  console.log(wholeRoom)
   const busySeats = reserveData.filter((reserve: any) => reserve.seat.type === "meet").map((s: any) => s.seat.name)
   const seats = ["meet-1", "meet-2", "meet-3", "meet-4", "meet-5", "meet-6", "meet-7", "meet-8"]
 
   const seatsElements = seats.map((seat) => {
-    var elClass = busySeats.includes(seat) ? "meet-seat seat busy" : "meet-seat seat"
+    var elClass = busySeats.includes(seat) || wholeRoom ? "meet-seat seat busy" : "meet-seat seat"
     return <div
       id={seat} key={seat}
       className={elClass}
@@ -170,7 +172,6 @@ function ItDesk({ reserveData }: any) {
       className={elClass}
     ></div>
   })
-
 
   return (
     <div className="it-desk desk">
