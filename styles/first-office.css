@@ -258,4 +258,12 @@
     width: 35px;
     margin: 0 auto;
   }
+
+  .contentLegend{
+    flex-direction: column;
+  }
+
+  .contentLegend-single{
+    margin-bottom: 10px;
+  }
 }
