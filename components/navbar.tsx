@@ -15,13 +15,21 @@ function Navbar() {
 
   return (
     <div className="navbar">
-      <div className="brand-title"> IT Cube </div>
+      <div className="brand-title">
+          <img src="../logo.png"  />
+      </div>
+      <div className="content-user">
+          <img className="user-img" src="../user.gif"  />
+          <h2 className="user-name-menu">Nome utente</h2>
+      </div>
       <div className="navbar-links">
         <ul>
           <CustomLink href="/prenota">Prenota</CustomLink>
           <CustomLink href="/profilo">Profilo</CustomLink>
         </ul>
+        <p></p>
       </div>
+
       <a href="#" className="toggle-button">
         <span className="bar"></span>
         <span className="bar"></span>

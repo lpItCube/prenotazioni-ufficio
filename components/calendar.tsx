@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 function Calendar() {
 
-  const [selectedDate, setSelectedDate] = useState(new Date()) 
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [selectedDay, setSelectedDay] = useState(0)
 
   useEffect(() => {
@@ -31,8 +31,8 @@ function Calendar() {
 
       for (let i = 1; i <= lastDateOfMonth; i++) {
         let liClass = (i === date.getDate() && currMonth === new Date().getMonth()
-                      && currYear === new Date().getFullYear() && (selectedDate.getFullYear() < 2000)) || 
-                      (i === selectedDate.getDate() && currMonth === selectedDate.getMonth() && currYear === selectedDate.getFullYear()) ? "active" 
+                      && currYear === new Date().getFullYear() && (selectedDate.getFullYear() < 2000)) ||
+                      (i === selectedDate.getDate() && currMonth === selectedDate.getMonth() && currYear === selectedDate.getFullYear()) ? "active"
                       : (new Date(currYear, currMonth, i + 1) < new Date()) ? "inactive": "";
         liTag += `<li class="${liClass}">${i}</li>`
       }
@@ -73,13 +73,17 @@ function Calendar() {
     })
 
   }, [selectedDate])
-  
+
   return (
     <>
     <Head>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     </Head>
     <div className="calendar-container">
+      <div className="content-test-info">
+        <h2 className="calendar-info">Selezione un giorno disponibile per eseguire una prenotazione per quella data</h2>
+        <div className="separatorCalendar"> </div>
+      </div>
       <div className="wrapper">
         <header>
           <p className="current-date">Novemeber 2022</p>
