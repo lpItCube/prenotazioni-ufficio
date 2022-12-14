@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  margin: auto;
 }
 
 .calendar-button {
@@ -26,6 +27,9 @@
   width: 450px;
   background: #fff;
   border-radius: 10px;
+
+  -webkit-box-shadow: 1px 1px 15px -4px #000000;
+  box-shadow: 1px 1px 15px -4px #000000;
 }
 
 .wrapper header {
@@ -124,13 +128,17 @@ header .icons span:last-child{
 }
 
 .content-test-info{
-  margin-bottom: 20px;
-  color: #fff ;
+  margin-bottom: -9px;
   max-width: 500px;
   text-align: center;
 }
 
-.separator{
+.calendar-info{
+  font-size: 18px;
+  color: #2d2d3b;
+}
+
+.separatorCalendar{
   height: 2px;
   width: 300px;
   margin-left: 100px;

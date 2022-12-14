@@ -81,8 +81,8 @@ function Calendar() {
     </Head>
     <div className="calendar-container">
       <div className="content-test-info">
-        <h2>Selezione un giorno disponibile per eseguire una prenotazione per quella data</h2>
-        <div className="separator"> </div>
+        <h2 className="calendar-info">Selezione un giorno disponibile per eseguire una prenotazione per quella data</h2>
+        <div className="separatorCalendar"> </div>
       </div>
       <div className="wrapper">
         <header>

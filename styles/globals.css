@@ -13,7 +13,7 @@ a {
   list-style: none;
 } */
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");  
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 * {
   box-sizing: border-box;
   padding: 0;
@@ -26,25 +26,54 @@ a {
   }
   body {
     color: black;
-    background: rgb(52, 62, 78);
+    background: #d7d8e4;
   }
+}
+
+.content-page{
+  display: flex;
+}
+
+.content-user{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 100%;
+  padding: 20px;
+
+}
+
+.user-img{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background: #4CAF50;
+  margin-right: 10px;
 }
 
 .navbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: #333;
+  background-color:  rgb(52, 62, 78);
   color: white;
+
+  height: 100vh;
+  width: 250px;
+  flex-direction: column;
 }
 
 .brand-title {
-  font-size: 1.5rem;
-  margin: .5rem;
+  font-size: 1.3rem;
+  margin: 0.5rem 30px;}
+
+.navbar-links {
+  width: 100%;
 }
 
 .navbar-links ul {
   display: flex;
+  flex-direction: column;
   margin: 0;
   padding: 0;
 }
@@ -81,7 +110,7 @@ a {
 }
 
 .navbar-links li.active {
-  background-color: rgb(52, 62, 78);
+  background-color: #ffffff29;
 }
 
 .confirm-btn {
@@ -96,14 +125,36 @@ a {
   margin-bottom: 10px;
 }
 
+
+.content-menu{
+
+}
+
+.user-name-menu {
+  max-width: 100px;
+}
+
+
+
 @media (max-width: 400px) {
+
+  .content-page{
+    flex-direction: column;
+  }
+
   .toggle-button {
     display: flex;
   }
-  
+
   .navbar {
     flex-direction: column;
     align-items: flex-start;
+    height: fit-content;
+    width: 100%;
+  }
+
+  .content-user{
+    display: none;
   }
 
   .navbar-links {
@@ -119,7 +170,7 @@ a {
   .navbar-links li {
     text-align: center;
   }
-  
+
   .navbar-links li a {
     padding: .5rem 1rem;
   }
@@ -127,7 +178,5 @@ a {
   .navbar-links.active {
     display: flex;
   }
-
-
 
 }
