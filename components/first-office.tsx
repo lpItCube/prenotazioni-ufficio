@@ -6,7 +6,7 @@ import Modal from "./modal"
 
 function FirstOffice({ reserveData, date }: any) {
   const [seatName, setSeatName] = useState("none")
-  const [yourSeat, setYourSeat] = useState("none")
+  const [yourSeat, setYourSeat] = useState(false)
 
   const session = useSession()
   var username = null
@@ -63,7 +63,31 @@ function FirstOffice({ reserveData, date }: any) {
           <span className="text-name-room">Ripostiglio</span>
         </div>
       </div>
-    </div>
+
+      <div className="contentLegend">
+
+        <div className="contentLegend-single">
+          <div className="single-red"> </div>
+          <p> Prenotato </p>
+        </div>
+
+        <div className="contentLegend-single">
+          <div className="single-yellow"> </div>
+          <p> Prenotato da te  </p>
+        </div>
+
+        <div className="contentLegend-single">
+          <div className="single-green"> </div>
+          <p> Prenotabille </p>
+        </div>
+
+        <div className="contentLegend-single">
+          <div className="single-grey"> </div>
+          <p> Non prenotabile  </p>
+        </div>
+
+        </div>
+      </div>
 
     <div className="office-container-mobile">
 
@@ -101,22 +125,14 @@ function FirstOffice({ reserveData, date }: any) {
       <div className="office-margin">
 
         <div className="border-detail">
-          <div className="prenotazione-all">
-            <span className="text-name-room">Sala riunione</span>
-            <span id="meetAll" className="button-all" onClick={() =>{
-              setSeatId("all");
-              (document.getElementById("myModal") as HTMLElement).style.display = "flex"
-            }}>Prenotazione unica</span>
-          </div>
-
-          <MeetDesk reserveData={reserveData}/>
+          <MeetDesk reserveData={reserveData} session={session} setSeatName={setSeatName} setYourSeat={setYourSeat} />
         </div>
 
         <div className="separator"> </div>
 
         <div className="border-detail">
           <span className="text-name-room">Stanza it</span>
-          <ItDesk reserveData={reserveData}/>
+          <ItDesk reserveData={reserveData} session={session} setSeatName={setSeatName} setYourSeat={setYourSeat} />
         </div>
 
       </div>
@@ -173,13 +189,15 @@ function MeetDesk({ reserveData, session, setSeatName, setYourSeat }: any) {
       className={elClass}
       onClick={
         isYourRoom ? () => {} :
-        isYourSeat || isAdmin ? () => {
-          setYourSeat(seat);
+        isYourSeat || (isAdmin && !available) ? () => {
+          setSeatName(seat)
+          setYourSeat(true);
           (document.getElementById("myModal") as HTMLElement).style.display = "flex"
         } : 
         !available ? () => {} : 
         () => {
-          setSeatName(seat);
+          setSeatName(seat)
+          setYourSeat(false);
           (document.getElementById("myModal") as HTMLElement).style.display = "flex"
       }}
     ></div>
@@ -193,13 +211,17 @@ function MeetDesk({ reserveData, session, setSeatName, setYourSeat }: any) {
         id="meetAll" 
         className={`btn-wholeroom ${isYourRoom ? "your" : roomIsBookable && "available"}`} 
         onClick={
-          isYourRoom ? () => {
-            setYourSeat("meet-room");
-            (document.getElementById("myModal") as HTMLElement).style.display = "flex"
-          } : roomIsBookable ? () =>{
+          isYourRoom || (isAdmin) ? () => {
+            setYourSeat(true)
             setSeatName("meet-room");
             (document.getElementById("myModal") as HTMLElement).style.display = "flex"
-          } : () => {}}>Prenota stanza</span>
+          } : roomIsBookable ? () =>{
+            setSeatName("meet-room")
+            setYourSeat(false);
+            (document.getElementById("myModal") as HTMLElement).style.display = "flex"
+          } : () => {}}>
+        Prenota stanza
+      </span>
     </div>
     <div className="meet-desk desk">
       <div className="meet-desk-first-row desk-row">
@@ -247,13 +269,15 @@ function ItDesk({ reserveData, session,  setSeatName, setYourSeat }: any) {
     id={seat} key={seat}
     className={elClass}
     onClick={
-      isYourSeat || isAdmin ? () => {
-        setYourSeat(seat);
+      isYourSeat || (isAdmin && !available) ? () => {
+        setSeatName(seat)
+        setYourSeat(true);
         (document.getElementById("myModal") as HTMLElement).style.display = "flex"
       } : 
       !available ? () => {} : 
       () => {
-        setSeatName(seat);
+        setSeatName(seat)
+        setYourSeat(false);
         (document.getElementById("myModal") as HTMLElement).style.display = "flex"
     }}
   ></div>

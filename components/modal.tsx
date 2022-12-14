@@ -5,7 +5,7 @@ import { useEffect, useImperativeHandle } from "react"
 const NONE_VAL = "none"
 
 function Modal({seatName, yourSeat, username, reserveData, date}: any) { 
-
+  
   useEffect(() => {
     var modal = document.getElementById("myModal") as HTMLElement
     var span = document.getElementsByClassName("close")[0] as HTMLElement
@@ -25,8 +25,7 @@ function Modal({seatName, yourSeat, username, reserveData, date}: any) {
     const seatId = await (await axios.get(`/api/seats/${seatName !== NONE_VAL ? seatName : yourSeat}`)).data.id
     const userId = await (await axios.get(`/api/users/${username}`)).data.id
 
-    if(seatName !== NONE_VAL) {
-      
+    if(!yourSeat) {
       await axios.post("/api/addReserve", {
         seatId: seatId,
         userId: userId,
@@ -44,9 +43,9 @@ function Modal({seatName, yourSeat, username, reserveData, date}: any) {
     <div className="modal-content">
       <span className="close">&times;</span>
       <div className="modal-body">
-        <p>{seatName !== NONE_VAL ? 
+        <p>{!yourSeat ? 
           "Vuoi procedere con la prenotazione del posto " + seatName + "?" :
-          "Vuoi annullare la prenotazione del posto " + yourSeat + "?"
+          "Vuoi annullare la prenotazione del posto " + seatName + "?"
           }</p>
         {username === "admin" && <input></input>}
         <button className="modal-button" onClick={() => handleSeat()} >Conferma</button>

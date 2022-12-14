@@ -13,9 +13,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return ( 
     <SessionProvider session={pageProps.session}>
       {
-        Component.name !== "Login" && <Navbar />
+        Component.name !== "Login" ?
+        <div className="main-container">
+          <Navbar />
+          <Component {...pageProps} /> 
+        </div> :
+        <Component {...pageProps} /> 
       }
-      <Component {...pageProps} /> 
     </SessionProvider >
   )
 }

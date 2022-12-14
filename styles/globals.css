@@ -30,7 +30,17 @@ a {
   }
 }
 
-.content-page{
+.main-container {
+  display: flex;
+}
+
+.test-log-out {
+  padding: 20px;
+  width: 100%;
+  text-align: end;
+}
+
+.content-page {
   display: flex;
 }
 

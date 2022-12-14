@@ -1,8 +1,12 @@
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 function Navbar() {
+
+  const session = useSession()
+
   useEffect(() => {
     const toggleButton = document.getElementsByClassName("toggle-button")[0]
     const navbarLinks = document.getElementsByClassName("navbar-links")[0]
@@ -20,7 +24,7 @@ function Navbar() {
       </div>
       <div className="content-user">
           <img className="user-img" src="../user.gif"  />
-          <h2 className="user-name-menu">Nome utente</h2>
+          <h2 className="user-name-menu">{ (session.status === "authenticated") ? session?.data?.user?.name : "" }</h2>
       </div>
       <div className="navbar-links">
         <ul>
@@ -28,6 +32,7 @@ function Navbar() {
           <CustomLink href="/profilo">Profilo</CustomLink>
         </ul>
         <p></p>
+        <p className="test-log-out">Log Out</p>
       </div>
 
       <a href="#" className="toggle-button">
