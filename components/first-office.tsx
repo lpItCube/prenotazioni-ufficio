@@ -60,6 +60,30 @@ function FirstOffice({ reserveData, date }: any) {
           <span className="text-name-room">Ripostiglio</span>
         </div>
       </div>
+
+      <div className="contentLegend">
+
+        <div className="contentLegend-single">
+          <div className="single-red"> </div>
+          <p> Prenotato </p>
+        </div>
+
+        <div className="contentLegend-single">
+          <div className="single-yellow"> </div>
+          <p> Prenotato da te  </p>
+        </div>
+
+        <div className="contentLegend-single">
+          <div className="single-green"> </div>
+          <p> Prenotabille </p>
+        </div>
+
+        <div className="contentLegend-single">
+          <div className="single-grey"> </div>
+          <p> Non prenotabile  </p>
+        </div>
+
+      </div>
     </div>
 
     <div className="office-container-mobile">

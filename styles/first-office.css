@@ -14,7 +14,7 @@
 }
 
 .r-border {
-  border: #d3d3d3 solid 1px;
+  border: #9d9d9d solid 1px;
 }
 
 .r-border-no-bottom {
@@ -75,7 +75,7 @@
   border-radius: 10px;
   width: 70%;
   height: 70%;
-  background-color: #d4d4d4;
+  background-color: #fff;
   flex-wrap: wrap;
 }
 
@@ -147,6 +147,44 @@
 .seat.busy:hover {
   background-color: rgb(231, 88, 88); ;
   cursor: auto;
+}
+
+.contentLegend{
+  margin-top: 20px;
+  display: flex;
+}
+
+.contentLegend-single{
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.contentLegend-single div {
+  height: 25px;
+  width: 25px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.contentLegend-single p {
+  color: #343e4e;
+}
+
+.single-red{
+  background: red;
+}
+
+.single-yellow{
+  background: yellow;
+}
+
+.single-green{
+  background: green;
+}
+
+.single-grey{
+  background: grey;
 }
 
 @media (max-width:400px){

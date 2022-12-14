@@ -13,6 +13,12 @@ a {
   list-style: none;
 } */
 
+.test-log-out {
+  padding: 20px;
+  width: 100%;
+  text-align: end;
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 * {
   box-sizing: border-box;

@@ -27,7 +27,7 @@ function Navbar() {
           <CustomLink href="/prenota">Prenota</CustomLink>
           <CustomLink href="/profilo">Profilo</CustomLink>
         </ul>
-        <p></p>
+        <p className="test-log-out">Log Out</p>
       </div>
 
       <a href="#" className="toggle-button">
