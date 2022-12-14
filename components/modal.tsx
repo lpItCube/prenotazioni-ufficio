@@ -1,36 +1,41 @@
 import axios from "axios"
-import Link from "next/link"
 import Router from "next/router"
-import { useEffect } from "react"
+import { useEffect, useImperativeHandle } from "react"
 
-function Modal({seatId, reserveData, date}: any) { 
+const NONE_VAL = "none"
+
+function Modal({seatName, yourSeat, username, reserveData, date}: any) { 
 
   useEffect(() => {
     var modal = document.getElementById("myModal") as HTMLElement
     var span = document.getElementsByClassName("close")[0] as HTMLElement
 
     span.onclick = function() {
-      modal.style.display = "none"
+      modal.style.display = NONE_VAL
     }
 
     window.onclick = function(event) {
       if (event.target == modal) {
-        modal.style.display = "none"
+        modal.style.display = NONE_VAL
       }
     }
   }, [])
 
-  async function reserveSeat() {
+  async function handleSeat() {
+    const seatId = await (await axios.get(`/api/seats/${seatName !== NONE_VAL ? seatName : yourSeat}`)).data.id
+    const userId = await (await axios.get(`/api/users/${username}`)).data.id
 
-    await axios.get(`/api/seats/${seatId}`).then((seat: any) => {
-      const seatIdentifier = seat.data.id
+    if(seatName !== NONE_VAL) {
       
-      axios.post("/api/addReserve", {
-        seatId: seatIdentifier,
-        userId: "28d9660b-7073-44fa-9602-873f03a73704",
+      await axios.post("/api/addReserve", {
+        seatId: seatId,
+        userId: userId,
         reservedDays: [date]
       })
-    })
+    } else {
+      const reserveToDelete = reserveData.find((reserve: any) => reserve.seat.name === yourSeat)
+      await axios.delete("/api/reserve/" + reserveToDelete.id)
+    }
     Router.push("/prenota")
   }
 
@@ -39,8 +44,12 @@ function Modal({seatId, reserveData, date}: any) {
     <div className="modal-content">
       <span className="close">&times;</span>
       <div className="modal-body">
-        <p>Vuoi procedere con la prenotazione del posto <b>{seatId}</b>?</p>
-        <button className="modal-button" onClick={() => reserveSeat()} >Conferma</button>
+        <p>{seatName !== NONE_VAL ? 
+          "Vuoi procedere con la prenotazione del posto " + seatName + "?" :
+          "Vuoi annullare la prenotazione del posto " + yourSeat + "?"
+          }</p>
+        {username === "admin" && <input></input>}
+        <button className="modal-button" onClick={() => handleSeat()} >Conferma</button>
       </div>
     </div>
   </div>

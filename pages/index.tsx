@@ -12,11 +12,19 @@ export const getStaticProps: GetStaticProps = async () => {
   await prisma.seat.deleteMany()
   await prisma.user.deleteMany()
 
-  const user = await prisma.user.create(
+  await prisma.user.createMany(
     {
-      data: { username: "admin", password: "admin" }    
+      data: [
+        { username: "admin", password: "admin" },
+        { username: "user1", password: "user1" },
+        { username: "user2", password: "user2" }  
+      ]
     }
   )
+
+  const users = await prisma.user.findMany()
+
+  console.log(users)
 
   await prisma.seat.createMany( 
     {
@@ -54,12 +62,12 @@ export const getStaticProps: GetStaticProps = async () => {
     where: {name: "it-3"}
   })
 
-  const ca = await prisma.reserve.createMany(
+  await prisma.reserve.createMany(
     {
       data: [
-        { userId: user.id, seatId: seat.id, reservedDays: ["2022-12-6", "2022-12-7", "2022-12-8"] },
-        { userId: user.id, seatId: seat2.id, reservedDays: ["2022-12-7"] },
-        { userId: user.id, seatId: seat3.id, reservedDays: ["2022-12-7", "2022-12-8"] }
+        { userId: users[0].id, seatId: seat.id, reservedDays: ["2022-12-6", "2022-12-7", "2022-12-8"] },
+        { userId: users[1].id, seatId: seat2.id, reservedDays: ["2022-12-7"] },
+        { userId: users[2].id, seatId: seat3.id, reservedDays: ["2022-12-7", "2022-12-8"] }
       ]
     }
   )

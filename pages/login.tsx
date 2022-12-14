@@ -27,6 +27,11 @@ function Login() {
 
   return (
     <div className="loginContainer">
+      <div className="logo">
+        <div>
+          <img src="logo.png"></img>
+        </div>
+      </div>
       <div className="loginModal">
         <div className="invalidLogin">
           <p>Crendeziali non valide</p>

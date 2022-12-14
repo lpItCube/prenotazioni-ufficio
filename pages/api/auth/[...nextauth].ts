@@ -17,13 +17,26 @@ const authOptions: NextAuthOptions = {
            where: { username: email, password: password }
         })
         
-        return { id: res.id, name: res.username }
+        return { id: res.id, name: res.username, email: res.id }
       }
     })
   ],
   pages: {
     signIn: "/login"
-  }
+  },
+  // callbacks: {
+  //   jwt: ({ token, user }) => {
+  //     if (user) {
+  //       token.sub = user.id;
+  //     }
+  //     return token
+  //   },
+  //   session: async ({ session, token, user }) => {
+  //     if (token)
+  //       session.user = user
+  //     return session
+  //   },
+  // }
 }
 
 export default NextAuth(authOptions)

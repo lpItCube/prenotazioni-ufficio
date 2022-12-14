@@ -7,7 +7,6 @@ function Prenota() {
   const { status, data } = useSession()
 
   const session = useSession()
-  console.log(session)
 
   useEffect(() => {
     //if (status === "unauthenticated" ) Router.replace("/login")

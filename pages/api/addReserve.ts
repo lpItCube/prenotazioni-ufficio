@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { useSession } from "next-auth/react";
 import prisma from "../../lib/prisma";
 
 type Data = {
@@ -13,10 +14,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     where: {id: data.seatId}
   })
 
+  // controlli
   data.reservedDays.forEach(async (date) => {
     const reservations = await prisma.reserve.findMany({
       include: {
-        seat: true
+        seat: true,
+        user: true
       },
       where: {
         reservedDays: {
@@ -24,20 +27,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }
     })
-    const roomReserved = reservations.filter((reserve: any) => reserve.seat.type === "meet-whole")
-    if (roomReserved !== null && roomReserved.length > 0)
-      res.status(403).json("Non puoi prenotare per questo giorno")
-  })
+    const yourReserved = reservations.find((reserve: any) => reserve.user.id === data.userId)
+    const roomReserved = reservations.find((reserve: any) => reserve.seat.type === "meet-whole")
 
-  try {
-    const result = await prisma.reserve.create({
-      data: {
-        ...data
+    if(yourReserved && seat?.type !== "meet-whole") 
+      res.status(403).json("Per questa data hai già prenotato un posto")
+    else if (roomReserved && seat?.type === "meet")
+      res.status(403).json("Non puoi prenotare la stanza già occupata")
+    else 
+      try {
+        const result = await prisma.reserve.create({
+          data: {
+            ...data
+          }
+        }) 
+        res.status(200).json(result)
+      } catch (e) {
+        console.log(e)
+        res.status(404)
       }
-    })
-    res.status(200).json(result)
-  } catch (e) {
-    console.log(e)
-    res.status(404)
-  }
+  })
 }

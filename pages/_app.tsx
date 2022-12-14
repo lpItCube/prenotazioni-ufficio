@@ -9,9 +9,12 @@ import Navbar from '../components/navbar'
 import { SessionProvider } from 'next-auth/react'
 
 export default function App({ Component, pageProps }: AppProps) {
+  console.log(Component.name)
   return ( 
     <SessionProvider session={pageProps.session}>
-      <Navbar />
+      {
+        Component.name !== "Login" && <Navbar />
+      }
       <Component {...pageProps} /> 
     </SessionProvider >
   )

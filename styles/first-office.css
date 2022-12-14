@@ -108,7 +108,7 @@
   height: 70%;
   border: white solid 2px;
   border-radius: 20%;
-  background-color: rgb(88, 169, 88);
+  background-color: gray;
 }
 
 .it-desk-first-row {
@@ -128,7 +128,7 @@
   height: 48%;
   border: white solid 2px;
   border-radius: 20%;
-  background-color: rgb(88, 169, 88);
+  background-color: gray;
   margin-left: 7%;
   margin-right: 7%;
 }
@@ -137,23 +137,22 @@
   background-color: rgb(231, 88, 88);
 }
 
-.seat:hover {
+.seat.busy.your {
+  background-color: rgb(194, 194, 30)
+}
+
+.seat.available {
+  background-color: rgb(88, 169, 88);
+}
+
+.seat.available:hover {
   background-color: grey;
   cursor: pointer;
 }
 
-.seat.busy:hover {
-  background-color: rgb(231, 88, 88); ;
-  cursor: auto;
+.btn-wholeroom.available {
+  background-color: rgb(88, 169, 88);
 }
-
-@media (max-width:400px){
-  .office-margin {
-    height: 250px;
-    width: 300px;
-  }
-}
-
 
 .text-name-room {
   font-size: 11px;
@@ -169,7 +168,8 @@
   align-items: center;
 }
 
-.button-all{
+.btn-wholeroom {
+  background-color: rgb(231, 88, 88);
   padding: 2px 8px;
   margin: 3px;
   color: white;
@@ -177,7 +177,20 @@
   font-size: 10px;
 }
 
-.button-all:hover{
+.btn-wholeroom.your {
+  background-color: rgb(194, 194, 30);
+}
+
+.btn-wholeroom:hover {
   color: black;
   background: #fff;
 }
+
+@media (max-width:400px){
+  .office-margin {
+    height: 250px;
+    width: 300px;
+  }
+}
+
+
