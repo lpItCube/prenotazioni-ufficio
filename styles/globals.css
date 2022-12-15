@@ -38,6 +38,11 @@ a {
   padding: 20px;
   width: 100%;
   text-align: end;
+  cursor: pointer;
+}
+
+.test-log-out:hover {
+  background: #4CAF50;
 }
 
 .content-page {
@@ -148,6 +153,11 @@ a {
 
 @media (max-width: 400px) {
 
+  .main-container {
+    display: flex;
+    flex-direction: column;
+  }
+
   .content-page{
     flex-direction: column;
   }
@@ -187,6 +197,13 @@ a {
 
   .navbar-links.active {
     display: flex;
+    flex-direction: column;
+  }
+
+  .test-log-out{
+    background: #4CAF50;
+    padding: 15px;
+    margin-top: 20px;
   }
 
 }

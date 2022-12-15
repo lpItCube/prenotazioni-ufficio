@@ -7,7 +7,7 @@ function Login() {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
-    
+
     const res = await signIn("credentials", {
       email: userInfo.email,
       password: userInfo.password,
@@ -21,36 +21,40 @@ function Login() {
       (invalidLoginEl as HTMLElement).style.display = "block"
       console.log("Credenziali errate")
     }
-    
+
     else Router.replace("/prenota")
   }
 
   return (
     <div className="loginContainer">
-      <div className="logo">
-        <div>
-          <img src="logo.png"></img>
-        </div>
-      </div>
       <div className="loginModal">
+
+        <div className="contentlogo">
+          <div className="logo">
+            <div>
+              <img src="logo.png"></img>
+            </div>
+          </div>
+        </div>
+
         <div className="invalidLogin">
           <p>Crendeziali non valide</p>
           <p>Inserisci username e password corretti</p>
         </div>
         <form onSubmit={handleSubmit}>
-          <input 
-            type="text" 
-            placeholder="Username or Email" 
-            name="uname" 
+          <input
+            type="text"
+            placeholder="Username or Email"
+            name="uname"
             onChange={({ target }) => {
               setUserInfo({ ...userInfo, email: target.value })
             }}
             required
           />
-          <input 
-            type="password" 
-            placeholder="Password" 
-            name="psw" 
+          <input
+            type="password"
+            placeholder="Password"
+            name="psw"
             onChange={({ target }) => {
               setUserInfo({ ...userInfo, password: target.value })
             }}
@@ -62,4 +66,4 @@ function Login() {
   )
 }
 
-export default Login  
+export default Login

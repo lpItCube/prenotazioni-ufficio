@@ -19,7 +19,7 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
 }
 
-::placeholder { 
+::placeholder {
   color: rgb(169, 169, 169);
   opacity: 1;
 }
@@ -28,8 +28,13 @@ input[type=text], input[type=password] {
   margin: 5px;
   text-align: left;
   padding: 12px 20px;
-  width: 100%;  
+  width: 100%;
   cursor: pointer;
+}
+
+.login-btn:hover {
+  background: #4CAF50;
+  border-color: #4CAF50;
 }
 
 .invalidLogin {
@@ -38,6 +43,15 @@ input[type=text], input[type=password] {
   width: 100%;
   font-size: 0.9rem;
   display: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.contentlogo {
+  margin: 5px;
+  margin-bottom: 15px;
+  width: 100%;
+  font-size: 0.9rem;
 }
 
 .invalidLogin p {
@@ -46,6 +60,7 @@ input[type=text], input[type=password] {
   color: white;
   text-align: center;
   padding: 13px;
+  border-radius: 10px;
 }
 
 .invalidLogin p:first-child {
@@ -60,15 +75,11 @@ input[type=text], input[type=password] {
 
 .logo {
   text-align: center;
-  margin-top: 100px;
 }
 
 .logo div {
-  margin-left: auto;
-    margin-right: auto;
-    /* border: 1px solid; */
-    width: 50%;
-    padding: 30px;
-    background-color: #3b3b3c;
-    border-radius: 10px;
+  width: 100%;
+  padding: 30px;
+  background-color: #3b3b3c;
+  border-radius: 10px;
 }
