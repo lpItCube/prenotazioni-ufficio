@@ -28,11 +28,11 @@ function Navbar() {
       </div>
       <div className="navbar-links">
         <ul>
-          <CustomLink href="/prenota">Prenota</CustomLink>
-          <CustomLink href="/profilo">Profilo</CustomLink>
+          <CustomLink href="/prenota" > <img style={{height:  20, marginRight: 10}} src="../calendar.png" /> <span>Prenota</span></CustomLink>
+          <CustomLink href="/profilo"> <img style={{height:  20, marginRight: 10}} src="../user.png" /> <span>Profilo</span></CustomLink>
         </ul>
         <p></p>
-        <p className="test-log-out">Log Out</p>
+          <div className="test-log-out"> <span>LogOut </span> <img style={{height:  20}} src="../logout.png" /> </div>
       </div>
 
       <a href="#" className="toggle-button">
@@ -48,7 +48,7 @@ function CustomLink({ href, children }: any) {
   const path = useRouter().pathname
   return (
     <li className={path === href ? "active" : ""}>
-      <Link href={href}>
+      <Link href={href} style={{display: "flex", alignItems: "center"}}>
         {children}
       </Link>
     </li>

@@ -37,8 +37,14 @@ a {
 .test-log-out {
   padding: 20px;
   width: 100%;
-  text-align: end;
+  justify-content: end;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.test-log-out img {
+  margin-left: 10px;
 }
 
 .test-log-out:hover {
