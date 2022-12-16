@@ -37,7 +37,18 @@ a {
 .test-log-out {
   padding: 20px;
   width: 100%;
-  text-align: end;
+  justify-content: end;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.test-log-out img {
+  margin-left: 10px;
+}
+
+.test-log-out:hover {
+  background: #4CAF50;
 }
 
 .content-page {
@@ -153,10 +164,11 @@ a {
 @media (max-width: 600px) {
 
   .main-container {
+    display: flex;
     flex-direction: column;
   }
 
-  .content-page {
+  .content-page{
     flex-direction: column;
   }
 
@@ -195,6 +207,13 @@ a {
 
   .navbar-links.active {
     display: flex;
+    flex-direction: column;
+  }
+
+  .test-log-out{
+    background: #4CAF50;
+    padding: 15px;
+    margin-top: 20px;
   }
 
 }
