@@ -4,9 +4,7 @@ import FirstOffice from "../../components/first-office"
 import prisma from '../../lib/prisma'
 
 function PrenotaDate({ reserveData, date }: any) {
-  const session = useSession() 
-  // console.log("Maria")
-  // console.log(session)
+  const session = useSession()
 
   return (
     <FirstOffice reserveData={reserveData} date={date} />

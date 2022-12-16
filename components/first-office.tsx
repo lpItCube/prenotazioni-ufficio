@@ -4,7 +4,7 @@ import { type } from "os"
 import { useEffect, useState} from "react"
 import Modal from "./modal"
 
-function FirstOffice({ reserveData, date }: any) {
+function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
   const [seatName, setSeatName] = useState("none")
   const [yourSeat, setYourSeat] = useState(false)
 
@@ -31,7 +31,7 @@ function FirstOffice({ reserveData, date }: any) {
   <div>Loading</div> :
   (
     <>
-    <Modal seatName={seatName} yourSeat={yourSeat} username={username} reserveData={reserveData} date={date} />
+    <Modal seatName={seatName} yourSeat={yourSeat} username={username} reserveData={reserveData} setReserveData={setReserveData} fromTo={fromTo} />
     <div className="office-container">
       <div className="office-margin">
         <div className="boss-room r-border r-border-no-bottom">
@@ -68,18 +68,19 @@ function FirstOffice({ reserveData, date }: any) {
 
         <div className="contentLegend-single">
           <div className="single-red"> </div>
-          <p> Prenotato </p>
-        </div>
-
-        <div className="contentLegend-single">
-          <div className="single-yellow"> </div>
-          <p> Prenotato da te  </p>
+          <p> Occupato </p>
         </div>
 
         <div className="contentLegend-single">
           <div className="single-green"> </div>
-          <p> Prenotabille </p>
+          <p> Disponibile </p>
         </div>
+
+        <div className="contentLegend-single">
+          <div className="single-yellow"> </div>
+          <p> Il tuo posto  </p>
+        </div>
+
 
         <div className="contentLegend-single">
           <div className="single-grey"> </div>

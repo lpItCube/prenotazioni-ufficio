@@ -31,4 +31,6 @@ model Reserve {
   seat         Seat   @relation(fields: [seatId], references: [id])
   seatId       String
   reservedDays String[]
+  from         DateTime 
+  to           DateTime
 }

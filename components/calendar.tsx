@@ -1,10 +1,53 @@
+import axios from "axios";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
-function Calendar() {
+type FromToHour = {
+  from: string,
+  to: string
+}
+
+function Calendar({setFromTo, setReserveData}: any) {
 
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [fromToHours, setFromToHours] = useState<FromToHour>({from: "09", to: "18"}) 
   const [selectedDay, setSelectedDay] = useState(0)
+
+
+  function createNewDate(selectedDate: Date, hour: string) {
+    const currYear = selectedDate.getFullYear()
+    const currMonth = selectedDate.getMonth() + 1
+    const day = selectedDate.getDate()
+    const textDate = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
+    return textDate
+  }  
+
+  async function handleChangeHour(e: ChangeEvent) {
+    const target = e.target as HTMLElement
+    console.log(target.nodeValue)
+    const fromValue = (document.getElementById("from") as HTMLInputElement).value
+    const toValue = (document.getElementById("to") as HTMLInputElement).value
+    setFromToHours({from: fromValue, to: toValue})
+
+    const fromDate = createNewDate(selectedDate, fromValue)
+    const toDate = createNewDate(selectedDate, toValue)
+    
+    const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
+
+    setFromTo({from: fromDate, to: toDate})
+    setReserveData(res)
+  }
+
+  async function handleConfirmDate(selDate: Date) {
+
+    const fromDate = createNewDate(selDate, fromToHours.from)
+    const toDate = createNewDate(selDate, fromToHours.to)
+
+    const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
+
+    setFromTo({from: fromDate, to: toDate})
+    setReserveData(res)
+  }
 
   useEffect(() => {
     const currentDate: any = document.querySelector(".current-date"),
@@ -50,8 +93,9 @@ function Calendar() {
           var currentEl = e.target as HTMLElement
           const selDay = parseInt(currentEl.textContent as string)
           const selDate = new Date(currYear, currMonth, selDay)
-          setSelectedDay(selDay)
+          // setSelectedDay(selDay)
           setSelectedDate(selDate)
+          handleConfirmDate(selDate)
         })
       });
     }
@@ -105,7 +149,70 @@ function Calendar() {
           <ul className="days"></ul>
         </div>
       </div>
-      <a href={`/prenota/${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()}`} className="calendar-button">Prosegui</a>
+      <div>
+        {/* Seleziona orario: 
+        <input type="number" min="0" max="8" placeholder="0" onChange={(e) => {handleChangeHour(e)}}></input> */}
+
+        <form>
+          <label htmlFor="from">From: </label>
+            <select name="from" id="from" onChange={(e) => {handleChangeHour(e)}}>
+              <option value="00">00:00</option>
+              <option value="01">01:00</option>
+              <option value="02">02:00</option>
+              <option value="03">03:00</option>
+              <option value="04">04:00</option>
+              <option value="05">05:00</option>
+              <option value="06">06:00</option>
+              <option value="07">07:00</option>
+              <option value="08">08:00</option>
+              <option value="09">09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12">12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+              <option value="17">17:00</option>
+              <option value="18">18:00</option>
+              <option value="19">19:00</option>
+              <option value="20">20:00</option>
+              <option value="21">21:00</option>
+              <option value="22">22:00</option>
+              <option value="23">23:00</option>
+            </select>
+
+            <label htmlFor="to">To: </label>
+            <select name="to" id="to" onChange={(e) => {handleChangeHour(e)}}>
+              <option value="00">00:00</option>
+              <option value="01">01:00</option>
+              <option value="02">02:00</option>
+              <option value="03">03:00</option>
+              <option value="04">04:00</option>
+              <option value="05">05:00</option>
+              <option value="06">06:00</option>
+              <option value="07">07:00</option>
+              <option value="08">08:00</option>
+              <option value="09">09:00</option>
+              <option value="10">10:00</option>
+              <option value="11">11:00</option>
+              <option value="12">12:00</option>
+              <option value="13">13:00</option>
+              <option value="14">14:00</option>
+              <option value="15">15:00</option>
+              <option value="16">16:00</option>
+              <option value="17">17:00</option>
+              <option value="18">18:00</option>
+              <option value="19">19:00</option>
+              <option value="20">20:00</option>
+              <option value="21">21:00</option>
+              <option value="22">22:00</option>
+              <option value="23">23:00</option>
+            </select>
+        </form>
+      </div>
+      {/* <a href={`/prenota/${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()}`} className="calendar-button">Prosegui</a> */}
+      {/* <button className="calendar-button" onClick={() => handleConfirmDate()}> Conferma </button> */}
     </div>
     </>
   )

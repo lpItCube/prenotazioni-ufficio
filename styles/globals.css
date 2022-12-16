@@ -140,15 +140,23 @@ a {
 
 }
 
+.resAndCalContainer {
+  display: flex;
+}
+
 .user-name-menu {
   max-width: 100px;
 }
 
 
 
-@media (max-width: 400px) {
+@media (max-width: 600px) {
 
-  .content-page{
+  .main-container {
+    flex-direction: column;
+  }
+
+  .content-page {
     flex-direction: column;
   }
 
