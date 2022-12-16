@@ -42,24 +42,30 @@ function Login() {
           <p>Inserisci username e password corretti</p>
         </div>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username or Email"
-            name="uname"
-            onChange={({ target }) => {
-              setUserInfo({ ...userInfo, email: target.value })
-            }}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            name="psw"
-            onChange={({ target }) => {
-              setUserInfo({ ...userInfo, password: target.value })
-            }}
-            required />
-          <button className="login-btn" type="submit" >Login</button>
+          <div className="content-input">
+            <img src="user.gif" />
+            <input
+                type="text"
+                placeholder="Username or Email"
+                name="uname"
+                onChange={({ target }) => {
+                  setUserInfo({ ...userInfo, email: target.value })
+                }}
+                required
+            />
+          </div>
+          <div className="content-input">
+            <img src="lock.png" />
+            <input
+                type="password"
+                placeholder="Password"
+                name="psw"
+                onChange={({ target }) => {
+                  setUserInfo({ ...userInfo, password: target.value })
+                }}
+                required />
+          </div>
+          <button className="login-btn" type="submit" > <span> Login </span>  <img src="enter.png" /> </button>
         </form>
       </div>
     </div>
