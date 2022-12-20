@@ -5,6 +5,7 @@ import Router from "next/router"
 import { useEffect, useState } from "react"
 import Calendar from "../../components/calendar"
 import FirstOffice from "../../components/first-office"
+import prisma from "../../lib/prisma"
 
 type DateRange = {
   from: string | null,
