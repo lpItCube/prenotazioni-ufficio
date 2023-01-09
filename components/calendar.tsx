@@ -16,8 +16,8 @@ function Calendar({setFromTo, setReserveData}: any) {
 
   function createNewDate(selectedDate: Date, hour: string) {
     const currYear = selectedDate.getFullYear()
-    const currMonth = selectedDate.getMonth() + 1
-    const day = selectedDate.getDate()
+    const currMonth = ("0" + (selectedDate.getMonth() + 1)).slice(-2)
+    const day = ("0" + selectedDate.getDate()).slice(-2)
     const textDate = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
     return textDate
   }  

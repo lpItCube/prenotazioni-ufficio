@@ -14,9 +14,9 @@ type DateRange = {
 
 function createNewDate(hour: string) {
   const currYear = new Date().getFullYear()
-  const currMonth = new Date().getMonth()
-  const day = new Date().getDate()
-  const textDate = currYear + "-" + (currMonth + 1) + "-" + day + "T" + hour + ":00:00";
+  const currMonth = ("0" + (new Date().getMonth() + 1)).slice(-2)
+  const day = ("0" + new Date().getDate()).slice(-2)
+  const textDate = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
   return textDate
 }
 
@@ -69,24 +69,27 @@ export const getServerSideProps: GetServerSideProps = async () => {
       seat: true,
       user: true
     },
-    where:{
-      NOT:{
-        OR:[
-            {
-              from:{
-                  gte:new Date(toDate)
-              }
-            },
-            {
-              to:{
-                  lte: new Date(fromDate)
-              }
-            }
-        ]
-      }
-    }
+    // where:{
+    //   NOT:{
+    //     OR:[
+    //         {
+    //           from:{
+    //               gte:new Date(toDate)
+    //           }
+    //         },
+    //         {
+    //           to:{
+    //               lte: new Date(fromDate)
+    //           }
+    //         }
+    //     ]
+    //   }
+    // }
   })
+
+  const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))  
+
   return {
-    props: { initialData: JSON.parse(JSON.stringify(initialData)) }
+    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)) }
   }
 }
