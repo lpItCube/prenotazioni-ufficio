@@ -1,6 +1,6 @@
 import axios from "axios"
 import { GetServerSideProps } from "next"
-import { useSession } from "next-auth/react"
+import { getSession, useSession } from "next-auth/react"
 import Router from "next/router"
 import { useEffect, useState } from "react"
 import Calendar from "../../components/calendar"
@@ -61,35 +61,28 @@ function Prenota({ initialData }: any) {
 
 export default Prenota
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession({ req: context.req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
   const fromDate = createNewDate("08")
   const toDate = createNewDate("18")
   const initialData = await prisma.reserve.findMany({
     include: {
       seat: true,
       user: true
-    },
-    // where:{
-    //   NOT:{
-    //     OR:[
-    //         {
-    //           from:{
-    //               gte:new Date(toDate)
-    //           }
-    //         },
-    //         {
-    //           to:{
-    //               lte: new Date(fromDate)
-    //           }
-    //         }
-    //     ]
-    //   }
-    // }
+    }
   })
-
   const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))  
 
   return {
-    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)) }
+    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), session }
   }
 }

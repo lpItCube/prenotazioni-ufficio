@@ -1,6 +1,7 @@
 import { FormEventHandler, useState } from "react"
-import { signIn } from "next-auth/react"
+import { getSession, signIn } from "next-auth/react"
 import Router from "next/router"
+import { url } from "inspector"
 
 function Login() {
   const [userInfo, setUserInfo] = useState({ email: "", password: ""})
@@ -14,15 +15,13 @@ function Login() {
       redirect: false
     })
 
-    console.log(res)
-
     if (res!.error) {
       const invalidLoginEl = document.getElementsByClassName("invalidLogin")[0];
       (invalidLoginEl as HTMLElement).style.display = "block"
       console.log("Credenziali errate")
     }
 
-    else Router.replace("/prenota")
+    else window.location.replace("/prenota")
   }
 
   return (

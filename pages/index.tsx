@@ -24,8 +24,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const users = await prisma.user.findMany()
 
-  console.log(users)
-
   await prisma.seat.createMany( 
     {
       data: [

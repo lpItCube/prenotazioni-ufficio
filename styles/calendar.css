@@ -127,15 +127,29 @@ header .icons span:last-child{
   background: #fff;
 }
 
-.content-test-info{
+.content-test-info {
   margin-bottom: -9px;
   max-width: 500px;
   text-align: center;
 }
 
-.calendar-info{
+.calendar-info {
   font-size: 18px;
   color: #2d2d3b;
+}
+
+.fromToSelect {
+  margin: 5px;
+}
+
+.fromToSelect label {
+  margin-left: 5px;
+}
+
+.fromToSelect select {
+  background-color: white;
+  color: black;
+  border-radius: 8px;
 }
 
 .separatorCalendar{

@@ -152,8 +152,7 @@ function Calendar({setFromTo, setReserveData}: any) {
       <div>
         {/* Seleziona orario: 
         <input type="number" min="0" max="8" placeholder="0" onChange={(e) => {handleChangeHour(e)}}></input> */}
-
-        <form>
+        <form className="fromToSelect">
           <label htmlFor="from">From: </label>
             <select name="from" id="from" onChange={(e) => {handleChangeHour(e)}}>
               <option value="00">00:00</option>
@@ -165,7 +164,7 @@ function Calendar({setFromTo, setReserveData}: any) {
               <option value="06">06:00</option>
               <option value="07">07:00</option>
               <option value="08">08:00</option>
-              <option value="09">09:00</option>
+              <option value="09" selected>09:00</option>
               <option value="10">10:00</option>
               <option value="11">11:00</option>
               <option value="12">12:00</option>
@@ -203,7 +202,7 @@ function Calendar({setFromTo, setReserveData}: any) {
               <option value="16">16:00</option>
               <option value="17">17:00</option>
               <option value="18">18:00</option>
-              <option value="19">19:00</option>
+              <option value="19" selected>19:00</option>
               <option value="20">20:00</option>
               <option value="21">21:00</option>
               <option value="22">22:00</option>

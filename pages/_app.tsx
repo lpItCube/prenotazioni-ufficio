@@ -7,7 +7,8 @@ import '../styles/calendar.css'
 import '../styles/prenotazioni.css'
 import type { AppProps } from 'next/app'
 import Navbar from '../components/navbar'
-import { SessionProvider } from 'next-auth/react'
+import { getSession, SessionProvider } from 'next-auth/react'
+import { GetServerSideProps } from 'next'
 
 export default function App({ Component, pageProps }: AppProps) {
   console.log(Component.name)

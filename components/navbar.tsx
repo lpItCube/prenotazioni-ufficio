@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 function Navbar() {
 
@@ -32,7 +32,8 @@ function Navbar() {
           <CustomLink href="/profilo"> <img style={{height:  20, marginRight: 10}} src="../user.png" /> <span>Profilo</span></CustomLink>
         </ul>
         <p></p>
-          <div className="test-log-out"> <span>LogOut </span> <img style={{height:  20}} src="../logout.png" /> </div>
+        {/* <CustomLink href="/logout"> <img style={{height:  20}} src="../logout.png" /> <span>LogOut </span> </CustomLink> */}
+        <div className="test-log-out" onClick={() => { signOut({ callbackUrl: '/login' }) }}>  <img style={{height:  20}} src="../logout.png" /> <span>LogOut </span> </div>
       </div>
 
       <a href="#" className="toggle-button">

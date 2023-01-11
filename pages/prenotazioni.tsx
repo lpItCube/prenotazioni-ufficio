@@ -9,7 +9,6 @@ function Prenotazioni() {
   const [reserves, setReserves] = useState([])
 
   useEffect(() => {
-    console.log(session.data)
     async function getReserves() {
       const data = await (await axios.get(`/api/userReserves/${session.data?.user?.name}`)).data
       setReserves(data)
