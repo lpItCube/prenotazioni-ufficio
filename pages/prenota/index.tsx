@@ -1,29 +1,88 @@
-import { useSession } from "next-auth/react"
+import axios from "axios"
+import { GetServerSideProps } from "next"
+import { getSession, useSession } from "next-auth/react"
 import Router from "next/router"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Calendar from "../../components/calendar"
+import FirstOffice from "../../components/first-office"
+import prisma from "../../lib/prisma"
 
-function Prenota() {
+type DateRange = {
+  from: string | null,
+  to: string | null
+}
+
+function createNewDate(hour: string) {
+  const currYear = new Date().getFullYear()
+  const currMonth = ("0" + (new Date().getMonth() + 1)).slice(-2)
+  const day = ("0" + new Date().getDate()).slice(-2)
+  const textDate = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
+  return textDate
+}
+
+function Prenota({ initialData }: any) {
+  console.log(initialData)
   const { status, data } = useSession()
+  const [ date, setDate ] = useState("2022-12-15")
+  const [ reserveData, setReserveData ] = useState(initialData)
+  const [ fromTo, setFromTo ] = useState<DateRange>({from: null, to: null}) 
 
   const session = useSession()
-  console.log(session)
+
+  useEffect(() => {
+    const fromDate = createNewDate("08")
+    const toDate = createNewDate("18")
+    setFromTo({ from: fromDate, to: toDate })
+  }, [])
+
+  useEffect(() => {
+    console.log("rerender")
+  }, [reserveData])
 
   useEffect(() => {
     //if (status === "unauthenticated" ) Router.replace("/login")
     const event = new Event("visibilitychange");
     document.dispatchEvent(event);
-
-    console.log(status)
   }, [status])
+
+  useEffect(() => {
+    console.log("rerender from date")
+  }, [fromTo])
   
   if(status === "authenticated")
     return (
-      <Calendar />
+      <div className="resAndCalContainer">
+        <Calendar setFromTo={setFromTo} setReserveData={setReserveData} />
+        <FirstOffice reserveData={reserveData} setReserveData={setReserveData} fromTo={fromTo} />
+      </div>
     )
   else return <div>Loading</div>
-
-  return <Calendar />
 }
 
 export default Prenota
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession({ req: context.req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+  const fromDate = createNewDate("08")
+  const toDate = createNewDate("18")
+  const initialData = await prisma.reserve.findMany({
+    include: {
+      seat: true,
+      user: true
+    }
+  })
+  const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))  
+
+  return {
+    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), session }
+  }
+}

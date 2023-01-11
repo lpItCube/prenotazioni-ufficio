@@ -1,37 +1,53 @@
 import axios from "axios"
-import Link from "next/link"
 import Router from "next/router"
-import { useEffect } from "react"
+import { useEffect, useImperativeHandle } from "react"
 
-function Modal({seatId, reserveData, date}: any) { 
+const NONE_VAL = "none"
+const ADD = "ADD"
+const DELETE = "DELETE"
+
+function Modal({seatName, action, username, reserveData, setReserveData, fromTo}: any) { 
 
   useEffect(() => {
     var modal = document.getElementById("myModal") as HTMLElement
     var span = document.getElementsByClassName("close")[0] as HTMLElement
 
     span.onclick = function() {
-      modal.style.display = "none"
+      modal.style.display = NONE_VAL
     }
 
     window.onclick = function(event) {
       if (event.target == modal) {
-        modal.style.display = "none"
+        modal.style.display = NONE_VAL
       }
     }
   }, [])
 
-  async function reserveSeat() {
+  async function handleSeat() {
 
-    await axios.get(`/api/seats/${seatId}`).then((seat: any) => {
-      const seatIdentifier = seat.data.id
-      
-      axios.post("/api/addReserve", {
-        seatId: seatIdentifier,
-        userId: "28d9660b-7073-44fa-9602-873f03a73704",
-        reservedDays: [date]
+    var modal = document.getElementById("myModal") as HTMLElement
+    modal.style.display = NONE_VAL
+
+    const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
+    const userId = await (await axios.get(`/api/users/${username}`)).data.id
+
+    console.log("FROM: " + fromTo.from)
+    console.log("TO: " + fromTo.to)
+
+    if (action === ADD) {
+      await axios.post("/api/addReserve", {
+        seatId: seatId,
+        userId: userId,
+        reservedDays: [],
+        from: new Date(fromTo.from),
+        to: new Date(fromTo.to)
       })
-    })
-    Router.push("/prenota")
+    } else if (action === DELETE) {
+      const reserveToDelete = reserveData.find((reserve: any) => reserve.seat.name === seatName)
+      await axios.delete("/api/reserve/" + reserveToDelete.id)
+    }
+    const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+    setReserveData(reloadData)
   }
 
   return(
@@ -39,8 +55,12 @@ function Modal({seatId, reserveData, date}: any) {
     <div className="modal-content">
       <span className="close">&times;</span>
       <div className="modal-body">
-        <p>Vuoi procedere con la prenotazione del posto <b>{seatId}</b>?</p>
-        <button className="modal-button" onClick={() => reserveSeat()} >Conferma</button>
+        <p>{action === ADD ? 
+            "Vuoi procedere con la prenotazione del posto " + seatName + "?" : 
+            "Vuoi annullare la prenotazione del posto " + seatName + "?"
+          }</p>
+        {username === "admin" && <input></input>}
+        <button className="modal-button" onClick={() => handleSeat()} >Conferma</button>
       </div>
     </div>
   </div>

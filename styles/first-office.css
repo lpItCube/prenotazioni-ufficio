@@ -1,5 +1,7 @@
 .office-container {
   margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .office-margin {
@@ -12,12 +14,25 @@
 }
 
 .r-border {
-  border: rgb(170, 158, 158) solid 2px;
+  border: #433e3e solid 2px;
+}
+
+.r-border-no-bottom {
+  border-bottom: none !important;
+}
+
+.r-border-no-left {
+  border-left: none !important;
+}
+
+.r-border-no-right {
+  border-right: none !important;
 }
 
 .boss-room {
   width: 30%;
   height: 34%;
+  border-radius: 10px 0px 0px 0px;
 }
 
 .hr-room {
@@ -28,23 +43,25 @@
 .toilette {
   width: 30%;
   height: 22%;
+  border-radius: 0px 10px 10px 0px;
 }
 
 .it-room {
-  display: flex;
   width: 65%;
   height: 33%;
+  border-radius: 0px 0px 0px 10px;
 }
 
 .cafe {
   width: 20%;
   height: 20%;
+  border-radius: 10px;
 }
 
 .meeting-room {
-  display: flex;
   width: 50%;
   height: 33%;
+  border-radius: 0px 10px 0px 0px;
 }
 
 .hall {
@@ -55,15 +72,16 @@
 .sgabu {
   width: 20%;
   height: 33%;
+  border-radius: 0px 10px 10px 0px;
 }
 
 .desk {
   display: flex;
-  margin: auto;
+  margin: 10px auto;
   border-radius: 10px;
   width: 70%;
   height: 70%;
-  background-color: #d4d4d4;
+  background-color: #ffffff;
   flex-wrap: wrap;
 }
 
@@ -98,7 +116,7 @@
   height: 70%;
   border: white solid 2px;
   border-radius: 20%;
-  background-color: rgb(88, 169, 88);
+  background-color: gray;
 }
 
 .it-desk-first-row {
@@ -118,7 +136,7 @@
   height: 48%;
   border: white solid 2px;
   border-radius: 20%;
-  background-color: rgb(88, 169, 88);
+  background-color: gray;
   margin-left: 7%;
   margin-right: 7%;
 }
@@ -127,19 +145,127 @@
   background-color: rgb(231, 88, 88);
 }
 
-.seat:hover {
+.seat.busy.your {
+  background-color: rgb(194, 194, 30)
+}
+
+.seat.available {
+  background-color: rgb(88, 169, 88);
+}
+
+.seat.available:hover {
   background-color: grey;
   cursor: pointer;
 }
 
-.seat.busy:hover {
-  background-color: rgb(231, 88, 88); ;
-  cursor: auto;
+.btn-wholeroom.available {
+  background-color: rgb(88, 169, 88);
 }
 
-@media (max-width:400px){
-  .office-margin {
-    height: 250px;
-    width: 300px;
+.text-name-room {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: rgba(52, 62, 78, 0.81);
+  margin: 3px;
+  color: white;
+  border-radius: 3px;
+}
+
+.prenotazione-all {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-wholeroom {
+  background-color: rgb(231, 88, 88);
+  padding: 2px 8px;
+  margin: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.btn-wholeroom.your {
+  background-color: rgb(194, 194, 30);
+}
+
+.btn-wholeroom:hover {
+  color: black;
+  background: #fff;
+}
+
+
+.office-container-mobile{
+  display: none;
+}
+
+.separator {
+  height: 30px;
+  width: 100%;
+}
+
+.border-detail {
+  border: #000 solid 2px;
+  width: 100%;
+  height: 225px;
+}
+
+.contentLegend{
+  margin-top: 20px;
+  display: flex;
+}
+
+.contentLegend-single{
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.contentLegend-single div {
+  height: 25px;
+  width: 25px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.contentLegend-single p {
+  color: #343e4e;
+}
+
+.single-red{
+  background: rgb(231, 88, 88);
+}
+
+.single-yellow{
+  background: rgb(194, 194, 30);
+}
+
+.single-green{
+  background: rgb(88, 169, 88);
+}
+
+.single-grey{
+  background: grey;
+}
+
+@media only screen and (max-width: 600px) {
+  .office-container {
+    display: none;
+  }
+
+  .office-container-mobile{
+    display: block;
+  }
+
+  .meet-seat {
+    height: 35px;
+    width: 35px;
+  }
+
+  .it-seat {
+    height: 35px;
+    width: 35px;
+    margin: 0 auto;
   }
 }
