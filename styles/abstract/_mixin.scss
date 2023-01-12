@@ -1,0 +1,157 @@
+@use "sass:math";
+// Rem output with px fallback
+@mixin pxToRem($fontSize) {
+	font-size: math.div($fontSize,$fs) * 1rem;
+}
+
+@mixin lhRem($fontSize) {
+	line-height: math.div($fontSize,$fs) * 1rem;
+}
+
+// Transform
+@mixin transform($x, $y, $rot) {
+    transform: translate($x, $y) rotate($rot);
+    -webkit-transform: translate($x, $y) rotate($rot);
+    -moz-transform: translate($x, $y) rotate($rot);
+    -ms-transform: translate($x, $y) rotate($rot);
+}
+
+// BorderRadius
+@mixin borderRadius($radius) {
+    border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -ms-border-radius: $radius;
+}
+
+// Opacity
+@mixin opacity($opacity, $events) {
+    opacity: $opacity;
+    -webkit-opacity: $opacity;
+    -moz-opacity: $opacity;
+    -ms-opacity: $opacity;
+    pointer-events: $events;
+}
+
+// Ombra
+@mixin shadow($ombra, $coloreOmbra) {
+    box-shadow: $ombra $coloreOmbra;
+    -webkit-box-shadow: $ombra $coloreOmbra;
+    -moz-box-shadow: $ombra $coloreOmbra;
+    -ms-box-shadow: $ombra $coloreOmbra;
+}
+
+// Scala Zero
+@mixin scale($scale) {
+    transform: scale($scale);
+    -webkit-transform: scale($scale);
+    -moz-transform: scale($scale);
+    -ms-transform: scale($scale);
+}
+
+//animazioni
+@mixin animate($timeEase) {
+    transition: $timeEase;
+    -webkit-transition: $timeEase;
+    -moz-transition: $timeEase;
+    -ms-transition: $timeEase;
+}
+
+// Delay
+@mixin delay($delay) {
+    transition-delay: $delay;
+    -webkit-transition-delay: $delay;
+    -moz-transition-delay: $delay;
+    -ms-transition-delay: $delay;
+}
+
+// Child colonne
+@mixin childColPaddx($parentCol, $childCol, $paddingLeft, $paddingRight) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    width: $xPercent;
+    padding-left:$paddingLeft;
+    padding-right: $paddingRight;
+}
+
+@mixin childCol($parentCol, $childCol) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    width: $xPercent;
+}
+
+@mixin childColCalc($parentCol, $childCol,$operator, $calc) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    width:calc(#{$xPercent} #{$operator} #{$calc});
+}
+
+// Child padding left
+@mixin childPaddLeft($parentCol, $childCol) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    padding-left: $xPercent;
+}
+
+// Child padding right
+@mixin childPaddRight($parentCol, $childCol) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    padding-right: $xPercent;
+}
+
+// Child padding right
+@mixin childPaddTop($parentCol, $childCol) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    padding-top: $xPercent;
+}
+
+@mixin childPaddBottom($parentCol, $childCol) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    padding-bottom: $xPercent;
+}
+
+
+
+// Child padding right
+@mixin childPaddRightCalc($parentCol, $childCol, $operator, $calc) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    padding-right: calc(#{$xPercent} #{$operator} #{$calc});
+}
+
+
+// Child margin left
+@mixin childMargLeft($parentCol, $childCol, $spacing) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    margin-left: calc(#{$xPercent} + #{$spacing});
+}
+
+// Child margin right
+@mixin childMargRight($parentCol, $childCol, $spacing) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    margin-right: calc(#{$xPercent} + #{$spacing});
+}
+
+
+// Child left
+@mixin childLeft($parentCol, $childCol) {
+    $proporzioneEstremi: ($childCol * 100);
+    $proporzioneX: math.div($proporzioneEstremi,$parentCol);
+    $xPercent: $proporzioneX * 1%;
+    margin-left: calc(#{$xPercent});
+}

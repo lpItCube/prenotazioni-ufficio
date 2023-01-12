@@ -1,0 +1,37 @@
+h1,
+.txt-h1 {
+    @include pxToRem(48);
+}
+
+h2,
+.txt-h2 {
+    @include pxToRem(40);
+}
+
+h3,
+.txt-h3 {
+    @include pxToRem(32);
+}
+
+h4,
+.txt-h4 {
+    @include pxToRem(24);
+}
+
+h5,
+.txt-h5 {
+    @include pxToRem(21);
+}
+
+h6,
+.txt-h6 {
+    @include pxToRem(18);
+}
+
+p,
+.txt-p {
+    @include pxToRem(16);
+    &.min {
+        @include pxToRem(14);
+    }
+}

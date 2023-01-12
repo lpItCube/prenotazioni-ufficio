@@ -1,0 +1,141 @@
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: $dark500;
+}
+
+.loginModal {
+  width: $col12;
+  margin: auto;
+  max-width: 600px;
+  padding:0 16px;
+  @media screen and (min-width:$sm) {
+    @include childCol($col12, $col6);
+  }
+  @media screen and (min-width:$md) {
+    @include childCol($col12, $col4);
+  }
+}
+
+input[type=text],
+input[type=password] {
+  width: 100%;
+  margin: 5px;
+  padding: 12px 20px;
+  border: 1px solid rgb(85, 85, 85);
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+::placeholder {
+  color: rgb(169, 169, 169);
+  opacity: 1;
+}
+
+.form {
+  &__input {
+    &--wrapper {
+      margin-bottom: 24px;
+    }
+  }
+}
+
+.content-input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: $dark700;
+  border-radius: 8px;
+  margin-bottom: 8px;
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+
+  .icon {
+    &--light {
+      fill: $light500;
+    }
+  }
+
+  input {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    max-width: calc(100% - 48px);
+    padding: 0 16px 0 0;
+    color: $light500;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+
+
+
+.login-btn {
+  margin: 5px;
+  text-align: left;
+  padding: 12px 20px;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-btn img {
+  height: 20px;
+}
+
+.login-btn:hover {
+  background: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.invalidLogin {
+  margin-bottom: 16px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+
+  &__paragraph {
+    width: 100%;
+    color: white;
+    text-align: center;
+    padding: 13px;
+    border-radius: 10px;
+  }
+
+  &__title {
+    @extend .invalidLogin__paragraph;
+    border-radius: 3px 3px 0px 0px;
+    background-color: $warning500;
+  }
+
+  &__text {
+    @extend .invalidLogin__paragraph;
+    background-color: $warning700;
+    border-radius: 0px 0px 3px 3px;
+  }
+}
+
+
+.contentlogo {
+  margin-bottom: 24px;
+}
+
+.logo {
+  margin: auto;
+  display: table;
+}

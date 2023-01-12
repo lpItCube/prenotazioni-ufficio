@@ -1,0 +1,22 @@
+.cta {
+    padding: 12px 16px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 16px;
+    border-style: none;
+    display: flex;
+    &--primary {
+        background-color: $green500;
+        color:white;
+        &:hover {
+            background-color: $green700;
+        }
+    }
+    &__icon {
+        justify-content: space-between;
+        align-items: center;
+        &--right {
+            @extend .cta__icon;
+        }
+    }
+}

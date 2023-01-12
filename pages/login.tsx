@@ -3,11 +3,21 @@ import { getSession, signIn } from "next-auth/react"
 import Router from "next/router"
 import { url } from "inspector"
 
+// Icons
+import { CiLock } from "react-icons/ci";
+
+// Components
+import ErrorAlert from '../components/login/ErrorAlert'
+import LoginForm from "../components/login/LoginForm";
+
 function Login() {
-  const [userInfo, setUserInfo] = useState({ email: "", password: ""})
+  const [userInfo, setUserInfo] = useState({ email: "", password: "" })
+  const [loginError, setLoginError] = useState(false)
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
+
+    setLoginError(false)
 
     const res = await signIn("credentials", {
       email: userInfo.email,
@@ -16,56 +26,59 @@ function Login() {
     })
 
     if (res!.error) {
-      const invalidLoginEl = document.getElementsByClassName("invalidLogin")[0];
-      (invalidLoginEl as HTMLElement).style.display = "block"
+      setLoginError(true)
       console.log("Credenziali errate")
     }
 
     else window.location.replace("/prenota")
   }
 
+  console.log(loginError)
+
   return (
     <div className="loginContainer">
       <div className="loginModal">
 
         <div className="contentlogo">
-          <div className="logo">
-            <div>
-              <img src="logo.png"></img>
-            </div>
-          </div>
+          <img className="logo" src="logo.png" />
         </div>
-
-        <div className="invalidLogin">
-          <p>Crendeziali non valide</p>
-          <p>Inserisci username e password corretti</p>
-        </div>
-        <form onSubmit={handleSubmit}>
+        {loginError && 
+          <ErrorAlert
+            title={'Credenziali non valide'}
+            text={'Inserisci username e password corretti'}
+          />
+        }
+        <LoginForm
+          handleSubmit={handleSubmit}
+          setUserInfo={setUserInfo}
+          userInfo={userInfo}
+        />
+        {/* <form onSubmit={handleSubmit}>
           <div className="content-input">
             <img src="user.gif" />
             <input
-                type="text"
-                placeholder="Username or Email"
-                name="uname"
-                onChange={({ target }) => {
-                  setUserInfo({ ...userInfo, email: target.value })
-                }}
-                required
+              type="text"
+              placeholder="Username or Email"
+              name="uname"
+              onChange={({ target }) => {
+                setUserInfo({ ...userInfo, email: target.value })
+              }}
+              required
             />
           </div>
           <div className="content-input">
             <img src="lock.png" />
             <input
-                type="password"
-                placeholder="Password"
-                name="psw"
-                onChange={({ target }) => {
-                  setUserInfo({ ...userInfo, password: target.value })
-                }}
-                required />
+              type="password"
+              placeholder="Password"
+              name="psw"
+              onChange={({ target }) => {
+                setUserInfo({ ...userInfo, password: target.value })
+              }}
+              required />
           </div>
           <button className="login-btn" type="submit" > <span> Login </span>  <img src="enter.png" /> </button>
-        </form>
+        </form> */}
       </div>
     </div>
   )
