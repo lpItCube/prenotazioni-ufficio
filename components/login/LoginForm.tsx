@@ -1,7 +1,10 @@
 // Components
 import Input from "./Input"
-import { CiLock, CiUser, CiLogin } from "react-icons/ci";
+import { CiLogin } from "react-icons/ci";
+import { IoLockClosedOutline } from 'react-icons/io5'
+import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import Button from "../Ui/Button";
+import { Colors } from "../Ui/Colors";
 
 type LoginProps = {
     handleSubmit:any,
@@ -27,7 +30,7 @@ function LoginForm({
         <form onSubmit={handleSubmit}>
             <div className="form__input--wrapper">
                 <Input
-                    icon={<CiLock size={24} className='icon--light'/>}
+                    icon={<AiOutlineLock size={24} color={Colors.light700}/>}
                     handleInfo={handleEmail}
                     type='text'
                     placeholder='Username or Email'
@@ -35,7 +38,7 @@ function LoginForm({
                     required={true}
                 />
                 <Input
-                    icon={<CiUser size={24} className='icon--light'/>}
+                    icon={<AiOutlineUser size={24} color={Colors.light700}/>}
                     handleInfo={handlePassword}
                     type='password'
                     placeholder='Password'
@@ -49,10 +52,6 @@ function LoginForm({
                 icon={<CiLogin size={24}/>}
                 text='Login'
             />
-            {/* <button className="login-btn" type="submit" > 
-            <span> Login </span>  
-            <img src="enter.png" /> 
-            </button> */}
         </form>
     )
 }

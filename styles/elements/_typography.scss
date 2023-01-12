@@ -1,4 +1,13 @@
 h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 400
+}
+
+h1,
 .txt-h1 {
     @include pxToRem(48);
 }
@@ -34,4 +43,26 @@ p,
     &.min {
         @include pxToRem(14);
     }
+    &.extra-min {
+        @include pxToRem(10)
+    }
+}
+
+
+@for $i from 0 through 4 {
+    .ls-#{$i} {
+       letter-spacing: #{$i}px!important;
+    }
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.semiBold {
+    font-weight: 500;
+}
+
+.bold {
+    font-weight: 600;
 }

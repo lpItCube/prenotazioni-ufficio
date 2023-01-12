@@ -25,6 +25,13 @@
       margin-left: auto;
     }
   }
+  .content-logo {
+    margin-bottom: 32px;
+    .logo {
+      margin: auto;
+      display: table;
+    }
+  }
 }
 
 
@@ -55,12 +62,6 @@
     align-items: center;
     justify-content: center;
     display: flex;
-  }
-
-  .icon {
-    &--light {
-      fill: $light500;
-    }
   }
 
   input {
@@ -129,12 +130,3 @@
   }
 }
 
-
-.contentlogo {
-  margin-bottom: 32px;
-}
-
-.logo {
-  margin: auto;
-  display: table;
-}

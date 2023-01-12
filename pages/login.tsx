@@ -9,6 +9,7 @@ import { CiLock } from "react-icons/ci";
 // Components
 import ErrorAlert from '../components/login/ErrorAlert'
 import LoginForm from "../components/login/LoginForm";
+import Logo from "../components/Ui/Logo";
 
 function Login() {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" })
@@ -38,10 +39,7 @@ function Login() {
   return (
     <div className="loginContainer">
       <div className="loginModal">
-
-        <div className="contentlogo">
-          <img className="logo" src="logo.png" />
-        </div>
+        <Logo/>
         {loginError && 
           <ErrorAlert
             title={'Credenziali non valide'}
