@@ -22,7 +22,9 @@ function Button({
             {text}
         </p>
         {icon && 
-            icon
+            <div className="icon__inner--container">
+                {icon}
+            </div>
         }
     </button>
   )

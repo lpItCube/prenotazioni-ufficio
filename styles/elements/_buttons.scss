@@ -1,8 +1,8 @@
 .cta {
     padding: 12px 16px;
-    width: 100%;
+    width: auto;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 24px;
     border-style: none;
     display: flex;
     &--primary {
@@ -15,8 +15,24 @@
     &__icon {
         justify-content: space-between;
         align-items: center;
+        .icon {
+            &__inner {
+                &--container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center
+                }
+            }
+        }
         &--right {
             @extend .cta__icon;
+            .icon {
+                &__inner {
+                    &--container {
+                        margin-left: 16px;
+                    }
+                }
+            }
         }
     }
 }

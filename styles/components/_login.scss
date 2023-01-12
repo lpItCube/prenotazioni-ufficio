@@ -9,28 +9,27 @@
 .loginModal {
   width: $col12;
   margin: auto;
-  max-width: 600px;
+  max-width: 420px;
   padding:0 16px;
   @media screen and (min-width:$sm) {
     @include childCol($col12, $col6);
   }
-  @media screen and (min-width:$md) {
+  @media screen and (min-width:$xl) {
     @include childCol($col12, $col4);
+    max-width: 600px;
+  }
+  .cta {
+    width: 100%;
+    @media screen and (min-width:$md) {
+      width: auto;
+      margin-left: auto;
+    }
   }
 }
 
-input[type=text],
-input[type=password] {
-  width: 100%;
-  margin: 5px;
-  padding: 12px 20px;
-  border: 1px solid rgb(85, 85, 85);
-  border-radius: 3px;
-  box-sizing: border-box;
-}
 
 ::placeholder {
-  color: rgb(169, 169, 169);
+  color: $light700;
   opacity: 1;
 }
 
@@ -132,7 +131,7 @@ input[type=password] {
 
 
 .contentlogo {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .logo {
