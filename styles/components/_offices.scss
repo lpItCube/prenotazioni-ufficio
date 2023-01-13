@@ -1,0 +1,226 @@
+.room {
+    &__wrapper {
+        @include childCol($col12,$col10);
+        margin:auto;
+    }
+    &__container {
+        position: relative;
+        @include childCol($col10,$col7);
+        margin-left: auto;
+    }
+    &__body {
+        margin-top: 48px;
+        position: relative;
+    }
+}
+
+
+.room-header {
+    &__container {
+        border-bottom: solid 1px $dark500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding:8px 0;
+    }
+}
+
+.isometric {
+
+    &__meeting-room {
+        svg {
+            width: $col12;
+        }
+    }
+
+    &__desk {
+        position: absolute;
+        left: 27%;
+        top: 49%;
+        width: 40%;
+        z-index: 10;
+        pointer-events: none;
+
+    }
+
+    &__chair {
+        position:absolute;
+        height: auto;
+        width: 12%;
+        &#meet-1 {
+            left:23%;
+            top:54%;
+            z-index: 8;
+        }
+        &#meet-2 {
+            left: 34%;
+            top: 47%;
+            z-index: 4;
+        }
+        &#meet-3 {
+            left: 44%;
+            top: 41%;
+            z-index: 0;
+        }
+        &#meet-5 {
+            left: 61%;
+            top: 41%;
+        }
+        &#meet-4 {
+            left: 22%;
+            top: 69%;
+            z-index: 11;
+        }
+        &#meet-6 {
+            left: 40%;
+            top: 67%;
+            z-index: 20;
+        }
+        &#meet-7 {
+            left: 50%;
+            top: 61%;
+            z-index: 18;
+        }
+        &#meet-8 {
+            left: 60%;
+            top: 55%;
+            z-index: 12;
+        }
+
+        .st368 {
+            fill:$statusNotAvailable
+        }
+        .st369 {
+            fill: $notAvailableBorder;
+        }
+
+        &.available {
+            .st368 {
+                fill:$statusAvailable
+            }
+            .st369 {
+                fill: $availableBorder;
+            }
+        }
+
+        &.busy {
+            .st368 {
+                fill:$statusBuisy;
+            }
+            .st369 {
+                fill: $buisyBorder;
+            }
+            &.your {
+                .st368 {
+                    fill:$statusYours
+                }
+                .st369 {
+                    fill: $yoursBorder;
+                }
+            }
+        }
+
+        &.available,
+        &.your {
+            cursor: pointer;
+            &:hover {
+                .st368 {
+                    fill:$chairBase
+                }
+            }
+        }
+        
+    }
+}
+
+.info-table {
+    &__button {
+        width: 32px;
+        height: 32px;
+        background-color: $green500;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        cursor: pointer;
+        top:0;
+        left: 0;
+        z-index: 1;
+        @include animate(0.4s ease-in-out);
+        &:hover {
+            background-color: $green700;
+        }
+    }
+    &__icon {
+        position: relative;
+        width: 32px;
+        height: 32px;
+        span {
+            width: 1px;
+            height: 16px;
+            display: table;
+            background-color: white;
+            position: absolute;
+            left: 50%;
+            top:50%;
+            &:nth-child(1) {
+                @include transform(-50% , -50%, -90deg)
+            }
+            &:nth-child(2) {
+                @include transform(-50% , -50%, 0)
+            }
+        }
+    }
+    &__body {
+        position: relative;
+        background-color: $green300;
+        padding:16px 24px 16px;
+        border-radius: 12px;
+        top:4px;
+        opacity: 0;
+        pointer-events: none;
+        @include animate(0.4s ease-in-out);
+    }
+    &__list {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+    }
+    &__item {
+        display: flex;
+        justify-content: space-between;
+        border-top: solid 1px $green700;
+        padding: 5px 0;
+    }
+    &__heading {
+
+    }
+    &__title {
+        flex:1;
+        padding-right:8px
+    }
+    &__data {
+        flex:0
+    }
+    &__container {
+        position: absolute;
+        left: 0;
+        @include childCol($col10,$col3);
+        z-index: 50;
+        &.is-open {
+            .info-table {
+                &__button {
+                    @include transform(0, 0, -45deg);
+                    left: calc(100% - 16px);
+                    top: 16px;
+                }
+                &__body {
+                    top:0px;
+                    opacity: 1;
+                    pointer-events: all;
+                }
+            }
+        }
+    }
+}

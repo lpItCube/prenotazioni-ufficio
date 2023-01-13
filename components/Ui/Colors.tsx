@@ -11,5 +11,6 @@ export const Colors = {
     light700:'#a09396',
     warning500:'#d31010',
     warning300:'#ff553c',
-    warning700:'#990000'
+    warning700:'#990000',
+    white:'#ffffff'
 }

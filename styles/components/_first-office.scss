@@ -112,11 +112,11 @@
   }
   
   .meet-seat {
-    width: 13%;
-    height: 70%;
-    border: white solid 2px;
-    border-radius: 20%;
-    background-color: gray;
+    // width: 13%;
+    // height: 70%;
+    // border: white solid 2px;
+    // border-radius: 20%;
+    // background-color: gray;
   }
   
   .it-desk-first-row {
@@ -141,22 +141,22 @@
     margin-right: 7%;
   }
   
-  .seat.busy {
-    background-color: rgb(231, 88, 88);
-  }
+  // .seat.busy {
+  //   background-color: rgb(231, 88, 88);
+  // }
   
-  .seat.busy.your {
-    background-color: rgb(194, 194, 30)
-  }
+  // .seat.busy.your {
+  //   background-color: rgb(194, 194, 30)
+  // }
   
-  .seat.available {
-    background-color: rgb(88, 169, 88);
-  }
+  // .seat.available {
+  //   background-color: rgb(88, 169, 88);
+  // }
   
-  .seat.available:hover {
-    background-color: grey;
-    cursor: pointer;
-  }
+  // .seat.available:hover {
+  //   background-color: grey;
+  //   cursor: pointer;
+  // }
   
   .btn-wholeroom.available {
     background-color: rgb(88, 169, 88);
@@ -196,9 +196,9 @@
   }
   
   
-  .office-container-mobile{
-    display: none;
-  }
+  // .office-container-mobile{
+  //   display: none;
+  // }
   
   .separator {
     height: 30px;
@@ -250,9 +250,9 @@
   }
   
   @media only screen and (max-width: 600px) {
-    .office-container {
-      display: none;
-    }
+    // .office-container {
+    //   display: none;
+    // }
   
     .office-container-mobile{
       display: block;
