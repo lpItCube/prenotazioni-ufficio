@@ -9,13 +9,14 @@ import { TbDoorExit } from "react-icons/tb"
 import { Colors } from "../Ui/Colors";
 import Logout from "./Logout";
 
-type NavigationProps = {
-    navbarOpen: Boolean
-}
+// Redux
+import { useSelector } from 'react-redux'
+import { getNavbarStatus } from '../../features/navigationSlice'
 
-function Navigation({
-    navbarOpen
-}: NavigationProps) {
+
+function Navigation() {
+
+    const navbarStatus = useSelector(getNavbarStatus)
 
     const path = useRouter().pathname
 
@@ -24,32 +25,32 @@ function Navigation({
     }
 
     return (
-        <nav className={`navigation__container${navbarOpen ? ' active' : ''}`}>
+        <nav className={`navigation__container${navbarStatus ? ' active' : ''}`}>
             <div className="navigation__wrapper">
                 <p className="navigation__label extra-min uppercase ls-1">
                     Menu:
                 </p>
                 <ul>
-                    <CustomLink 
+                    <CustomLink
                         href="/prenota"
                         icon={
-                            <IoCalendarOutline 
+                            <IoCalendarOutline
                                 size={18}
                                 color={path === '/prenota' ? Colors.dark700 : Colors.light500}
                             />}
                         text="Prenota"
                         isActive={path === '/prenota'}
-                    /> 
-                    <CustomLink 
+                    />
+                    <CustomLink
                         href="/profilo"
                         icon={
-                            <IoSettingsOutline 
-                                size={18} 
+                            <IoSettingsOutline
+                                size={18}
                                 color={path === '/profilo' ? Colors.dark700 : Colors.light500}
                             />}
                         text="Profilo"
                         isActive={path === '/profilo'}
-                    /> 
+                    />
                 </ul>
             </div>
             <Logout
