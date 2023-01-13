@@ -14,7 +14,7 @@ function User({
             </div>
             <div className="user__name">
                 <p className="user__label extra-min uppercase ls-1">
-                    You're logged as:
+                    You are logged as:
                 </p>
                 <h2 
                     className="txt-h6"

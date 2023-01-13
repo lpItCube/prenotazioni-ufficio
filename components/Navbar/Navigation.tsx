@@ -3,7 +3,6 @@ import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 // Components
-import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5"
 import { TbDoorExit } from "react-icons/tb"
 import { Colors } from "../Ui/Colors";
@@ -16,7 +15,7 @@ import { getNavbarStatus } from '../../features/navigationSlice'
 
 function Navigation() {
 
-    const navbarStatus = useSelector(getNavbarStatus)
+    const navbarStatus:boolean = useSelector(getNavbarStatus)
 
     const path = useRouter().pathname
 

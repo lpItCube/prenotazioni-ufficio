@@ -1,0 +1,65 @@
+.main-header {
+    background-color: $dark700;
+    padding:13px 16px;
+    top:0;
+    position: relative;
+    @include animate(0.5s ease-in-out);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @media screen and (min-width:$md) {
+        top:-100%
+    }
+    &__primary {
+        display: flex;
+        align-items: center;
+        .content-logo {
+            margin-left: 16px;
+            .logo {
+                width: 100px;
+            }
+        }
+    }
+}
+
+.menu-button {
+    width: 40px;
+    height: 40px;
+    display: table;
+    background-color: $dark500;
+    border-radius: 24px;
+    position: relative;
+    span {
+        width: 24px;
+        height: 1px;
+        background-color: white;
+        display: table;
+        position: absolute;
+        top:50%;
+        left:50%;
+        @include animate(0.2s ease-in-out);
+        &:nth-child(1) {
+            @include transform(-50%, calc(-50% - 6px), 0);
+        }
+        &:nth-child(2) {
+            @include transform(-50%, -50%, 0);
+        }
+        &:nth-child(3) {
+            @include transform(-50%, calc(-50% + 6px), 0);
+        }
+    }
+    &.active {
+        span {
+            width:20px;
+            &:nth-child(1) {
+                @include transform(-50%,-50%, 45deg);
+            }
+            &:nth-child(2) {
+                width: 0;
+            }
+            &:nth-child(3) {
+                @include transform(-50%, calc(50% - 1px), -45deg);
+            }
+        }
+    }
+}

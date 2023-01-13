@@ -51,10 +51,11 @@ function Prenota({ initialData }: any) {
   
   if(status === "authenticated")
     return (
-      <div className="resAndCalContainer">
+      <>
         <Calendar setFromTo={setFromTo} setReserveData={setReserveData} />
         <FirstOffice reserveData={reserveData} setReserveData={setReserveData} fromTo={fromTo} />
-      </div>
+      </>
+
     )
   else return <div>Loading</div>
 }

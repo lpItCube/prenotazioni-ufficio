@@ -7,8 +7,8 @@ import { url } from "inspector"
 import { CiLock } from "react-icons/ci";
 
 // Components
-import ErrorAlert from '../components/login/ErrorAlert'
-import LoginForm from "../components/login/LoginForm";
+import ErrorAlert from '../components/Login/ErrorAlert'
+import LoginForm from "../components/Login/LoginForm";
 import Logo from "../components/Ui/Logo";
 
 function Login() {

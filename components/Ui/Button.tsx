@@ -1,4 +1,5 @@
 type ButtonProps = {
+    onClick:any,
     className:string,
     type:any,
     icon:any,
@@ -6,6 +7,7 @@ type ButtonProps = {
 }
 
 function Button({
+    onClick,
     className,
     type,
     icon,
@@ -15,14 +17,17 @@ function Button({
     <button 
         className={className} 
         type={type}
+        onClick={onClick}
     >
-        <p
-            className="min"
-        >
-            {text}
-        </p>
+        {text && 
+            <p
+                className="min"
+            >
+                {text}
+            </p>
+        }
         {icon && 
-            <div className="icon__inner--container">
+            <div className={`icon__inner--container${text ? ' marginate' : ''}`}>
                 {icon}
             </div>
         }

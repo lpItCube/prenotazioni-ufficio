@@ -86,24 +86,6 @@ a {
 }
 
 
-.toggle-button {
-  position: absolute;
-  top: .75rem;
-  right: .5rem;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 21px;
-}
-
-.toggle-button .bar {
-  height: 3px;
-  width: 100%;
-  background-color: white;
-  border-radius: 10px;
-}
-
 .confirm-btn {
   background-color: #4CAF50;
   color: white;
@@ -124,6 +106,8 @@ a {
 .resAndCalContainer {
   // display: flex;
   width: calc(100% - 240px);
+  left:240px;
+  position: relative;
 }
 
 

@@ -29,7 +29,9 @@
             .icon {
                 &__inner {
                     &--container {
-                        margin-left: 16px;
+                        &.marginate {
+                            margin-left: 16px;
+                        }
                     }
                 }
             }

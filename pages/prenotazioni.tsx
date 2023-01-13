@@ -30,9 +30,11 @@ function Prenotazioni() {
           </tr>
         </thead>
         <tbody>
-          {reserves.map((r: any) => {
+          {reserves.map((r: any, index:any) => {
             return (
-              <tr>
+              <tr
+                key={index}
+              >
                 <td>{r.from}</td>
                 <td>{r.to}</td>
                 <td>{r.seat.name}</td>
