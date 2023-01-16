@@ -5,7 +5,7 @@
     }
     &__container {
         position: relative;
-        @include childCol($col10,$col7);
+        @include childCol($col10,$col6);
         margin-left: auto;
     }
     &__body {
@@ -17,7 +17,7 @@
 
 .room-header {
     &__container {
-        border-bottom: solid 1px $dark500;
+        // border-bottom: solid 1px $dark500;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -35,12 +35,18 @@
 
     &__desk {
         position: absolute;
-        left: 27%;
-        top: 49%;
+        pointer-events: none;
         width: 40%;
         z-index: 10;
-        pointer-events: none;
-
+        &.meeting-desk {
+            left: 27%;
+            top: 49%;
+        }
+        &.it-desk {
+            left: 28%;
+            top:45%;
+            width: 50%;
+        }
     }
 
     &__chair {
@@ -86,7 +92,46 @@
             top: 55%;
             z-index: 12;
         }
-
+        &#it-1 {
+            left: 22%;
+            top: 56%;
+            z-index: 8;
+        }
+        &#it-2 {
+            left:31%;
+            top: 51%;
+            z-index: 7;
+        }
+        &#it-3 {
+            left: 40%;
+            top: 46%;
+            z-index: 6;
+        }
+        &#it-4 {
+            left: 49%;
+            top: 41%;
+            z-index: 5;
+        }
+        &#it-5 {
+            left: 43%;
+            top: 71%;
+            z-index: 18;
+        }
+        &#it-6 {
+            left: 52.5%;
+            top: 65.5%;
+            z-index: 17;
+        }
+        &#it-7 {
+            left: 62%;
+            top: 60%;
+            z-index: 16;
+        }
+        &#it-8 {
+            left: 71%;
+            top: 55%;
+            z-index: 15;
+        }
         .st368 {
             fill:$statusNotAvailable
         }
@@ -174,8 +219,8 @@
     }
     &__body {
         position: relative;
-        background-color: $green300;
-        padding:16px 24px 16px;
+        // padding:16px 24px 16px;
+        padding:0;
         border-radius: 12px;
         top:4px;
         opacity: 0;
@@ -190,18 +235,21 @@
     &__item {
         display: flex;
         justify-content: space-between;
-        border-top: solid 1px $green700;
+        border-top: solid 1px $light500;
         padding: 5px 0;
     }
     &__heading {
-
+        color: $dark300;
+        margin-bottom: 4px;
     }
     &__title {
         flex:1;
-        padding-right:8px
+        padding-right:8px;
+        color: $dark300;
     }
     &__data {
-        flex:0
+        flex:0;
+        color: $dark300;
     }
     &__container {
         position: absolute;

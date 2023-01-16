@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    navbarOpen: false
+    navbarOpen: false,
 }
 
 const navigationSlice = createSlice({

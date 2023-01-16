@@ -18,11 +18,11 @@ function InfoTable({
     availableForYou
 }: InfoTableProps) {
 
-    const [isOpen, setIsOpen] = useState(true)
+    // const [isOpen, setIsOpen] = useState(true)
 
-    const handleOpenInfo = () => {
-        setIsOpen(prev => !prev)
-    }
+    // const handleOpenInfo = () => {
+    //     setIsOpen(prev => !prev)
+    // }
 
     let totalPlaceTitle:string
 
@@ -34,9 +34,9 @@ function InfoTable({
      
     return (
         <div
-            className={`info-table__container${isOpen ? ' is-open' : ''}`}
+            className={`info-table__container is-open`}
         >
-            <div 
+            {/* <div 
                 className='info-table__button'
                 onClick={() => handleOpenInfo()}
             >
@@ -44,7 +44,7 @@ function InfoTable({
                     <span></span>
                     <span></span>
                 </div>
-            </div>
+            </div> */}
             <div className='info-table__body'>
                 <h6
                     className='info-table__heading'

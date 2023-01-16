@@ -26,11 +26,11 @@ function RoomHeader({
         <div
             className="room-header__container"
         >
-            <h4
-                className="room-header__title"
+            <h3
+                className="room-header__title txt-h2"
             >
                 {roomName}
-            </h4>
+            </h3>
             
             {hasBookAll &&
                 // id="meetAll"

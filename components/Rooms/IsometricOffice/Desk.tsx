@@ -1,7 +1,12 @@
+type DeskProps = {
+	className:string
+}
 
-function Desk() {
+function Desk({
+	className
+}: DeskProps ) {
   return (
-	<div className="isometric__desk">
+	<div className={`isometric__desk ${className}`}>
 
 		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
 		viewBox="0 0 153.11 129.16">
