@@ -25,6 +25,8 @@ type Reserve = {
 }
 
 type RoomProps = {
+    id:number,
+    visibleRoom:number,
     username: any,
     isAdmin: boolean,
     reserveData: any,
@@ -37,6 +39,8 @@ type RoomProps = {
 }
 
 function Room({
+    id,
+    visibleRoom,
     username,
     isAdmin,
     reserveData,
@@ -54,6 +58,7 @@ function Room({
 
     let compareType: string
 
+    
     if (roomType === 'meeting') {
         compareType = 'meet'
     } else {
@@ -81,6 +86,16 @@ function Room({
     const [yourBooked, setYourBooked] = useState<number>(0)
     const [availableForYou, setAvailableForYou] = useState<number>(0)
 
+    // Controlla l'animazione
+    let activeClass = 'active-room'
+
+    useEffect(() => {
+        activeClass = 'in-change'
+        setTimeout(() => {
+            activeClass = 'active-room'
+        }, 2000)
+    }, [visibleRoom])
+ 
     // Setta quanti posti sono prenotati per giorno
     useEffect(() => {
         if (wholeRoom && hasBookAll) {
@@ -117,7 +132,10 @@ function Room({
     }, [isYourRoom, busyRes, yourReserves])
 
     return (
-        <>
+        <div 
+            id={`room-${id}`} 
+            className={`room__wrapper ${visibleRoom === id ? activeClass : 'in-change'}`}
+        >
             <RoomHeader
                 roomName={roomName}
                 hasBookAll={hasBookAll}
@@ -181,7 +199,7 @@ function Room({
                     }
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

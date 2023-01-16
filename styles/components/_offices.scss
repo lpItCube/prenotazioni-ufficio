@@ -1,7 +1,29 @@
+.rooms {
+    &__container {
+        position: relative;
+        @include childCol($col12,$col10);
+        margin: auto;
+    }
+}
+
 .room {
     &__wrapper {
-        @include childCol($col12,$col10);
+        width: $col12;
         margin:auto;
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        @include animate(0.4s ease-in-out);
+        &.active-room {
+            position: relative;
+            opacity: 1;
+            // top:0;
+        }
+        &.in-change {
+            opacity: 0;
+            // top: 8px;
+            pointer-events: none;
+        }
     }
     &__container {
         position: relative;
