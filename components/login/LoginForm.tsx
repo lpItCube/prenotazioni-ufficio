@@ -47,6 +47,7 @@ function LoginForm({
                 />
             </div>
             <Button
+                onClick={() => console.log('Login')}
                 className='cta cta--primary cta__icon--right'
                 type='submit'
                 icon={<CiLogin size={24}/>}

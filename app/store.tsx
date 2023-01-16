@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import navigationReducer from '../features/navigationSlice'
+import modalReducer from '../features/modalSlice'
 
 export const store = configureStore({
     reducer: {
         navigation: navigationReducer,
+        modal: modalReducer
     }
 })
 

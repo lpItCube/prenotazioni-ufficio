@@ -1,6 +1,11 @@
 // Components
 import Button from "../Ui/Button";
 
+// Redux
+import { useSelector, useDispatch } from "react-redux"
+import { toggleModal, getModalStatus } from "../../features/modalSlice"
+
+
 type RoomHeaderProps = {
     roomName: string,
     hasBookAll: boolean,
@@ -22,6 +27,9 @@ function RoomHeader({
     ADD,
     DELETE
 }: RoomHeaderProps) {
+
+    const dispatch = useDispatch()
+
     return (
         <div
             className="room-header__container"
@@ -38,17 +46,16 @@ function RoomHeader({
                     type="button"
                     icon=""
                     text={`${isYourRoom ? 'Cancella prenotazione' : 'Prenota stanza'}`}
-                    className={`cta btn-wholeroom ${isYourRoom ? "your" : roomIsBookable && "available"}`}
+                    className={`cta cta--primary ${isYourRoom ? "your" : roomIsBookable && "available"}`}
                     onClick={
                         () => {
                             setSeatName("meet-room");
+                            dispatch(toggleModal(true));
                             if (roomIsBookable) {
                                 setAction(ADD);
-                                (document.getElementById("myModal") as HTMLElement).style.display = "flex"
                             }
                             if (isYourRoom) {
                                 setAction(DELETE);
-                                (document.getElementById("myModal") as HTMLElement).style.display = "flex"
                             }
                         }
                     }

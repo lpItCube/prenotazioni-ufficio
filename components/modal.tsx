@@ -1,32 +1,35 @@
 import axios from "axios"
-import Router from "next/router"
-import { useEffect, useImperativeHandle } from "react"
 
-const NONE_VAL = "none"
+// Redux
+import { useSelector, useDispatch } from 'react-redux'
+import { toggleModal, getModalStatus } from "../features/modalSlice"
+
+// Components
+import Button from "./Ui/Button"
+import { IoClose } from "react-icons/io5";
+import { Colors } from "./Ui/Colors";
+
 const ADD = "ADD"
 const DELETE = "DELETE"
 
-function Modal({seatName, action, username, reserveData, setReserveData, fromTo}: any) { 
+function Modal({
+  seatName,
+  action,
+  username,
+  reserveData,
+  setReserveData,
+  fromTo
+}: any) {
 
-  useEffect(() => {
-    var modal = document.getElementById("myModal") as HTMLElement
-    var span = document.getElementsByClassName("close")[0] as HTMLElement
+  const dispatch = useDispatch()
+  const modalStatus: boolean = useSelector(getModalStatus)
 
-    span.onclick = function() {
-      modal.style.display = NONE_VAL
-    }
-
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = NONE_VAL
-      }
-    }
-  }, [])
+  const handleCloseModal = () => {
+    dispatch(toggleModal(false))
+  }
 
   async function handleSeat() {
 
-    var modal = document.getElementById("myModal") as HTMLElement
-    modal.style.display = NONE_VAL
 
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     const userId = await (await axios.get(`/api/users/${username}`)).data.id
@@ -46,24 +49,48 @@ function Modal({seatName, action, username, reserveData, setReserveData, fromTo}
       const reserveToDelete = reserveData.find((reserve: any) => reserve.seat.name === seatName)
       await axios.delete("/api/reserve/" + reserveToDelete.id)
     }
+
+    handleCloseModal()
     const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
     setReserveData(reloadData)
   }
 
-  return(
-    <div id="myModal" className="modal">
-    <div className="modal-content">
-      <span className="close">&times;</span>
-      <div className="modal-body">
-        <p>{action === ADD ? 
-            "Vuoi procedere con la prenotazione del posto " + seatName + "?" : 
-            "Vuoi annullare la prenotazione del posto " + seatName + "?"
-          }</p>
-        {username === "admin" && <input></input>}
-        <button className="modal-button" onClick={() => handleSeat()} >Conferma</button>
+  return (
+    <div id="myModal" className={`modal${modalStatus ? ' show-modal' : ''}`}>
+      <div onClick={() => handleCloseModal()} className={`modal__obscurer${modalStatus ? ' active' : ''}`}></div>
+      <div className="modal__content">
+        <div className="modal__header">
+          <h5
+            className="semiBold"
+          >
+            {action === ADD ? 'Aggiungi' : 'Annulla'} prenotazione
+          </h5>
+          <div
+            onClick={() => handleCloseModal()}
+            className="modal__close">
+            <IoClose
+              size={32}
+              color={Colors.light700}
+            />
+          </div>
+        </div>
+        <div className="modal__body">
+          <p
+            className="modal__text txt-h6"
+          >{action === ADD 
+              ? "Vuoi procedere con la prenotazione del posto "
+              : "Vuoi annullare la prenotazione del posto " 
+          } <b>{seatName}</b>?</p>
+          <Button
+            onClick={handleSeat}
+            className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--secondary-delete'}`}
+            type='button'
+            icon={false}
+            text={action === ADD ? 'Conferma' : 'Cancella'}
+          />
+        </div>
       </div>
     </div>
-  </div>
   )
 }
 
