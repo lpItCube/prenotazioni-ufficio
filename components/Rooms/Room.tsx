@@ -136,23 +136,25 @@ function Room({
             id={`room-${id}`} 
             className={`room__wrapper ${visibleRoom === id ? activeClass : 'in-change'}`}
         >
-            <RoomHeader
-                roomName={roomName}
-                hasBookAll={hasBookAll}
-                isYourRoom={isYourRoom}
-                roomIsBookable={roomIsBookable}
-                setSeatName={setSeatName}
-                setAction={setAction}
-                ADD={ADD}
-                DELETE={DELETE}
-            />
             <div className="room__body">
-                <InfoTable
-                    totlaPlace={seats[roomType].length}
-                    booked={booked}
-                    yourBooked={yourBooked}
-                    availableForYou={availableForYou}
-                />
+                <div className="room__info">
+                    <RoomHeader
+                        roomName={roomName}
+                        hasBookAll={hasBookAll}
+                        isYourRoom={isYourRoom}
+                        roomIsBookable={roomIsBookable}
+                        setSeatName={setSeatName}
+                        setAction={setAction}
+                        ADD={ADD}
+                        DELETE={DELETE}
+                    />
+                    <InfoTable
+                        totlaPlace={seats[roomType].length}
+                        booked={booked}
+                        yourBooked={yourBooked}
+                        availableForYou={availableForYou}
+                    />
+                </div>
                 <div className="room__container">
                     {seats[roomType].map((seat: any, k: number) => {
                         var busy = busySeats.includes(seat) || (hasBookAll && wholeRoom)

@@ -4,7 +4,32 @@
         @include childCol($col12,$col10);
         margin: auto;
     }
+    &__navigator {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        @include childCol($col12,$col10);
+        margin:auto;
+        margin-bottom: 16px;
+        cursor: pointer;
+        &:hover {
+            .rooms {
+                &__navigator {
+                    &--text {
+                        color: $green500;
+                    }
+                }
+            }
+        }
+        path {
+            stroke: $green500;
+        }
+        &--text {
+            padding-right: 16px;
+        }
+    }
 }
+
 
 .room {
     &__wrapper {
@@ -25,14 +50,19 @@
             pointer-events: none;
         }
     }
+    &__info {
+        @include childCol($col10,$col4);
+        padding-right: 24px;
+    }
     &__container {
         position: relative;
         @include childCol($col10,$col6);
         margin-left: auto;
     }
     &__body {
-        margin-top: 48px;
         position: relative;
+        display: flex;
+        justify-content: space-between;
     }
 }
 
@@ -40,15 +70,18 @@
 .room-header {
     &__container {
         // border-bottom: solid 1px $dark500;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        // display: flex;
+        // justify-content: space-between;
+        // align-items: center;
         padding:8px 0;
         .cta {
             &.your {
                 background-color: $warning500;
             }
         }
+    }
+    &__title {
+        margin-bottom: 16px;
     }
 }
 
@@ -279,10 +312,11 @@
         color: $dark300;
     }
     &__container {
-        position: absolute;
+        position: relative;
         left: 0;
-        @include childCol($col10,$col3);
+        @include childCol($col4, $col3);
         z-index: 50;
+        margin-top: 32px;
         &.is-open {
             .info-table {
                 &__button {

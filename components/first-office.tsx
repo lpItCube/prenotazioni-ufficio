@@ -4,6 +4,8 @@ import Modal from "./modal"
 
 // Components
 import Room from "./Rooms/Room"
+import RoomsNavigator from "./Rooms/RoomsNavigator"
+
 
 type Seats = {
   meeting:any[],
@@ -14,6 +16,7 @@ function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
   const [seatName, setSeatName] = useState("none")
   const [action, setAction] = useState("")
   const [visibleRoom, setVisibleRoom] = useState(0)
+  const [nextRoom, setNextRoom] = useState(1)
 
   const session = useSession()
   let username = null
@@ -27,6 +30,11 @@ function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
       setVisibleRoom(prev => prev+1)
     } else {
       setVisibleRoom(0)
+    }
+    if(nextRoom === 0 || nextRoom !== maxLength) {
+      setNextRoom(prev => prev+1)
+    } else {
+      setNextRoom(0)
     }
   }
 
@@ -62,10 +70,11 @@ function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
     <div>Loading</div> :
     (
       <>
-       <div
-            onClick={() => handleVisibleRoom()}
-          >{setRooms[visibleRoom].roomName}</div>
-          {visibleRoom}
+        
+        <RoomsNavigator
+          nextName={setRooms[nextRoom].roomName}
+          onClick={() => handleVisibleRoom()}
+        />
         <div className="rooms__container">
           {setRooms.map((room:any, index:number) => {
             return (
