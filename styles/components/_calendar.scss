@@ -23,21 +23,21 @@
     background-color: #3b3b4b;
   }
   
-  .wrapper {
-    width: 450px;
-    background: #fff;
-    border-radius: 10px;
+  // .wrapper {
+  //   width: 450px;
+  //   background: #fff;
+  //   border-radius: 10px;
   
-    -webkit-box-shadow: 1px 1px 15px -4px #000000;
-    box-shadow: 1px 1px 15px -4px #000000;
-  }
+  //   -webkit-box-shadow: 1px 1px 15px -4px #000000;
+  //   box-shadow: 1px 1px 15px -4px #000000;
+  // }
   
-  .wrapper header {
-    display: flex;
-    align-items: center;
-    padding: 25px 30px 10px;
-    justify-content: space-between;
-  }
+  // .wrapper header {
+  //   display: flex;
+  //   align-items: center;
+  //   padding: 25px 30px 10px;
+  //   justify-content: space-between;
+  // }
   
   header .current-date {
     font-size: 1.45rem;
@@ -68,31 +68,31 @@
     padding: 20px;
   }
   
-  .calendar ul {
-    display: flex;
-    list-style: none;
-    flex-wrap: wrap;
-    text-align: center;
-  }
+  // .calendar ul {
+  //   display: flex;
+  //   list-style: none;
+  //   flex-wrap: wrap;
+  //   text-align: center;
+  // }
   
-  .calendar .days {
-    margin-bottom: 20px;
-  }
+  // .calendar .days {
+  //   margin-bottom: 20px;
+  // }
   
-  .calendar .weeks li {
-    font-weight: 500;
-  }
+  // .calendar .weeks li {
+  //   font-weight: 500;
+  // }
   
-  .calendar ul li {
-    position: relative;
-    width: calc(100% / 7);
-  }
+  // .calendar ul li {
+  //   position: relative;
+  //   width: calc(100% / 7);
+  // }
   
-  .calendar .days li {
-    z-index: 1;
-    cursor: pointer;
-    margin-top: 30px;
-  }
+  // .calendar .days li {
+  //   z-index: 1;
+  //   cursor: pointer;
+  //   margin-top: 30px;
+  // }
   
   .days li.inactive {
     color: #aaa;
@@ -102,30 +102,30 @@
     color: #fff;
   }
   
-  .calendar .days li::before {
-    position: absolute;
-    content: "";
-    height: 40px;
-    width: 40px;
-    top: 50%;
-    left: 50%;
-    z-index: -1;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-  }
+  // .calendar .days li::before {
+  //   position: absolute;
+  //   content: "";
+  //   height: 40px;
+  //   width: 40px;
+  //   top: 50%;
+  //   left: 50%;
+  //   z-index: -1;
+  //   border-radius: 50%;
+  //   transform: translate(-50%, -50%);
+  // }
   
-  .days li:hover::before {
-    background: #f2f2f2;
-  }
+  // .days li:hover::before {
+  //   background: #f2f2f2;
+  // }
   
-  .days li.active::before {
-    background: #65657e;
-  }
+  // .days li.active::before {
+  //   background: #65657e;
+  // }
   
-  .days li.inactive:hover {
-    cursor: auto;
-    background: #fff;
-  }
+  // .days li.inactive:hover {
+  //   cursor: auto;
+  //   background: #fff;
+  // }
   
   .content-test-info {
     margin-bottom: -9px;

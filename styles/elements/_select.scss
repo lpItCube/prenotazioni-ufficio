@@ -1,0 +1,48 @@
+.select {
+    &__value-container {
+        display: flex;
+        padding:8px 16px;
+        background-color: white;
+        border-radius: 24px;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    &__container {
+        position: relative;
+    }
+    &__options {
+        position: absolute;
+        width: auto;
+        background-color: white;
+        box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
+        margin-top: 12px;
+        padding: 8px 16px 8px;
+        border-radius: 8px;
+        left: 16px;
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        opacity: 0;
+        pointer-events: none;
+        @include animate(0.2s ease-in-out);
+        &.is-open {
+            margin-top: 8px;
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+}
+
+.option {
+    &__wrapper {
+        padding:4px 0 0;
+        cursor: pointer;
+        &.current {
+            color: $green500;
+        }
+        &:hover {
+            color: $green500;
+        }
+    }
+}

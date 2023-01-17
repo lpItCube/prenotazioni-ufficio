@@ -49,7 +49,6 @@ function SeatsElement({
     const dispatch = useDispatch()
     const modalStatus:boolean = useSelector(getModalStatus)
 
-    console.log('MODALSTATUS',modalStatus)
 
     let elClass = `isometric__chair ${roomType}-seat seat ${busy && "busy"} ${isYourSeat && "your"} ${available && "available"}`
     const handleAddSingleSeat = () => {
@@ -65,7 +64,6 @@ function SeatsElement({
     return (
         <div
             id={seat}
-            key={seat}
             className={elClass}
             onClick={
                 () => {

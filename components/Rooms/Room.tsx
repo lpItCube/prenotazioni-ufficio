@@ -162,11 +162,10 @@ function Room({
                         var isYourSeat = roomType === 'meeting' 
                             ? (allSeatsNotAvailable && yourReserves.find((r: any) => r.seat.name === seat)) || wholeRoom?.user.username === username
                             : allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat)
-                        
 
                         return (
-                            <>
                                 <SeatsElement
+                                    key={seat}
                                     seat={seat}
                                     roomType={roomType}
                                     // elClass={elClass}
@@ -185,7 +184,6 @@ function Room({
                                     seatsPrimaryDx={seatsPrimaryDx}
                                     seatsBack={seatsBack}
                                 />
-                            </>
                         )
                     })}
                     <Desk

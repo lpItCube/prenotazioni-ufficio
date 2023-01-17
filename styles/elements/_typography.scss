@@ -48,6 +48,12 @@ p,
     }
 }
 
+.label {
+    @include pxToRem(10);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 
 @for $i from 0 through 4 {
     .ls-#{$i} {

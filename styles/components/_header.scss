@@ -2,7 +2,9 @@
     background-color: $dark700;
     padding:13px 16px;
     top:0;
-    position: relative;
+    left: 0;
+    width: $col12;
+    position: absolute;
     @include animate(0.5s ease-in-out);
     display: flex;
     align-items: center;
