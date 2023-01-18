@@ -1,4 +1,8 @@
 .rooms {
+    &__external {
+        margin-top: 48px;
+        margin-bottom: 48px;
+    }
     &__container {
         position: relative;
         @include childCol($col12,$col10);
@@ -7,7 +11,7 @@
     &__navigator {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: flex-start;
         @include childCol($col12,$col10);
         margin:auto;
         margin-bottom: 16px;
@@ -331,5 +335,23 @@
                 }
             }
         }
+    }
+}
+
+.legenda {
+    &__wrapper {
+        position: absolute;
+        right: 0;
+        z-index: 1;
+    }
+    &__color {
+        width: 8px;
+        height: 8px;
+        border-radius: 16px;
+        margin-right: 8px;
+    }
+    &__element {
+        display: flex;
+        align-items: center;
     }
 }

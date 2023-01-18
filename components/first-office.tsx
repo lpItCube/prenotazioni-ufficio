@@ -4,6 +4,7 @@ import Modal from "./modal"
 
 // Components
 import Room from "./Rooms/Room"
+import Legenda from "./Rooms/Legenda"
 import RoomsNavigator from "./Rooms/RoomsNavigator"
 
 
@@ -69,13 +70,14 @@ function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
   return session.data === undefined ?
     <div>Loading</div> :
     (
-      <>
+      <div className="rooms__external">
         
         <RoomsNavigator
           nextName={setRooms[nextRoom].roomName}
           onClick={() => handleVisibleRoom()}
         />
         <div className="rooms__container">
+          <Legenda/>
           {setRooms.map((room:any, index:number) => {
             return (
               <Room
@@ -103,38 +105,7 @@ function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
           setReserveData={setReserveData} 
           fromTo={fromTo} 
         />
-
-
-        <div className="office-container">
-          
-
-          <div className="contentLegend">
-
-            <div className="contentLegend-single">
-              <div className="single-red"> </div>
-              <p> Occupato </p>
-            </div>
-
-            <div className="contentLegend-single">
-              <div className="single-green"> </div>
-              <p> Disponibile </p>
-            </div>
-
-            <div className="contentLegend-single">
-              <div className="single-yellow"> </div>
-              <p> Il tuo posto  </p>
-            </div>
-
-
-            <div className="contentLegend-single">
-              <div className="single-grey"> </div>
-              <p> Non prenotabile  </p>
-            </div>
-
-          </div>
-        </div>
-
-      </>
+      </div>
     )
 }
 

@@ -12,5 +12,9 @@ export const Colors = {
     warning500:'#d31010',
     warning300:'#ff553c',
     warning700:'#990000',
-    white:'#ffffff'
+    white:'#ffffff',
+    buisy:'#f78989',
+    notAvailable:'#3c3c3c',
+    yourSeat:'#f6ff92',
+    available:'#b9ff92'
 }

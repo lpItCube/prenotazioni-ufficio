@@ -1,3 +1,4 @@
+import { useState } from "react"
 // Components 
 import { IoCalendarOutline } from "react-icons/io5"
 import { Colors } from "../Ui/Colors"
@@ -10,7 +11,7 @@ type DatePickerProps = {
     selectedDate:any,
     setSelectedDate:any,
     handleConfirmDate:any,
-    setOpenCalendar:any
+    setOpenCalendar:any,
 }
 
 function DatePicker({
@@ -20,15 +21,22 @@ function DatePicker({
     selectedDate,
     setSelectedDate,
     handleConfirmDate,
-    setOpenCalendar
+    setOpenCalendar,
 }: DatePickerProps) {
+
+    const allMonths = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu",
+      "Lug", "Ago", "Set", "Ott", "Nov", "Dic"]
+
+
+    const [month] = useState<String[]>(allMonths)
+
     return (
         <div
             onClick={() => handleOpenCalendar()}
             className="datepicker__container"
         >
             <p className="label">
-                Data
+                Data {}
             </p>
             <div className="datepicker__wrapper">
                 <div className="datepicker__date">
@@ -37,7 +45,7 @@ function DatePicker({
                     >{("0" + date.getDate()).slice(-2)}</p>
                     <p
                         className="datepicker__number"
-                    >{("0" + (date.getMonth() + 1)).slice(-2)}</p>
+                    >{month[date.getMonth()]}</p>
                     <p
                         className="datepicker__number"
                     >{date.getFullYear()}</p>
@@ -45,6 +53,8 @@ function DatePicker({
                 <IoCalendarOutline
                     size={18}
                     color={Colors.dark700}
+                    fill={openCalendar ? Colors.green500 : Colors.dark700}
+                    stroke={openCalendar ? Colors.green500 : Colors.dark700}
                 />
             </div>
             <CalendarElement

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 // Components
 import Select from '../Ui/Select'
@@ -16,6 +16,9 @@ function Hourpicker({
 
     const startTime: any[] = []
     const endTime: any[] = []
+
+    const startRef = useRef<any>(null)
+    const endRef = useRef<any>(null)
 
     const createOptions = (start: number, max: number, type: any) => {
         for (let i = start; i < max; i++) {
@@ -45,20 +48,20 @@ function Hourpicker({
 
 
     useEffect(() => {
+        // UseRef per controllare se il click è interno
 
-        const clickOutsideOption = (event: any) => {
-            if (
-                !event.target.classList.contains('select__value-container')
-            ) {
+        const handleClickOutside = (event: any) => {
+            if (startRef.current && !startRef.current.contains(event.target)) {
                 setStartOpen(false)
+            } else if(endRef.current && !endRef.current.contains(event.target)) {
                 setEndOpen(false)
             }
-        }
+        };
+        window.addEventListener('click', handleClickOutside, true);
+        return () => {
+            window.removeEventListener('click', handleClickOutside, true);
+        };
 
-        window.addEventListener('click', clickOutsideOption);
-
-        // Cleanup
-        return () => window.removeEventListener("click", clickOutsideOption);
 
     }, [])
 
@@ -98,41 +101,51 @@ function Hourpicker({
 
     return (
         <>
-            <Select
-                label='From'
-                value={`${String(startHour).padStart(2, '0')}:00`}
-                onClick={() => handleOpenStartOption}
-                openOption={startOpen}
-            >
-                
-                {optionStartHours.map((hour: any) => {
-                    return (
-                        <Option
-                            key={hour.value}
-                            onClick={() => handleStartHour(hour.value)}
-                            label={hour.time}
-                            className={`${String(startHour).padStart(2, '0')}:00` === hour.time ? ' current' : ''}
-                        />
-                    )
-                })}
-            </Select>
-            <Select
-                label='to'
-                value={`${String(endHour).padStart(2, '0')}:00`}
-                onClick={() => handleOpenEndOption}
-                openOption={endOpen}
-            >
-                {optionEndHours.map((hour: any) => {
-                    return (
-                        <Option
-                            key={hour.value}
-                            onClick={() => handleEndHour(hour.value)}
-                            label={hour.time}
-                            className={`${String(endHour).padStart(2, '0')}:00` === hour.time ? ' current' : ''}
-                        />
-                    )
-                })}
-            </Select>
+            <div 
+                ref={startRef}
+                className='select__ref'
+                >
+                <Select
+                    label='From'
+                    value={`${String(startHour).padStart(2, '0')}:00`}
+                    onClick={() => handleOpenStartOption}
+                    openOption={startOpen}
+                >
+                    
+                    {optionStartHours.map((hour: any) => {
+                        return (
+                            <Option
+                                key={hour.value}
+                                onClick={() => handleStartHour(hour.value)}
+                                label={hour.time}
+                                className={`${String(startHour).padStart(2, '0')}:00` === hour.time ? ' current' : ''}
+                            />
+                        )
+                    })}
+                </Select>
+            </div>
+            <div 
+                ref={endRef}
+                className='select__ref'
+                >
+                <Select
+                    label='to'
+                    value={`${String(endHour).padStart(2, '0')}:00`}
+                    onClick={() => handleOpenEndOption}
+                    openOption={endOpen}
+                >
+                    {optionEndHours.map((hour: any) => {
+                        return (
+                            <Option
+                                key={hour.value}
+                                onClick={() => handleEndHour(hour.value)}
+                                label={hour.time}
+                                className={`${String(endHour).padStart(2, '0')}:00` === hour.time ? ' current' : ''}
+                            />
+                        )
+                    })}
+                </Select>
+            </div>
 
         </>
     )

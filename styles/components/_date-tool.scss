@@ -14,9 +14,7 @@
         .datepicker,
         .select {
             &__container {
-                width: $col3;
                 padding: 0 8px;
-
                 .label {
                     margin-left: 16px;
                     margin-bottom: 4px;
@@ -27,7 +25,19 @@
     }
 }
 
+.select {
+    &__container {
+        width: auto;
+    }
+    &__ref {
+        min-width: 90px;
+    }
+}
+
 .datepicker {
+    &__container {
+        width: $col3;
+    }
     &__wrapper {
         display: flex;
         padding: 8px 16px;

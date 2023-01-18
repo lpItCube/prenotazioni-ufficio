@@ -21,7 +21,6 @@ function CalendarBar({
   const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "18" })
   const [selectedDate, setSelectedDate] = useState(new Date())
 
-
   const createNewDate = (selectedDate: Date, hour: string) => {
     const currYear = selectedDate.getFullYear()
     const currMonth = ("0" + (selectedDate.getMonth() + 1)).slice(-2)
@@ -67,7 +66,7 @@ function CalendarBar({
       currYear = date.getFullYear(),
       currMonth = date.getMonth()
 
-    const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+    const months:String[] = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
       "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
 
     const renderCalendar = () => {

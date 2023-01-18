@@ -55,10 +55,6 @@ function Calendar({ setFromTo, setReserveData }: any) {
 
   return (
     <>
-      <Head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-      </Head>
-      {/* <Test/> */}
       <div className="date-tool__container">
         <DatePicker
           date={selectedDate}
@@ -73,15 +69,6 @@ function Calendar({ setFromTo, setReserveData }: any) {
           handleChangeHour={handleChangeHour}
           selectedDate={selectedDate}
         />
-        {/* {openCalendar &&
-
-          <CalendarElement
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            handleConfirmDate={handleConfirmDate}
-            handleOpenCalendar={handleOpenCalendar}
-          />
-        } */}
       </div>
     </>
   )
