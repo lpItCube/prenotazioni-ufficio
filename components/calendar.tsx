@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getIsBookable, getIsYourRoom } from "../features/roomSlice";
 import { toggleModal } from "../features/modalSlice";
+import { getUserRole } from "../features/authSlice";
 
 // Components
 import CalendarElement from "./Calendar/CalendarElement";
@@ -30,6 +31,8 @@ function Calendar({
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "18" })
   const [openCalendar, setOpenCalendar] = useState(false)
+
+  const userRole = useSelector(getUserRole)
 
   const roomIsBookable = useSelector(getIsBookable)
   const isYourRoom = useSelector(getIsYourRoom)
@@ -73,7 +76,7 @@ function Calendar({
     <>
       <div className="date-tool__container">
         <div className="date-tool__book-all">
-          {roomIsBookable &&
+          {roomIsBookable && userRole === 'ADMIN' &&
               // id="meetAll"
               <Button
                   type="button"

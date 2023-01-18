@@ -7,7 +7,6 @@ import Room from "./Rooms/Room"
 import Legenda from "./Rooms/Legenda"
 import RoomsNavigator from "./Rooms/RoomsNavigator"
 
-
 type Seats = {
   meeting:any[],
   it:any[]
@@ -22,8 +21,7 @@ function FirstOffice({
   action,
   setAction,
 }: any) {
-  // const [seatName, setSeatName] = useState("none")
-  // const [action, setAction] = useState("")
+
   const [visibleRoom, setVisibleRoom] = useState(0)
   const [nextRoom, setNextRoom] = useState(1)
 
@@ -52,12 +50,10 @@ function FirstOffice({
     it: ["it-1", "it-2", "it-3", "it-4", "it-5", "it-6", "it-7", "it-8"]
   }
 
-  console.log('WELCOME',session.data!.user)
 
   const setRooms:any = [
     {
       username:username,
-      isAdmin:username === "admin",
       reserveData:reserveData,
       roomType:"meeting",
       roomName:"Sala riunioni",
@@ -67,7 +63,6 @@ function FirstOffice({
     },
     {
       username:username,
-      isAdmin:username === "admin",
       reserveData:reserveData,
       roomType:"it",
       roomName:"Sala IT",

@@ -25,7 +25,7 @@ function createNewDate(hour: string) {
 }
 
 function Prenota({ initialData }: any) {
-  console.log(initialData)
+  console.log('INITIAL DATA',initialData)
   const { status, data } = useSession()
   const [ date, setDate ] = useState("2022-12-15")
   const [ reserveData, setReserveData ] = useState(initialData)

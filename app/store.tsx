@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import navigationReducer from '../features/navigationSlice'
 import modalReducer from '../features/modalSlice'
 import roomReducer from '../features/roomSlice'
+import authReducer from '../features/authSlice'
 
 export const store = configureStore({
     reducer: {
         navigation: navigationReducer,
         modal: modalReducer,
-        room: roomReducer
+        room: roomReducer,
+        auth: authReducer
     }
 })
 

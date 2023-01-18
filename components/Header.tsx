@@ -1,4 +1,5 @@
 import { signOut } from 'next-auth/react'
+import { useEffect } from 'react'
 
 // Components
 import Logo from './Ui/Logo'
@@ -6,14 +7,25 @@ import { TbDoorExit } from "react-icons/tb"
 import { Colors } from './Ui/Colors'
 import Button from './Ui/Button'
 
+// Hooks
+import { useAuthHook } from '../hooks/useAuthHook'
+
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleNavbar, getNavbarStatus } from '../features/navigationSlice'
 
-function Header() {
+type HeaderProps = {
+    setAppIsLoading:any
+}
+
+function Header({
+    setAppIsLoading
+}: HeaderProps ) {
 
     const dispatch = useDispatch()
-    const navbarStatus:boolean = useSelector(getNavbarStatus)
+    const navbarStatus: boolean = useSelector(getNavbarStatus)
+
+    const { roleLoading } = useAuthHook()
 
     const handleOpenNavbar = () => {
         dispatch(toggleNavbar(!navbarStatus))
@@ -23,7 +35,10 @@ function Header() {
         signOut({ callbackUrl: '/login' })
     }
 
-    
+    useEffect(() => {
+        setAppIsLoading(roleLoading)
+    }, [roleLoading])
+
     return (
         <header
             className='main-header'
@@ -38,14 +53,14 @@ function Header() {
                     <span></span>
                     <span></span>
                 </a>
-                <Logo/>
+                <Logo />
             </div>
             <div className='main-header__logout'>
                 <Button
                     onClick={() => handleLogout()}
                     className='cta cta--primary cta__icon--right'
                     type='submit'
-                    icon={<TbDoorExit size={20}/>}
+                    icon={<TbDoorExit size={20} />}
                     text=''
                 />
             </div>
