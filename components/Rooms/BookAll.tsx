@@ -11,12 +11,14 @@ import { getUserRole } from "../../features/authSlice";
 
 type BookAllProps = {
     setSeatName:any,
-    setAction:any
+    setAction:any,
+    containerClass:string
 }
 
 function BookAll({
     setSeatName,
-    setAction
+    setAction,
+    containerClass
 }: BookAllProps) {
 
     const dispatch = useDispatch()
@@ -42,24 +44,26 @@ function BookAll({
     } else {
 
         return (
-            <Button
-                type="button"
-                icon=""
-                text={`${isYourRoom ? 'Cancella prenotazione' : 'Prenota stanza'}`}
-                className={`cta cta--primary ${isYourRoom ? "your" : "available"}`}
-                onClick={
-                    () => {
-                        setSeatName("meet-room");
-                        dispatch(toggleModal(true));
-                        if (roomIsBookable) {
-                            setAction('ADD');
-                        }
-                        if (isYourRoom) {
-                            setAction('DELETE');
+            <div className={containerClass}>
+                <Button
+                    type="button"
+                    icon=""
+                    text={`${isYourRoom ? 'Cancella prenotazione' : 'Prenota stanza'}`}
+                    className={`cta cta--primary ${isYourRoom ? "your" : "available"}`}
+                    onClick={
+                        () => {
+                            setSeatName("meet-room");
+                            dispatch(toggleModal(true));
+                            if (roomIsBookable) {
+                                setAction('ADD');
+                            }
+                            if (isYourRoom) {
+                                setAction('DELETE');
+                            }
                         }
                     }
-                }
-            />
+                />
+            </div>
         )
     }
 

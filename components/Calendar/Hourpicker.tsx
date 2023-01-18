@@ -87,8 +87,14 @@ function Hourpicker({
         setStartHour(startHour)
         createOptions(startHour + 1, 19, 'end')
         setOptionEndHours(endTime)
+       
+        if(endHour <= startHour) {
+            setEndHour(startHour+1)
+            handleChangeHour(String(startHour).padStart(2, '0'), String(startHour+1).padStart(2, '0'))
+        } else {
+            handleChangeHour(String(startHour).padStart(2, '0'), String(endHour).padStart(2, '0'))
+        }
 
-        handleChangeHour(String(startHour).padStart(2, '0'), String(endHour).padStart(2, '0'))
     }
 
     const handleEndHour = (hourValue: any) => {
@@ -98,6 +104,7 @@ function Hourpicker({
 
         handleChangeHour(String(startHour).padStart(2, '0'), String(endHour).padStart(2, '0'))
     }
+
 
     return (
         <>

@@ -2,9 +2,6 @@ import axios from "axios";
 import Head from "next/head";
 import { useState } from "react";
 
-// Redux
-import { useDispatch } from "react-redux";
-
 // Components
 import HourPicker from "./Calendar/Hourpicker";
 import DatePicker from "./Calendar/DatePicker";
@@ -22,7 +19,6 @@ function Calendar({
   setAction
 }: any) {
 
-  const dispatch = useDispatch()
 
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "18" })
@@ -42,12 +38,16 @@ function Calendar({
 
   async function handleChangeHour(startHour: any, endHour: any) {
 
+    
+
     const fromDate = createNewDate(selectedDate, startHour)
     const toDate = createNewDate(selectedDate, endHour)
     const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
 
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
+
+    console.log('CLICK',fromDate,toDate)
     setReserveData(res)
   }
 
@@ -66,12 +66,11 @@ function Calendar({
   return (
     <>
       <div className="date-tool__container">
-        <div className="date-tool__book-all">
-          <BookAll
-            setSeatName={setSeatName}
-            setAction={setAction}
-          />
-        </div>
+        <BookAll
+          containerClass={'date-tool__book-all'}
+          setSeatName={setSeatName}
+          setAction={setAction}
+        />
         <div className="date-tool__settings">
           <DatePicker
             date={selectedDate}

@@ -14,14 +14,15 @@ export const useAuthHook = () => {
     const [roleLoading, setRoleLoading] = useState<Boolean>(false)
     const [userRole, setUserRole] = useState<String>('')
     const [errorRole, setErrorRole] = useState<String>()
+    const username = session?.data?.user?.name
 
     useEffect(() => {
         const loadUserRole = async () => {
-            const username = session?.data?.user?.name
             setRoleLoading(true)
             try {
                 const user = await axios.get(`/api/users/${username}`)
                 const role = user.data.role
+                console.log('USER DATA',user)
                 setUserRole(role)
                 dispatch(setRole(role))
             } catch (err:any) {
@@ -31,7 +32,7 @@ export const useAuthHook = () => {
         }
 
         loadUserRole()
-    }, [])
+    }, [username])
 
 
     return {

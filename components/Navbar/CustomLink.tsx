@@ -1,3 +1,11 @@
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+
+// Redux
+import { useSelector, useDispatch } from 'react-redux'
+import { toggleNavbar, getNavbarStatus } from '../../features/navigationSlice'
+
+
 import Link from 'next/link'
 
 function CustomLink({ 
@@ -6,6 +14,14 @@ function CustomLink({
     text,
     isActive
 }: any) {
+
+    const dispatch = useDispatch()
+
+    const path = useRouter().pathname
+
+    useEffect(() => {
+        dispatch(toggleNavbar(false))
+    }, [path])
     
     return (
         <li 
