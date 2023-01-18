@@ -52,6 +52,8 @@ function FirstOffice({
     it: ["it-1", "it-2", "it-3", "it-4", "it-5", "it-6", "it-7", "it-8"]
   }
 
+  console.log('WELCOME',session.data!.user)
+
   const setRooms:any = [
     {
       username:username,
