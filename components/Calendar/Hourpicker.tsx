@@ -53,7 +53,8 @@ function Hourpicker({
         const handleClickOutside = (event: any) => {
             if (startRef.current && !startRef.current.contains(event.target)) {
                 setStartOpen(false)
-            } else if(endRef.current && !endRef.current.contains(event.target)) {
+            }
+            if(endRef.current && !endRef.current.contains(event.target)) {
                 setEndOpen(false)
             }
         };
