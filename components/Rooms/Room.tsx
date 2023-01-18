@@ -141,6 +141,41 @@ function Room({
         }
     }, [isYourRoom, busyRes, yourReserves])
 
+    const Fornitures = seats[rooms[id].roomType].map((seat: any, k: number) => {
+        var busy = busySeats.includes(seat) || (rooms[id].hasBookAll && wholeRoom)
+        var available = !(allSeatsNotAvailable || busy) || (isAdmin && !busy)
+        var isYourSeat = rooms[id].roomType.toString() === 'meeting' 
+            ? (allSeatsNotAvailable && yourReserves.find((r: any) => r.seat.name === seat)) || wholeRoom?.user.username === rooms[id].username
+            : allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat)
+
+        return (
+            <>
+                <SeatsElement
+                    key={seat}
+                    seat={seat}
+                    roomType={rooms[id].roomType}
+                    // elClass={elClass}
+                    hasBookAll={rooms[id].hasBookAll}
+                    available={available}
+                    busy={busy}
+                    isYourSeat={isYourSeat}
+                    wholeRoom={wholeRoom}
+                    setSeatName={setSeatName}
+                    setAction={setAction}
+                    ADD={ADD}
+                    DELETE={DELETE}
+                    seatsFront={seatsFront}
+                    seatsPrimarySx={seatsPrimarySx}
+                    seatsPrimaryDx={seatsPrimaryDx}
+                    seatsBack={seatsBack}
+                />
+                <Desk
+                    className={`${rooms[id].roomType}-desk`}
+                />
+            </>
+        )
+    })
+
     return (
         <div 
             id={`room-${id}`} 
@@ -163,50 +198,30 @@ function Room({
                         booked={booked}
                         yourBooked={yourBooked}
                         availableForYou={availableForYou}
+                        className='only-desk'
                     />
                 </div>
                 <div className="room__container">
-                    {seats[rooms[id].roomType].map((seat: any, k: number) => {
-                        var busy = busySeats.includes(seat) || (rooms[id].hasBookAll && wholeRoom)
-                        var available = !(allSeatsNotAvailable || busy) || (isAdmin && !busy)
-                        var isYourSeat = rooms[id].roomType.toString() === 'meeting' 
-                            ? (allSeatsNotAvailable && yourReserves.find((r: any) => r.seat.name === seat)) || wholeRoom?.user.username === rooms[id].username
-                            : allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat)
-
-                        return (
-                                <SeatsElement
-                                    key={seat}
-                                    seat={seat}
-                                    roomType={rooms[id].roomType}
-                                    // elClass={elClass}
-                                    hasBookAll={rooms[id].hasBookAll}
-                                    available={available}
-                                    busy={busy}
-                                    isYourSeat={isYourSeat}
-                                    wholeRoom={wholeRoom}
-                                    setSeatName={setSeatName}
-                                    setAction={setAction}
-                                    ADD={ADD}
-                                    DELETE={DELETE}
-                                    seatsFront={seatsFront}
-                                    seatsPrimarySx={seatsPrimarySx}
-                                    seatsPrimaryDx={seatsPrimaryDx}
-                                    seatsBack={seatsBack}
-                                />
-                        )
-                    })}
-                    <Desk
-                        className={`${rooms[id].roomType}-desk`}
-                    />
                     {rooms[id].roomType.toString() === 'meeting'
                         ? (
-                            <MeetingRoom />
+                            <MeetingRoom>
+                                {Fornitures}
+                            </MeetingRoom>
                         )
                         : (
-                            <ItRoom />
+                            <ItRoom>
+                                {Fornitures}
+                            </ItRoom>
                         )
                     }
                 </div>
+                <InfoTable
+                    totlaPlace={seats[rooms[id].roomType].length}
+                    booked={booked}
+                    yourBooked={yourBooked}
+                    availableForYou={availableForYou}
+                    className='only-smart'
+                />
             </div>
         </div>
     )

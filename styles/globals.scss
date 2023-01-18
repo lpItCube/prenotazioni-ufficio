@@ -40,10 +40,25 @@ a {
   }
 }
 
-.main-container {
-  display: flex;
-  min-height:100vh;
-  height: auto;
+.main {
+  &-container {
+    top: 75px;
+    position:relative;
+    display: flex;
+     min-height:100vh;
+    height: auto;
+    @media screen and (min-width:$md) {
+      top:0;
+    }
+ }
+ &-wrapper {
+  width: $col12;
+  position: relative;
+  @media screen and (min-width:$md) {
+    width: calc(100% - 240px);
+    left:240px;
+  }
+ }
 }
 
 .test-log-out {
@@ -103,12 +118,12 @@ a {
 
 }
 
-.resAndCalContainer {
-  // display: flex;
-  width: calc(100% - 240px);
-  left:240px;
-  position: relative;
-}
+// .resAndCalContainer {
+//   // display: flex;
+//   width: calc(100% - 240px);
+//   left:240px;
+//   position: relative;
+// }
 
 
 

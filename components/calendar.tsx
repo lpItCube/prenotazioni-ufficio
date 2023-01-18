@@ -1,18 +1,14 @@
 import axios from "axios";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import { getIsBookable, getIsYourRoom } from "../features/roomSlice";
-import { toggleModal } from "../features/modalSlice";
-import { getUserRole } from "../features/authSlice";
+import { useDispatch } from "react-redux";
 
 // Components
-import CalendarElement from "./Calendar/CalendarElement";
 import HourPicker from "./Calendar/Hourpicker";
 import DatePicker from "./Calendar/DatePicker";
-import Button from "./Ui/Button";
+import BookAll from "./Rooms/BookAll";
 
 type FromToHour = {
   from: string,
@@ -31,11 +27,6 @@ function Calendar({
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "18" })
   const [openCalendar, setOpenCalendar] = useState(false)
-
-  const userRole = useSelector(getUserRole)
-
-  const roomIsBookable = useSelector(getIsBookable)
-  const isYourRoom = useSelector(getIsYourRoom)
 
   const handleOpenCalendar = () => {
     setOpenCalendar(true)
@@ -76,27 +67,10 @@ function Calendar({
     <>
       <div className="date-tool__container">
         <div className="date-tool__book-all">
-          {roomIsBookable && userRole === 'ADMIN' &&
-              // id="meetAll"
-              <Button
-                  type="button"
-                  icon=""
-                  text={`${isYourRoom ? 'Cancella prenotazione' : 'Prenota stanza'}`}
-                  className={`cta cta--primary ${isYourRoom ? "your" : "available"}`}
-                  onClick={
-                      () => {
-                          setSeatName("meet-room");
-                          dispatch(toggleModal(true));
-                          if (roomIsBookable) {
-                              setAction('ADD');
-                          }
-                          if (isYourRoom) {
-                              setAction('DELETE');
-                          }
-                      }
-                  }
-              />
-          }
+          <BookAll
+            setSeatName={setSeatName}
+            setAction={setAction}
+          />
         </div>
         <div className="date-tool__settings">
           <DatePicker

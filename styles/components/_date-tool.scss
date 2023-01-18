@@ -10,11 +10,13 @@
         position: sticky;
         top: 0;
         z-index: 100;
-
+        flex-direction: column-reverse;
+        @media screen and (min-width:$md) {
+            flex-direction: row;
+        }
         .datepicker,
         .select {
             &__container {
-                padding: 0 8px;
                 .label {
                     margin-left: 16px;
                     margin-bottom: 4px;
@@ -33,27 +35,47 @@
         display: flex;
     }
     &__settings {
-        flex:auto;
-        justify-content: flex-end;
+        flex:1;
+        @media screen and (min-width:$md) {
+            justify-content: flex-end;
+            flex:auto;
+        }
     }
     &__book-all {
         flex:1;
         align-items: flex-end;
+        margin-top: 8px;
+        display: none;
+        @media screen and (min-width:$md) {
+            margin-top: 0;
+            display: flex;
+        }
     }
 }
 
 .select {
     &__container {
         width: auto;
+        padding: 0 8px;
     }
     &__ref {
         min-width: 90px;
+        width: $col12;
+        @media screen and (min-width:$md) {
+            width: auto;
+        }
     }
 }
 
 .datepicker {
     &__container {
-        width: $col5;
+        width: $col12;
+        padding: 0 4px;
+        padding-left: 0;
+        @media screen and (min-width:$md) {
+            width: $col5;
+            padding-left: 8px;
+        }
     }
     &__wrapper {
         display: flex;
@@ -63,7 +85,6 @@
         justify-content: space-between;
         align-items: center;
         cursor: pointer;
-
         &:hover {
             svg {
                 fill: $green500;
@@ -77,6 +98,8 @@
         align-items: center;
         gap: 6px;
         letter-spacing: 0.2px;
+        max-width: calc(100% - 18px);
+        padding-right: 8px;
     }
 
     &__container {

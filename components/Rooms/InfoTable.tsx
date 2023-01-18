@@ -8,14 +8,16 @@ type InfoTableProps = {
     totlaPlace: number,
     booked: number,
     yourBooked: number,
-    availableForYou: number
+    availableForYou: number,
+    className: string
 }
 
 function InfoTable({
     totlaPlace,
     booked,
     yourBooked,
-    availableForYou
+    availableForYou,
+    className
 }: InfoTableProps) {
 
     // const [isOpen, setIsOpen] = useState(true)
@@ -34,7 +36,7 @@ function InfoTable({
      
     return (
         <div
-            className={`info-table__container is-open`}
+            className={`info-table__container is-open ${className}`}
         >
             {/* <div 
                 className='info-table__button'

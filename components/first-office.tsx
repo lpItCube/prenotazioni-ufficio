@@ -6,6 +6,7 @@ import Modal from "./modal"
 import Room from "./Rooms/Room"
 import Legenda from "./Rooms/Legenda"
 import RoomsNavigator from "./Rooms/RoomsNavigator"
+import BookAll from "./Rooms/BookAll"
 
 type Seats = {
   meeting:any[],
@@ -76,7 +77,6 @@ function FirstOffice({
     <div>Loading</div> :
     (
       <div className="rooms__external">
-        
         <RoomsNavigator
           nextName={setRooms[nextRoom].roomName}
           onClick={() => handleVisibleRoom()}
@@ -105,6 +105,12 @@ function FirstOffice({
           setReserveData={setReserveData} 
           fromTo={fromTo} 
         />
+        <div className="rooms__book-all">
+          <BookAll
+            setSeatName={setSeatName}
+            setAction={setAction}
+          />
+        </div>
       </div>
     )
 }

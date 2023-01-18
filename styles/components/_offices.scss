@@ -1,21 +1,49 @@
 .rooms {
     &__external {
-        margin-top: 48px;
-        margin-bottom: 48px;
+        margin-top:32px;
+        margin-bottom:0px;
+        @media screen and (min-width:$md) {
+            padding:0;
+            margin-top: 48px;
+            margin-bottom: 48px;
+        }
+    }
+    &__book-all {
+        display: flex;
+        background-color: $light300;
+        padding: 16px;
+        position: sticky;
+        bottom: 0;
+        z-index: 50;
+        justify-content: flex-end;
+        @media screen and (min-width:$md) {
+            display: none;
+        }
     }
     &__container {
         position: relative;
-        @include childCol($col12,$col10);
+        width: $col12;
         margin: auto;
+        padding:0 16px;
+        margin-bottom: 32px;
+        @media screen and (min-width:$md) {
+            width: calc(100% - 64px);
+            padding:0;
+            margin-bottom: 0;
+        }
     }
     &__navigator {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        @include childCol($col12,$col10);
+        width: $col12;
         margin:auto;
         margin-bottom: 16px;
         cursor: pointer;
+        padding:0 16px;
+        @media screen and (min-width:$md) {
+            padding:0 32px;
+        }
         &:hover {
             .rooms {
                 &__navigator {
@@ -37,12 +65,12 @@
 
 .room {
     &__wrapper {
-        width: $col12;
         margin:auto;
         position: absolute;
         opacity: 0;
         top: 0;
         @include animate(0.4s ease-in-out);
+        // width: $col12;
         &.active-room {
             position: relative;
             opacity: 1;
@@ -52,21 +80,37 @@
             opacity: 0;
             // top: 8px;
             pointer-events: none;
+            width: calc(100% - 32px);
+            left: 16px;
+            @media screen and (min-width:$md) {
+                width: $col12;
+                left: 0;
+            }
         }
     }
     &__info {
-        @include childCol($col10,$col4);
-        padding-right: 24px;
+        width: $col12;
+        @media screen and (min-width:$md) {
+            @include childCol($col10,$col4);
+            padding-right: 24px;
+        }
     }
     &__container {
+        width: $col12;
         position: relative;
-        @include childCol($col10,$col6);
         margin-left: auto;
+        @media screen and (min-width:$md) {
+            @include childCol($col10,$col6);
+        }
     }
     &__body {
         position: relative;
         display: flex;
         justify-content: space-between;
+        flex-direction: column;
+        @media screen and (min-width:$md) {
+            flex-direction: row;
+        }
     }
 }
 
@@ -77,7 +121,9 @@
         // display: flex;
         // justify-content: space-between;
         // align-items: center;
-        padding:8px 0;
+        @media screen and (min-width:$md) {
+            padding:8px 0;
+        }
         // .cta {
         //     &.your {
         //         background-color: $warning500;
@@ -85,13 +131,16 @@
         // }
     }
     &__title {
-        margin-bottom: 16px;
+        @media screen and (min-width:$md) {
+            margin-bottom: 16px;
+        }
     }
 }
 
 .isometric {
 
     &__meeting-room {
+    position:relative;
         svg {
             width: $col12;
         }
@@ -318,9 +367,12 @@
     &__container {
         position: relative;
         left: 0;
-        @include childCol($col4, $col3);
         z-index: 50;
         margin-top: 32px;
+        width: $col12;
+        @media screen and (min-width:$md) {
+            @include childCol($col4, $col3);
+        }
         &.is-open {
             .info-table {
                 &__button {
@@ -335,11 +387,24 @@
                 }
             }
         }
+        &.only-desk {
+            display: none;
+            @media screen and (min-width:$md) {
+                display: block;
+            }
+        }
+        &.only-smart {
+            display: block;
+            @media screen and (min-width:$md) {
+                display: none;
+            }
+        }
     }
 }
 
 .legenda {
     &__wrapper {
+        display: none;
         position: absolute;
         right: 0;
         z-index: 1;

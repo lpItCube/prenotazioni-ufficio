@@ -31,7 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   ? 'Loading ...'
                   : <>
                     <Navbar />
-                    <div className="resAndCalContainer">
+                    <div className="main-wrapper">
                       <Component {...pageProps} />
                     </div>
                   </>
