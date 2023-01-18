@@ -40,7 +40,7 @@ function RoomHeader({
                 {roomName}
             </h3>
             
-            {hasBookAll &&
+            {/* {hasBookAll &&
                 // id="meetAll"
                 <Button
                     type="button"
@@ -60,7 +60,7 @@ function RoomHeader({
                         }
                     }
                 />
-            }
+            } */}
         </div>
     )
 }

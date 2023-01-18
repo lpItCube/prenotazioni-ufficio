@@ -2,21 +2,37 @@ import axios from "axios";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { getIsBookable, getIsYourRoom } from "../features/roomSlice";
+import { toggleModal } from "../features/modalSlice";
+
 // Components
 import CalendarElement from "./Calendar/CalendarElement";
 import HourPicker from "./Calendar/Hourpicker";
 import DatePicker from "./Calendar/DatePicker";
+import Button from "./Ui/Button";
 
 type FromToHour = {
   from: string,
   to: string
 }
 
-function Calendar({ setFromTo, setReserveData }: any) {
+function Calendar({ 
+  setFromTo, 
+  setReserveData,
+  setSeatName,
+  setAction
+}: any) {
+
+  const dispatch = useDispatch()
 
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "18" })
   const [openCalendar, setOpenCalendar] = useState(false)
+
+  const roomIsBookable = useSelector(getIsBookable)
+  const isYourRoom = useSelector(getIsYourRoom)
 
   const handleOpenCalendar = () => {
     setOpenCalendar(true)
@@ -56,19 +72,44 @@ function Calendar({ setFromTo, setReserveData }: any) {
   return (
     <>
       <div className="date-tool__container">
-        <DatePicker
-          date={selectedDate}
-          handleOpenCalendar={handleOpenCalendar}
-          openCalendar={openCalendar}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          handleConfirmDate={handleConfirmDate}
-          setOpenCalendar={setOpenCalendar}
-        />
-        <HourPicker
-          handleChangeHour={handleChangeHour}
-          selectedDate={selectedDate}
-        />
+        <div className="date-tool__book-all">
+          {roomIsBookable &&
+              // id="meetAll"
+              <Button
+                  type="button"
+                  icon=""
+                  text={`${isYourRoom ? 'Cancella prenotazione' : 'Prenota stanza'}`}
+                  className={`cta cta--primary ${isYourRoom ? "your" : "available"}`}
+                  onClick={
+                      () => {
+                          setSeatName("meet-room");
+                          dispatch(toggleModal(true));
+                          if (roomIsBookable) {
+                              setAction('ADD');
+                          }
+                          if (isYourRoom) {
+                              setAction('DELETE');
+                          }
+                      }
+                  }
+              />
+          }
+        </div>
+        <div className="date-tool__settings">
+          <DatePicker
+            date={selectedDate}
+            handleOpenCalendar={handleOpenCalendar}
+            openCalendar={openCalendar}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            handleConfirmDate={handleConfirmDate}
+            setOpenCalendar={setOpenCalendar}
+          />
+          <HourPicker
+            handleChangeHour={handleChangeHour}
+            selectedDate={selectedDate}
+          />
+        </div>
       </div>
     </>
   )

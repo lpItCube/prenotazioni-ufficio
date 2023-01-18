@@ -7,6 +7,10 @@ import Calendar from "../../components/calendar"
 import FirstOffice from "../../components/first-office"
 import prisma from "../../lib/prisma"
 
+// Redux
+import { useSelector } from 'react-redux'
+import { getIsBookable, getIsYourRoom } from "../../features/roomSlice"
+
 type DateRange = {
   from: string | null,
   to: string | null
@@ -26,6 +30,10 @@ function Prenota({ initialData }: any) {
   const [ date, setDate ] = useState("2022-12-15")
   const [ reserveData, setReserveData ] = useState(initialData)
   const [ fromTo, setFromTo ] = useState<DateRange>({from: null, to: null}) 
+
+  const [seatName, setSeatName] = useState("none")
+  console.log('IS YOUR ROOM AND IS BOOKABLE?',useSelector(getIsYourRoom), useSelector(getIsBookable))
+  const [action, setAction] = useState("")
 
   const session = useSession()
 
@@ -52,8 +60,21 @@ function Prenota({ initialData }: any) {
   if(status === "authenticated")
     return (
       <>
-        <Calendar setFromTo={setFromTo} setReserveData={setReserveData} />
-        <FirstOffice reserveData={reserveData} setReserveData={setReserveData} fromTo={fromTo} />
+        <Calendar 
+          setFromTo={setFromTo} 
+          setReserveData={setReserveData} 
+          setSeatName={setSeatName}
+          setAction={setAction}
+        />
+        <FirstOffice 
+          reserveData={reserveData} 
+          setReserveData={setReserveData} 
+          fromTo={fromTo} 
+          seatName={seatName}
+          setSeatName={setSeatName}
+          action={action}
+          setAction={setAction}
+        />
       </>
 
     )

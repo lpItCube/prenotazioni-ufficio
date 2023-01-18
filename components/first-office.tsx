@@ -13,9 +13,17 @@ type Seats = {
   it:any[]
 }
 
-function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
-  const [seatName, setSeatName] = useState("none")
-  const [action, setAction] = useState("")
+function FirstOffice({ 
+  reserveData, 
+  setReserveData, 
+  fromTo,
+  seatName,
+  setSeatName,
+  action,
+  setAction,
+}: any) {
+  // const [seatName, setSeatName] = useState("none")
+  // const [action, setAction] = useState("")
   const [visibleRoom, setVisibleRoom] = useState(0)
   const [nextRoom, setNextRoom] = useState(1)
 
@@ -83,14 +91,9 @@ function FirstOffice({ reserveData, setReserveData, fromTo }: any) {
               <Room
                 key={index}
                 id={index}
+                rooms={setRooms}
                 visibleRoom={visibleRoom}
-                username={room.username}
-                isAdmin={room.isAdmin}
-                reserveData={room.reserveData}
                 seats={allSeats}
-                roomType={room.roomType.toString()}
-                roomName={room.roomName}
-                hasBookAll={room.hasBookAll}
                 setSeatName={room.setSeatName}
                 setAction={room.setAction}
               />
