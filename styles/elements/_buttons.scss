@@ -5,11 +5,22 @@
     border-radius: 24px;
     border-style: none;
     display: flex;
+    align-items: center;
     &--primary {
         background-color: $green500;
         color:white;
         &:hover {
             background-color: $green700;
+        }
+    }
+    &--border-primary {
+        border: solid 1px $green500;
+        color:$green500;
+        background-color: transparent;
+        &:hover {
+            background-color: $green700;
+            border-color: $green700;
+            color:white;
         }
     }
     &--secondary {

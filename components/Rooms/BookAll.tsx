@@ -6,7 +6,7 @@ import Button from "../Ui/Button";
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { getIsBookable, getIsYourRoom } from "../../features/roomSlice";
-import { toggleModal } from "../../features/modalSlice";
+import { toggleModal, setModalType } from "../../features/modalSlice";
 import { getUserRole } from "../../features/authSlice";
 
 type BookAllProps = {
@@ -54,6 +54,8 @@ function BookAll({
                         () => {
                             setSeatName("meet-room");
                             dispatch(toggleModal(true));
+                            dispatch(setModalType('seats-modal'))
+
                             if (roomIsBookable) {
                                 setAction('ADD');
                             }

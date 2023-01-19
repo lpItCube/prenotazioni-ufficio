@@ -11,6 +11,10 @@
     overflow: auto; 
     background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4); 
+    @media screen and (min-width:$md) {
+      left: 240px;
+      width: calc(100% - 240px);
+    }
     &.show-modal {
       display: flex;
     }

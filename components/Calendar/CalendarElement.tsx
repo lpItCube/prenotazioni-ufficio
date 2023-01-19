@@ -106,7 +106,6 @@ function CalendarElement({
         const handleClickOutside = (event: any) => {
             if (ref.current && !ref.current.contains(event.target)) {
                 setOpenCalendar(false)
-                console.log('OUTSIDE TRUE')
             } 
         };
         window.addEventListener('click', handleClickOutside, true);

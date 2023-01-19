@@ -12,6 +12,7 @@ import Desk from './IsometricOffice/Desk'
 import MeetingRoom from './IsometricOffice/MeetingRoom'
 import ItRoom from './IsometricOffice/ItRoom'
 import InfoTable from './InfoTable'
+import Legenda from './Legenda';
 
 type User = {
     id: String,
@@ -200,6 +201,7 @@ function Room({
                         availableForYou={availableForYou}
                         className='only-desk'
                     />
+                    <Legenda/>
                 </div>
                 <div className="room__container">
                     {rooms[id].roomType.toString() === 'meeting'

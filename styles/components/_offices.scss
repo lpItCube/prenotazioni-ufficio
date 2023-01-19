@@ -1,4 +1,8 @@
 .rooms {
+    &__recenter {
+        height: 100%;
+        display: flex;
+    }
     &__external {
         margin-top:32px;
         margin-bottom:0px;
@@ -40,16 +44,19 @@
         width: $col12;
         margin:auto;
         margin-bottom: 16px;
-        cursor: pointer;
         padding:0 16px;
         @media screen and (min-width:$md) {
             padding:0 32px;
         }
-        &:hover {
-            .rooms {
-                &__navigator {
-                    &--text {
-                        color: $green500;
+        &--container {
+            cursor: pointer;
+            display: flex;
+            &:hover {
+                .rooms {
+                    &__navigator {
+                        &--text {
+                            color: $green500;
+                        }
                     }
                 }
             }
@@ -405,13 +412,18 @@
 
 .legenda {
     &__wrapper {
-        display: none;
-        position: absolute;
+        // display: none;
         right: 0;
         z-index: 1;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        @media screen and (min-width:$md) {
+            margin-top: 48px;
+            
+        }
     }
     &__color {
-        width: 8px;
+        width: 16px;
         height: 8px;
         border-radius: 16px;
         margin-right: 8px;
@@ -419,5 +431,27 @@
     &__element {
         display: flex;
         align-items: center;
+        padding: 16px;
+        border-bottom: solid 1px $light500;
+        width: 50%;
+        &:nth-last-child(1),
+        &:nth-last-child(2) {
+            border-bottom: none;
+        }
+    }
+    &__name {
+        color:$dark300
+    }
+    &__button-wrapper {
+        .cta {
+            p {
+                width: calc(100% - 18px);
+                padding-right: 8px;
+            }
+        }
+    }
+    &__modal-container {
+        display: flex;
+        flex-wrap: wrap;
     }
 }

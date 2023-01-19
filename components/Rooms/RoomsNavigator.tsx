@@ -14,12 +14,16 @@ function RoomsNavigator({
   return (
     <div 
         className='rooms__navigator'
-        onClick={() => onClick()}
     >
-        <p className='rooms__navigator--text txt-h5'>
-            {nextName}
-        </p>
-        <GrLinkNext size={32}/>
+        <div 
+            className='rooms__navigator--container'
+            onClick={() => onClick()}
+        >
+            <p className='rooms__navigator--text txt-h5'>
+                {nextName}
+            </p>
+            <GrLinkNext size={32}/>
+        </div>
     </div>
   )
 }

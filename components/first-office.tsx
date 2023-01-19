@@ -4,9 +4,9 @@ import Modal from "./modal"
 
 // Components
 import Room from "./Rooms/Room"
-import Legenda from "./Rooms/Legenda"
 import RoomsNavigator from "./Rooms/RoomsNavigator"
 import BookAll from "./Rooms/BookAll"
+import Legenda from "./Rooms/Legenda"
 
 type Seats = {
   meeting: any[],
@@ -82,7 +82,6 @@ function FirstOffice({
           onClick={() => handleVisibleRoom()}
         />
         <div className="rooms__container">
-          <Legenda />
           {setRooms.map((room: any, index: number) => {
             return (
               <Room

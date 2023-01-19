@@ -6,7 +6,7 @@ import ChairFour from "./IsometricOffice/ChairFour"
 
 // Redux
 import { useSelector, useDispatch } from "react-redux"
-import { toggleModal, getModalStatus } from "../../features/modalSlice"
+import { toggleModal, getModalStatus, setModalType } from "../../features/modalSlice"
 import { getUserRole } from "../../features/authSlice";
 
 type SeatsElementProps = {
@@ -53,11 +53,13 @@ function SeatsElement({
     let elClass = `isometric__chair ${roomType}-seat seat ${busy && "busy"} ${isYourSeat && "your"} ${available && "available"}`
     const handleAddSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
+        dispatch(setModalType('seats-modal'))
         setAction(ADD);
     }
 
     const handleDeleteSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
+        dispatch(setModalType('seats-modal'))
         setAction(DELETE);
     }
 
