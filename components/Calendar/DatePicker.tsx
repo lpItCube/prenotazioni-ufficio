@@ -1,4 +1,6 @@
-import { useState } from "react"
+// Utils
+import { getStringDate } from "../../utils/datePharser"
+
 // Components 
 import { IoCalendarOutline } from "react-icons/io5"
 import { Colors } from "../Ui/Colors"
@@ -24,11 +26,6 @@ function DatePicker({
     setOpenCalendar,
 }: DatePickerProps) {
 
-    const allMonths = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu",
-      "Lug", "Ago", "Set", "Ott", "Nov", "Dic"]
-
-
-    const [month] = useState<String[]>(allMonths)
 
     return (
         <div
@@ -42,13 +39,13 @@ function DatePicker({
                 <div className="datepicker__date">
                     <p
                         className="datepicker__number"
-                    >{("0" + date.getDate()).slice(-2)}</p>
+                    >{getStringDate(date).day}</p>
                     <p
                         className="datepicker__number"
-                    >{month[date.getMonth()]}</p>
+                    >{getStringDate(date).month}</p>
                     <p
                         className="datepicker__number"
-                    >{date.getFullYear()}</p>
+                    >{getStringDate(date).year}</p>
                 </div>
                 <IoCalendarOutline
                     size={18}

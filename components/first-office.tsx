@@ -6,7 +6,7 @@ import Modal from "./modal"
 import Room from "./Rooms/Room"
 import RoomsNavigator from "./Rooms/RoomsNavigator"
 import BookAll from "./Rooms/BookAll"
-import Legenda from "./Rooms/Legenda"
+import Spinner from "./Ui/Spinner"
 
 type Seats = {
   meeting: any[],
@@ -74,7 +74,7 @@ function FirstOffice({
   ]
 
   return session.data === undefined ?
-    <div>Loading</div> :
+    <div><Spinner/></div> :
     (
       <div className="rooms__external">
         <RoomsNavigator

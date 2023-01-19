@@ -1,0 +1,37 @@
+.table {
+    border: solid 1px $light500;
+    border-radius: 24px;
+    &__title {
+        margin-bottom: 32px;
+    }
+    &__header {
+        background-color: $light300;
+        display: flex;
+        border-radius: 24px 24px 0 0;
+        justify-content: space-between;
+        border-bottom: solid 1px $light500;
+        padding:24px 0;
+    }
+    &__single-header {
+        flex:1;
+        font-weight: 600;
+        padding: 0 24px;
+    }
+    &__body {
+        display: flex;
+        flex-direction: column;
+    }
+    &__row {
+        display: flex;
+        border-bottom: solid 1px $light500;
+        &:nth-last-child(1) {
+            border-bottom: none;
+        }
+    }
+    &__col {
+        display: flex;
+        flex:1;
+        padding:24px;
+        border-right: solid 1px $light500;
+    }
+}

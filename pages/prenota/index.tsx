@@ -1,11 +1,12 @@
-import axios from "axios"
 import { GetServerSideProps } from "next"
 import { getSession, useSession } from "next-auth/react"
-import Router from "next/router"
 import { useEffect, useState } from "react"
+import prisma from "../../lib/prisma"
+
+// Components
 import Calendar from "../../components/calendar"
 import FirstOffice from "../../components/first-office"
-import prisma from "../../lib/prisma"
+import Spinner from "../../components/Ui/Spinner"
 
 // Redux
 import { useSelector } from 'react-redux'
@@ -27,7 +28,6 @@ function createNewDate(hour: string) {
 function Prenota({ initialData }: any) {
   console.log('INITIAL DATA',initialData)
   const { status, data } = useSession()
-  const [ date, setDate ] = useState("2022-12-15")
   const [ reserveData, setReserveData ] = useState(initialData)
   const [ fromTo, setFromTo ] = useState<DateRange>({from: null, to: null}) 
 
@@ -78,7 +78,7 @@ function Prenota({ initialData }: any) {
       </>
 
     )
-  else return <div>Loading</div>
+  else return <div><Spinner/></div>
 }
 
 export default Prenota

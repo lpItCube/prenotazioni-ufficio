@@ -2,3 +2,22 @@
     margin: 0;
     padding: 0;
   }
+
+.prenotazioni {
+  &__container {
+      width: $col12;
+      @media screen and (min-width:$md) {
+        padding: 0 32px
+      }
+  }
+}
+
+.prenotazione {
+  &__wrapper {
+  }
+
+  &__from,
+  &__to {
+    display: flex;
+  }
+}
