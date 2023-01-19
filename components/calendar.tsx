@@ -47,7 +47,7 @@ function Calendar({
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
 
-    console.log('CLICK',fromDate,toDate)
+    // console.log('CLICK',fromDate,toDate)
     setReserveData(res)
   }
 

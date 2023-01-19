@@ -1,21 +1,23 @@
 // Components
 import Input from "./Input"
 import { CiLogin } from "react-icons/ci";
-import { IoLockClosedOutline } from 'react-icons/io5'
 import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import Button from "../Ui/Button";
 import { Colors } from "../Ui/Colors";
+import Spinner from "../Ui/Spinner";
 
 type LoginProps = {
     handleSubmit:any,
     setUserInfo:any,
-    userInfo:any
+    userInfo:any,
+    isLoading:boolean
 }
 
 function LoginForm({
     handleSubmit,
     setUserInfo,
-    userInfo
+    userInfo,
+    isLoading
 }: LoginProps ) {
 
     const handleEmail = (target:any) => {
@@ -46,13 +48,17 @@ function LoginForm({
                     required={true}
                 />
             </div>
-            <Button
-                onClick={() => console.log('Login')}
-                className='cta cta--primary cta__icon--right'
-                type='submit'
-                icon={<CiLogin size={24}/>}
-                text='Login'
-            />
+            {isLoading 
+                ? <Spinner/>
+                : <Button
+                    onClick={() => console.log('Login')}
+                    className='cta cta--primary cta__icon--right'
+                    type='submit'
+                    icon={<CiLogin size={24}/>}
+                    text={'Login'}
+                />
+            }
+            
         </form>
     )
 }

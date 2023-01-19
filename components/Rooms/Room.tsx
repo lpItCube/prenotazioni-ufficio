@@ -150,9 +150,8 @@ function Room({
             : allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat)
 
         return (
-            <>
+            <div key={seat}>
                 <SeatsElement
-                    key={seat}
                     seat={seat}
                     roomType={rooms[id].roomType}
                     // elClass={elClass}
@@ -173,7 +172,7 @@ function Room({
                 <Desk
                     className={`${rooms[id].roomType}-desk`}
                 />
-            </>
+            </div>
         )
     })
 

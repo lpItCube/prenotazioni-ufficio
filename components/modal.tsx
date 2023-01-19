@@ -35,8 +35,8 @@ function Modal({
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     const userId = await (await axios.get(`/api/users/${username}`)).data.id
 
-    console.log("FROM: " + fromTo.from)
-    console.log("TO: " + fromTo.to)
+    // console.log("FROM: " + fromTo.from)
+    // console.log("TO: " + fromTo.to)
 
     if (action === ADD) {
       await axios.post("/api/addReserve", {

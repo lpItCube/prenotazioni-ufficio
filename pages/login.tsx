@@ -1,11 +1,5 @@
 import { FormEventHandler, useState } from "react"
-import { getSession, signIn, useSession } from "next-auth/react"
-import Router from "next/router"
-import { url } from "inspector"
-import axios from "axios"
-
-// Icons
-import { CiLock } from "react-icons/ci";
+import { signIn } from "next-auth/react"
 
 // Components
 import ErrorAlert from '../components/Login/ErrorAlert'
@@ -15,12 +9,12 @@ import Logo from "../components/Ui/Logo";
 function Login() {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" })
   const [loginError, setLoginError] = useState(false)
-
-  const session = useSession()
+  const [loadingLogin, setLoadingLogin] = useState(false)
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
+    setLoadingLogin(true)
     setLoginError(false)
 
     const res = await signIn("credentials", {
@@ -32,6 +26,7 @@ function Login() {
     if (res!.error) {
       setLoginError(true)
       console.log("Credenziali errate")
+      setLoadingLogin(false)
     }
 
     else window.location.replace("/prenota")
@@ -53,6 +48,7 @@ function Login() {
           handleSubmit={handleSubmit}
           setUserInfo={setUserInfo}
           userInfo={userInfo}
+          isLoading={loadingLogin}
         />
       </div>
     </div>

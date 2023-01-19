@@ -32,6 +32,11 @@
       display: table;
     }
   }
+  .spinner {
+    &__container {
+      margin: auto;
+    }
+  }
 }
 
 
