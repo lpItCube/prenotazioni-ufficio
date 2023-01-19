@@ -24,6 +24,7 @@ function BookAll({
     const dispatch = useDispatch()
 
     const userRole = useSelector(getUserRole)
+
     const roomIsBookable = useSelector(getIsBookable)
     const isYourRoom = useSelector(getIsYourRoom)
 
@@ -36,7 +37,7 @@ function BookAll({
         } else {
             setButtonIsVisible(false)
         }
-    }, [roomIsBookable])
+    }, [roomIsBookable, userRole])
     
 
     if(!buttonIsVisible) {

@@ -5,108 +5,134 @@ import { useEffect, useState } from "react"
 // Utils
 import { getStringDate, getStringHours } from "../utils/datePharser"
 
+// Redux
+import { useDispatch, useSelector } from "react-redux"
+import { toggleModal, setModalType } from "../features/modalSlice"
+import { getUserName } from "../features/authSlice"
+
 // Components 
 import Spinner from "../components/Ui/Spinner"
+import { Table, TableHeader, TableBody, TableRow, TableCol } from "../components/Ui/Table"
+import Modal from "../components/modal"
+import { RiDeleteBin3Line } from "react-icons/ri";
+import Button from "../components/Ui/Button"
 
 function Prenotazioni() {
+
+  const dispatch = useDispatch()
 
   const session = useSession()
   const [reserves, setReserves] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [handleDelete, setHandleDelete] = useState(false)
+  const [modalData, setModalData] = useState<any>({ seatName: '', action: '', username: '', reserveData: '' })
+  const [filterMode, setFilterMode] = useState('byUser')
+
+  const username = useSelector(getUserName)
+
 
   useEffect(() => {
     const getReserves = async () => {
-      const response = await axios.get(`/api/userReserves/${session.data?.user?.name}`)
-      setReserves(response.data)
+      let sortedResponse
+      if(filterMode === 'byUser') {
+        const response = await axios.get(`/api/userReserves/${session.data?.user?.name}`)
+        sortedResponse = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? 1 : -1)
+      } else if(filterMode === 'today') {
+        const date = new Date().toDateString()
+        const response = await axios.get(`/api/userReserves/${session.data?.user?.name}`)
+        const todayResponse = response.data.filter((res:any) => new Date(res.from).toDateString() === date)
+        console.log('TODAY', todayResponse)
+        sortedResponse = todayResponse.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? 1 : -1)
+      }
+      setReserves(sortedResponse)
     }
     setIsLoading(true)
     if (session.status === "authenticated")
-      
+
       getReserves()
-
+    if (handleDelete) {
+      setHandleDelete(false)
+    }
     setIsLoading(false)
-  }, [session])
+  }, [session, handleDelete, filterMode])
 
-  console.log('RESERVES',reserves)
 
-  if (session.status === "authenticated")
+  // reserves && console.log('TODAY ALL',new Date(reserves[3].from).toDateString() ,'===', new Date().toDateString())
+
+  const handleDeleteRow = (seatName: string, action: string, username: string, reserveData: any) => {
+    setModalData({ seatName: seatName, action: action, username: username, reserveData: reserveData })
+    dispatch(toggleModal(true));
+    dispatch(setModalType('seats-modal'))
+  }
+
+  if (session.status === "authenticated" && !isLoading)
     return (
       <div
         className="prenotazioni__container"
       >
-        <h2
-          className="table__title"
+        <Table
+          title='Le tue prenotazioni'
         >
-          Le tue prenotazioni
-        </h2>
-        <div className="table">
-          <div className="table__header">
-            <h6
-              className="table__single-header"
-            >
-              Data
-            </h6>
-            <h6
-              className="table__single-header"
-            >
-              Orario
-            </h6>
-            <h6
-              className="table__single-header"
-            >
-              Postazione
-            </h6>
+          <div className="prenotazioni__filters">
+            <button
+              onClick={() => setFilterMode('byUser')}
+            >Mie prenotazioni</button>
+            <button
+              onClick={() => setFilterMode('today')}
+            >Today</button>
           </div>
-          <div className="table__body">
-            {reserves.map((r:any, index:number) => {
-              return(
-                <div
-                  key={index}
-                  className='table__row'
-                >
-                  <div className="table__col">
-                    <p>{getStringDate(r.from).day} {getStringDate(r.from).month} {getStringDate(r.from).year}</p>
-                  </div>
-                  <div className="table__col">
-                    
-                    <p>{getStringHours(r.from).hours} - {getStringHours(r.to).hours}</p>
-                  </div>
-                  <div className="table__col">
-                    {r.seat.name}
-                  </div>
-
-                </div>
-              )
-            })}
-          </div>
-        </div>
-        {/* <div>Le tue prenotazioni</div>
-        <table className="table-prenotazioni">
-          <thead>
-            <tr>
-              <th>Da</th>
-              <th>A</th>
-              <th>Postazione</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reserves.map((r: any, index: any) => {
-              console.log('RESERVES',getStringDate(r.to))
+          <TableHeader
+            headerColumns={['Data', 'Orario', 'Postazione', '']}
+          />
+          <TableBody>
+            {reserves.map((r: any, index: number) => {
               return (
-                <tr
+                <TableRow
                   key={index}
                 >
-                  <td>{r.from}</td>
-                  <td>{r.to}</td>
-                  <td>{r.seat.name}</td>
-                </tr>
+                  <TableCol
+                    className=""
+                  >
+                    <p>{getStringDate(r.from).day} {getStringDate(r.from).month} {getStringDate(r.from).year}</p>
+                  </TableCol>
+                  <TableCol
+                     className=""
+                  >
+                    <p>{getStringHours(r.from).hours} - {getStringHours(r.to).hours}</p>
+                  </TableCol>
+                  <TableCol
+                     className=""
+                  >
+                    {r.seat.name}
+                  </TableCol>
+                  <TableCol
+                     className="prenotazioni__cta"
+                  >
+                    <Button
+                      className="cta cta--primary-delete cta__icon"
+                      onClick={() => handleDeleteRow(r.seat.name, 'DELETE', username, r)}
+                      type='button'
+                      icon={<RiDeleteBin3Line size={18} />}
+                      text='Elimina'
+                    />
+                  </TableCol>
+                </TableRow>
               )
             })}
-          </tbody>
-        </table> */}
+          </TableBody>
+        </Table>
+        <Modal
+          seatName={modalData.seatName}
+          action={modalData.action}
+          username={modalData.username}
+          reserveData={modalData.reserveData}
+          setReserveData={null}
+          fromTo={null}
+          setHandleDelete={setHandleDelete}
+        />
       </div>
     )
-  else return <div><Spinner/></div>
+  else return <div><Spinner /></div>
 }
 
 export default Prenotazioni

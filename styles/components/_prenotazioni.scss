@@ -10,6 +10,13 @@
         padding: 0 32px
       }
   }
+  &__cta {
+    &.table__col {
+      padding:0;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 
 .prenotazione {

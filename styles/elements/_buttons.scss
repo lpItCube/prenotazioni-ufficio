@@ -13,6 +13,13 @@
             background-color: $green700;
         }
     }
+    &--primary-delete {
+        background-color: $warning500;
+        color:white;
+        &:hover {
+            background-color: $warning700;
+        }
+    }
     &--border-primary {
         border: solid 1px $green500;
         color:$green500;
@@ -60,6 +67,9 @@
     &__icon {
         justify-content: space-between;
         align-items: center;
+        p {
+            padding-right: 4px;
+        }
         .icon {
             &__inner {
                 &--container {

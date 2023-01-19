@@ -4,7 +4,7 @@ import axios from "axios"
 
 // Redux
 import { useDispatch } from 'react-redux'
-import { setRole } from '../features/authSlice'
+import { setUser } from '../features/authSlice'
 
 export const useAuthHook = () => {
 
@@ -14,17 +14,19 @@ export const useAuthHook = () => {
     const [roleLoading, setRoleLoading] = useState<Boolean>(false)
     const [userRole, setUserRole] = useState<String>('')
     const [errorRole, setErrorRole] = useState<String>()
-    const username = session?.data?.user?.name
+    const sessionUsername = session?.data?.user?.name
 
     useEffect(() => {
         const loadUserRole = async () => {
             setRoleLoading(true)
             try {
-                const user = await axios.get(`/api/users/${username}`)
+                const user = await axios.get(`/api/users/${sessionUsername}`)
                 const role = user.data.role
+                const username = user.data.username
+
                 console.log('USER DATA',user)
                 setUserRole(role)
-                dispatch(setRole(role))
+                dispatch(setUser({role, username}))
             } catch (err:any) {
                 setErrorRole(err)
             }
@@ -32,7 +34,7 @@ export const useAuthHook = () => {
         }
 
         loadUserRole()
-    }, [username])
+    }, [sessionUsername])
 
 
     return {

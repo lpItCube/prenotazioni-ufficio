@@ -19,7 +19,8 @@ function Modal({
   username,
   reserveData,
   setReserveData,
-  fromTo
+  fromTo,
+  setHandleDelete
 }: any) {
 
   const dispatch = useDispatch()
@@ -29,9 +30,11 @@ function Modal({
     dispatch(toggleModal(false))
   }
 
+  console.log('RESERVE FROM MODAL', reserveData)
+
   async function handleSeat() {
 
-
+    
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     const userId = await (await axios.get(`/api/users/${username}`)).data.id
 
@@ -47,13 +50,29 @@ function Modal({
         to: new Date(fromTo.to)
       })
     } else if (action === DELETE) {
-      const reserveToDelete = reserveData.find((reserve: any) => reserve.seat.name === seatName)
-      await axios.delete("/api/reserve/" + reserveToDelete.id)
+
+      let reserveToDelete
+
+      if (reserveData.length > 0) {
+        reserveToDelete = reserveData.find((reserve: any) => reserve.seat.name === seatName)
+      } else {
+        reserveToDelete = reserveData
+      }
+
+      const deleteSeat = await axios.delete("/api/reserve/" + reserveToDelete.id);
+     
     }
 
     handleCloseModal()
-    const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-    setReserveData(reloadData)
+    if(setReserveData && fromTo) {
+      const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+      setReserveData(reloadData)
+    } 
+
+    if(setHandleDelete) {
+      setHandleDelete(true)
+    }
+
   }
 
   return (
