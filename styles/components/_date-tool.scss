@@ -29,6 +29,9 @@
                 background-color: $warning500;
             }
         }
+        &--end {
+            justify-content: flex-end;
+        }
     }
     &__settings,
     &__book-all {

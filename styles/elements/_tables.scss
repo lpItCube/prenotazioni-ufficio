@@ -1,37 +1,67 @@
 .table {
+    min-width: 660px;
     border: solid 1px $light500;
-    border-radius: 24px;
-    &__title {
-        margin-bottom: 32px;
+    border-radius: 16px;
+
+    @media screen and (min-width:$lg) {
+        border-radius: 24px;
     }
+
     &__header {
         background-color: $light300;
         display: flex;
-        border-radius: 24px 24px 0 0;
+        border-radius: 16px 16px 0 0;
         justify-content: space-between;
         border-bottom: solid 1px $light500;
-        padding:24px 0;
+        padding: 16px 0;
+
+        @media screen and (min-width:$lg) {
+            border-radius: 24px 24px 0 0;
+            padding: 24px 0;
+        }
     }
+
     &__single-header {
-        flex:1;
+        width: $col3;
         font-weight: 600;
-        padding: 0 24px;
+        padding: 0 16px;
+        @media screen and (min-width:$lg) {
+            padding: 0 24px;
+        }
+
     }
+
+    &__outer {
+        overflow: auto;
+    }
+
     &__body {
         display: flex;
         flex-direction: column;
     }
+
     &__row {
         display: flex;
         border-bottom: solid 1px $light500;
+
         &:nth-last-child(1) {
             border-bottom: none;
         }
+
+        .table__col {
+            &:nth-last-child(1) {
+                border-right: none;
+            }
+        }
     }
+
     &__col {
         display: flex;
-        flex:1;
-        padding:24px;
+        width: $col3;
+        padding: 16px;
         border-right: solid 1px $light500;
+        @media screen and (min-width:$lg) {
+            padding: 24px;
+        }
     }
 }

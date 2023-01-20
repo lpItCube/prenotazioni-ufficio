@@ -23,10 +23,11 @@ export const useAuthHook = () => {
                 const user = await axios.get(`/api/users/${sessionUsername}`)
                 const role = user.data.role
                 const username = user.data.username
+                const userId = user.data.id
 
                 console.log('USER DATA',user)
                 setUserRole(role)
-                dispatch(setUser({role, username}))
+                dispatch(setUser({role, username, userId}))
             } catch (err:any) {
                 setErrorRole(err)
             }

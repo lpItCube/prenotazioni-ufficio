@@ -1,27 +1,92 @@
 .table-prenotazioni {
-    margin: 0;
-    padding: 0;
-  }
+  margin: 0;
+  padding: 0;
+}
 
 .prenotazioni {
   &__container {
-      width: $col12;
-      @media screen and (min-width:$md) {
-        padding: 0 32px
+    width: $col12;
+    .date-tool {
+      &__container {
+        position: relative;
+        @media screen and (min-width:$md) {
+          position: sticky;
+        }
       }
+    }
+    .select {
+      &__ref {
+        width: $col12;
+        margin-bottom: 8px;
+        @media screen and (min-width:$md) {
+          width: $col4;
+          margin-bottom: 0;
+        }
+      }
+      &__options {
+        width: calc(100% - 32px);
+      }
+    }
+    .hidden-filters {
+      display: none;
+      @media screen and (min-width:$md) {
+        display: flex;
+      }
+    }
   }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  &__filters-cta {
+    &.cta {
+
+      display: flex;
+      @media screen and (min-width:$md) {
+        display: none;
+      }
+    }
+  }
+
+  &__empty {
+    &.table__col {
+      width: $col12;
+      flex-direction: column;
+    }
+  }
+
+  &__spinner {
+    justify-content: center;
+  }
+
+  &__wrapper {
+    padding: 0 16px;
+    margin-top: 32px;
+    @media screen and (min-width:$md) {
+      margin-top: 48px;
+      padding: 0 32px
+    }
+  }
+
   &__cta {
     &.table__col {
-      padding:0;
+      padding: 0;
       align-items: center;
       justify-content: center;
     }
   }
+
+  &__select-wrapper {
+    display: flex;
+  }
 }
 
 .prenotazione {
-  &__wrapper {
-  }
+  &__wrapper {}
 
   &__from,
   &__to {

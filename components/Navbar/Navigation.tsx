@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 
 // Components
 import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5"
+import { BsJournalCheck } from "react-icons/bs";
+
 import { TbDoorExit } from "react-icons/tb"
 import { Colors } from "../Ui/Colors";
 import Logout from "./Logout";
@@ -39,6 +41,16 @@ function Navigation() {
                             />}
                         text="Prenota"
                         isActive={path === '/prenota'}
+                    />
+                    <CustomLink
+                        href="/prenotazioni"
+                        icon={
+                            <BsJournalCheck
+                                size={18}
+                                color={path === '/prenotazioni' ? Colors.dark700 : Colors.light500}
+                            />}
+                        text="Prenotazioni"
+                        isActive={path === '/prenotazioni'}
                     />
                     <CustomLink
                         href="/profilo"

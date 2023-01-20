@@ -1,25 +1,16 @@
 type TableProps = {
-    title: string,
     children: any
 }
 
 export function Table({
-    title,
     children
 }: TableProps) {
     return (
-        <>
-            {title &&
-                <h2
-                    className="table__title"
-                >
-                    {title}
-                </h2>
-            }
+        <div className="table__outer">
             <div className="table">
                 {children}
             </div>
-        </>
+        </div>
     )
 }
 
@@ -30,29 +21,29 @@ type TableBodyProps = {
 
 export function TableBody({
     children
-} : TableBodyProps) {
-  return (
-    <div className="table__body">
-        {children}
-    </div>
-  )
+}: TableBodyProps) {
+    return (
+        <div className="table__body">
+            {children}
+        </div>
+    )
 }
 
 
 type TableColProps = {
-    children:any,
+    children: any,
     className: string
 }
 
 export function TableCol({
     children,
     className
-} : TableColProps) {
-  return (
-    <div className={`table__col ${className}`}>
-        {children}
-    </div>
-  )
+}: TableColProps) {
+    return (
+        <div className={`table__col ${className}`}>
+            {children}
+        </div>
+    )
 }
 
 
@@ -65,7 +56,7 @@ export function TableHeader({
 }: TableHeaderProps) {
     return (
         <div className="table__header">
-            {headerColumns.map((header: String, index:number) => {
+            {headerColumns.map((header: String, index: number) => {
                 return (
                     <h6
                         key={index}
