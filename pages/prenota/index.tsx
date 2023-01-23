@@ -43,7 +43,7 @@ function Prenota({ initialData }: any) {
   const userRole = useSelector(getUserRole)
 
   useEffect(() => {
-    const fromDate = createNewDate("08")
+    const fromDate = createNewDate("09")
     const toDate = createNewDate("18")
     setFromTo({ from: fromDate, to: toDate })
   }, [])

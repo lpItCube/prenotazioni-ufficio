@@ -35,8 +35,7 @@ function Modal({
 
   let otherReserveInPeriod
 
-  if(reserveData) {
-
+  if(reserveData.length > 0) {
     otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole')
   }
   
