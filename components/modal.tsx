@@ -1,3 +1,4 @@
+import { useState } from "react"
 import axios from "axios"
 
 // Redux
@@ -26,15 +27,22 @@ function Modal({
   const dispatch = useDispatch()
   const modalStatus: boolean = useSelector(getModalStatus)
 
+
+
   const handleCloseModal = () => {
     dispatch(toggleModal(false))
   }
 
-  console.log('RESERVE FROM MODAL', reserveData)
+  let otherReserveInPeriod
+
+  if(reserveData) {
+
+    otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole')
+  }
+  
 
   async function handleSeat() {
 
-    
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     const userId = await (await axios.get(`/api/users/${username}`)).data.id
 
@@ -42,6 +50,16 @@ function Modal({
     // console.log("TO: " + fromTo.to)
 
     if (action === ADD) {
+      if (seatName === 'meet-room') {
+        // Quando prenoti tutta la stanza 
+        // Se altri utenti hanno prenotato in quell'orario allora elimina le loro prenotazioni
+        const otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole')
+        if (otherReserveInPeriod) {
+          otherReserveInPeriod.map(async (reserveToDelete: any) => {
+            const deleteSeat = await axios.delete("/api/reserve/" + reserveToDelete.id);
+          })
+        }
+      }
       await axios.post("/api/addReserve", {
         seatId: seatId,
         userId: userId,
@@ -60,16 +78,18 @@ function Modal({
       }
 
       const deleteSeat = await axios.delete("/api/reserve/" + reserveToDelete.id);
-     
+
     }
 
+
+
     handleCloseModal()
-    if(setReserveData && fromTo) {
+    if (setReserveData && fromTo) {
       const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
       setReserveData(reloadData)
-    } 
+    }
 
-    if(setHandleDelete) {
+    if (setHandleDelete) {
       setHandleDelete(true)
     }
 
@@ -86,6 +106,14 @@ function Modal({
         ? "Vuoi procedere con la prenotazione del posto "
         : "Vuoi annullare la prenotazione del posto "
         } <b>{seatName}</b>?</p>
+        {reserveData && seatName === 'meet-room' && otherReserveInPeriod.length > 0 && 
+        <>
+          <br/>
+          <p
+          className="modal__text modal__text--warning txt-h6"
+          >Attenzione! Sono presenti prenotazioni di altri utenti per questi orari, procedendo verranno cancellate.</p>
+        </>
+        }
       <Button
         onClick={handleSeat}
         className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--secondary-delete'}`}

@@ -54,7 +54,10 @@
       }
     }
     &__text {
-        color:$dark300
+        color:$dark300;
+        &--warning {
+          color: $yoursBorder;
+        }
     }
     &__close {
       width: 40px;
