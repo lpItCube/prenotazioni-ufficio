@@ -36,7 +36,7 @@ function Modal({
   let otherReserveInPeriod
 
   if(reserveData.length > 0) {
-    otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole')
+    otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole' && reserve.seat.type !== 'it')
   }
   
 
@@ -52,7 +52,7 @@ function Modal({
       if (seatName === 'meet-room') {
         // Quando prenoti tutta la stanza 
         // Se altri utenti hanno prenotato in quell'orario allora elimina le loro prenotazioni
-        const otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole')
+        const otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole' && reserve.seat.type !== 'it')
         if (otherReserveInPeriod) {
           otherReserveInPeriod.map(async (reserveToDelete: any) => {
             const deleteSeat = await axios.delete("/api/reserve/" + reserveToDelete.id);
