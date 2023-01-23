@@ -25,14 +25,14 @@ function Login() {
 
     if (res!.error) {
       setLoginError(true)
-      console.log("Credenziali errate")
+      // console.log("Credenziali errate")
       setLoadingLogin(false)
     }
 
     else window.location.replace("/prenota")
   }
 
-  console.log(loginError)
+  // console.log(loginError)
 
   return (
     <div className="loginContainer">

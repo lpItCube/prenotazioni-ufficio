@@ -60,7 +60,7 @@ function SeatsElement({
     const handleDeleteSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
         dispatch(setModalType('seats-modal'))
-        console.log('OK OPEN')
+        // console.log('OK OPEN')
         setAction(DELETE);
     }
 

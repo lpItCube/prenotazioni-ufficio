@@ -105,7 +105,7 @@ function Modal({
         ? "Vuoi procedere con la prenotazione del posto "
         : "Vuoi annullare la prenotazione del posto "
         } <b>{seatName}</b>?</p>
-        {reserveData && seatName === 'meet-room' && otherReserveInPeriod.length > 0 && 
+        {reserveData && seatName === 'meet-room' && otherReserveInPeriod && otherReserveInPeriod.length > 0 && 
         <>
           <br/>
           <p

@@ -81,7 +81,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   })
 
-  console.log(query)
+  // console.log(query)
 
   return {
     props: { }

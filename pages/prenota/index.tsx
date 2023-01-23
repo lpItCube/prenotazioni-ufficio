@@ -38,7 +38,7 @@ function Prenota({ initialData }: any) {
   const [seatName, setSeatName] = useState("none")
   const [action, setAction] = useState("")
   
-  console.log('IS YOUR ROOM AND IS BOOKABLE?',useSelector(getIsYourRoom), useSelector(getIsBookable))
+  // console.log('IS YOUR ROOM AND IS BOOKABLE?',useSelector(getIsYourRoom), useSelector(getIsBookable))
 
   const userRole = useSelector(getUserRole)
 
@@ -61,7 +61,7 @@ function Prenota({ initialData }: any) {
   }, [session, fromTo])
 
   useEffect(() => {
-    console.log("rerender")
+    // console.log("rerender")
   }, [reserveData])
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function Prenota({ initialData }: any) {
   }, [status])
 
   useEffect(() => {
-    console.log("rerender from date")
+    // console.log("rerender from date")
   }, [fromTo])
   
   if(status === "authenticated")

@@ -24,6 +24,11 @@
         @media screen and (min-width:$md) {
             display: none;
         }
+        .cta {
+            &.your {
+                background-color: $warning500;
+            }
+        }
     }
     &__container {
         position: relative;

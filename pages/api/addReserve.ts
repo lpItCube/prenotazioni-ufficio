@@ -15,7 +15,7 @@ type Data = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: Data = req.body
-  console.log(data)
+  // console.log(data)
   const seat = await prisma.seat.findUnique({
     where: {id: data.seatId}
   })
