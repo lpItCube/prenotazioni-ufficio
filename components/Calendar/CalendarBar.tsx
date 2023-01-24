@@ -18,7 +18,7 @@ function CalendarBar({
   setReserveData
 }: CalendarBarProps ) {
 
-  const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "18" })
+  const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "10" })
   const [selectedDate, setSelectedDate] = useState(new Date())
 
   const createNewDate = (selectedDate: Date, hour: string) => {

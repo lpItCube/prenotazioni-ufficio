@@ -43,7 +43,7 @@ function Hourpicker({
         setOptionStartHours(startTime)
         setOptionEndHours(endTime)
         setStartHour(9)
-        setEndHour(18)
+        setEndHour(10)
     }, [selectedDate])
 
 
@@ -69,7 +69,7 @@ function Hourpicker({
     const [optionStartHours, setOptionStartHours] = useState(startTime)
     const [optionEndHours, setOptionEndHours] = useState(endTime)
     const [startHour, setStartHour] = useState(9)
-    const [endHour, setEndHour] = useState(18)
+    const [endHour, setEndHour] = useState(10)
 
     const [startOpen, setStartOpen] = useState(false)
     const [endOpen, setEndOpen] = useState(false)

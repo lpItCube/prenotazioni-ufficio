@@ -17,7 +17,7 @@ export const getStaticProps: GetStaticProps = async () => {
       data: [
         { username: "admin", password: "admin", role:'ADMIN'},
         { username: "user1", password: "user1", role:'USER' },
-        // { username: "user2", password: "user2" }  
+        { username: "user2", password: "user2", role:'USER' }  
       ]
     }
   )
@@ -65,7 +65,7 @@ export const getStaticProps: GetStaticProps = async () => {
       data: [
         { userId: users[0].id, seatId: seat.id, reservedDays: ["2022-12-6"], from: new Date("2022-12-15 9:00:00"), to: new Date("2022-12-15 18:00:00") },
         { userId: users[1].id, seatId: seat2.id, reservedDays: ["2022-12-7"], from: new Date("2022-12-16 9:00:00"), to: new Date("2022-12-16 18:00:00") },
-        // { userId: users[2].id, seatId: seat3.id, reservedDays: ["2022-12-7"], from: new Date("2022-12-17 9:00:00"), to: new Date("2022-12-17 18:00:00") }
+        { userId: users[2].id, seatId: seat3.id, reservedDays: ["2022-12-7"], from: new Date("2022-12-17 9:00:00"), to: new Date("2022-12-17 18:00:00") }
       ]
     }
   )

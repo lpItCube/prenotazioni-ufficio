@@ -8,12 +8,14 @@ import { Colors } from './Colors';
 
 type ModalComponentProps = {
     modalTitle: string,
+    subTitle: string,
     refType: string,
     children:any
 }
 
 function ModalComponent({
     modalTitle,
+    subTitle,
     refType,
     children
 }: ModalComponentProps) {
@@ -34,11 +36,18 @@ function ModalComponent({
             <div onClick={() => handleCloseModal()} className={`modal__obscurer${modalStatus && modalType === refType ? ' active' : ''}`}></div>
             <div className="modal__content">
                 <div className="modal__header">
-                    <h5
-                        className="semiBold"
-                    >
-                        {modalTitle}
-                    </h5>
+                    <div className='modal__title'>
+                        <h5
+                            className="semiBold"
+                        >
+                            {modalTitle}
+                        </h5>
+                        {subTitle &&
+                            <p className='label'>
+                                {subTitle}
+                            </p>
+                        }
+                    </div>
                     <div
                         onClick={() => handleCloseModal()}
                         className="modal__close">

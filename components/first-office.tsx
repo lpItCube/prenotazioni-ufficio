@@ -104,11 +104,11 @@ function FirstOffice({
           setReserveData={setReserveData}
           fromTo={fromTo}
         />
-        <BookAll
+        {/* <BookAll
           containerClass={'rooms__book-all'}
           setSeatName={setSeatName}
           setAction={setAction}
-        />
+        /> */}
       </div>
     )
 }

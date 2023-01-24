@@ -281,16 +281,23 @@
             .st369 {
                 fill: $buisyBorder;
             }
-            &.your {
-                .st368 {
-                    fill:$statusYours
-                }
-                .st369 {
-                    fill: $yoursBorder;
-                }
+        }
+        &.your {
+            .st368 {
+                fill:$statusYours
+            }
+            .st369 {
+                fill: $yoursBorder;
             }
         }
-
+        &.pending {
+            .st368 {
+                fill:$statusPending;
+            }
+            .st369 {
+                fill: $pendingBorder;
+            }
+        }
         &.available,
         &.your {
             cursor: pointer;

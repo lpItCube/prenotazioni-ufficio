@@ -28,6 +28,11 @@
             &.your {
                 background-color: $warning500;
             }
+            &.disabled {
+                background-color: $light700;
+                // pointer-events: none;
+                cursor: default;
+            }
         }
         &--end {
             justify-content: flex-end;

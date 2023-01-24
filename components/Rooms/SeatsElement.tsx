@@ -15,6 +15,7 @@ type SeatsElementProps = {
     hasBookAll: boolean,
     available: boolean,
     busy: boolean,
+    isPending:boolean,
     isYourSeat: boolean,
     wholeRoom: any,
     setSeatName: any,
@@ -33,6 +34,7 @@ function SeatsElement({
     hasBookAll,
     available,
     busy,
+    isPending,
     isYourSeat,
     wholeRoom,
     setSeatName,
@@ -47,10 +49,11 @@ function SeatsElement({
 
     const dispatch = useDispatch()
     const modalStatus:boolean = useSelector(getModalStatus)
-
     const isAdmin = useSelector(getUserRole) === 'ADMIN'
 
-    let elClass = `isometric__chair ${roomType}-seat seat ${busy && "busy"} ${isYourSeat && "your"} ${available && "available"}`
+    console.log('RESERVEDATADATA',roomType)
+
+    let elClass = `isometric__chair ${roomType}-seat seat${busy && !isPending ? " busy" : ""}${isYourSeat ? " your" : ""}${available ? " available" : ""}${isPending && roomType === 'meeting' ? " pending" : "" }`
     const handleAddSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
         dispatch(setModalType('seats-modal'))
@@ -78,6 +81,9 @@ function SeatsElement({
                             } else if (isYourSeat || (isAdmin && busy)) {
                                 handleDeleteSingleSeat()
                             }
+                        }
+                        if(isPending && isAdmin) {
+                            console.log('SEAT CLICK')
                         }
                     } else {
                         if (available || (isAdmin && !busy)) {

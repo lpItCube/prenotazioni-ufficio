@@ -121,7 +121,7 @@ function Prenotazioni() {
               >
                 <Button
                   className="cta cta--primary-delete cta__icon"
-                  onClick={() => handleDeleteRow(r.seat.name, 'DELETE', username, r)}
+                  onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
                   type='button'
                   icon={<RiDeleteBin3Line size={18} />}
                   text=''

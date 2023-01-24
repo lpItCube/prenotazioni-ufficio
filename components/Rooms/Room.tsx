@@ -27,7 +27,8 @@ type Seat = {
 
 type Reserve = {
     user: User,
-    seat: Seat
+    seat: Seat,
+    status: String
 }
 
 type RoomProps = {
@@ -63,12 +64,16 @@ function Room({
         compareType = 'it'
     }
 
+    const reserveData = rooms[id].reserveData
 
-    let yourReserves = rooms[id].reserveData.filter((r: Reserve) => r.user.username === rooms[id].username)
-    const wholeRoom = rooms[id].reserveData.find((r: Reserve) => r.seat.type === "meet-whole")
-    const busyRes = rooms[id].reserveData.filter((r: Reserve) => r.seat.type === compareType)
+    let yourReserves = reserveData.filter((r: Reserve) => r.user.username === rooms[id].username)
+    const wholeRoom = reserveData.find((r: Reserve) => r.seat.type === "meet-whole")
+    const busyRes = reserveData.filter((r: Reserve) => r.seat.type === compareType)
     const isYourRoom = wholeRoom?.user.username === rooms[id].username
-    const busyResAndRoom = rooms[id].reserveData.filter(({ seat: { type } }: Reserve) => type === "meet" || type === "meet-whole")
+    const busyResAndRoom = reserveData.filter(({ seat: { type } }: Reserve) => type === "meet" || type === "meet-whole")
+    const isPending = reserveData.find((r: Reserve) => r.status === 'pending' && r.seat.type === 'meet-whole' ) ? true : false
+
+    console.log('RESERVEDATADATA',reserveData)
     //se hai una prenotazione per quella giornata tutti i posti non sono disponibili
     const allSeatsNotAvailable = yourReserves.length > 0
     //se non hai prenotato posti in it e non ci sono posti meet occupati da altri, puoi prenotare
@@ -143,12 +148,13 @@ function Room({
     }, [isYourRoom, busyRes, yourReserves])
 
     const Fornitures = seats[rooms[id].roomType].map((seat: any, k: number) => {
-        var busy = busySeats.includes(seat) || (rooms[id].hasBookAll && wholeRoom)
-        var available = !(allSeatsNotAvailable || busy) || (isAdmin && !busy)
-        var isYourSeat = rooms[id].roomType.toString() === 'meeting' 
+        let busy = busySeats.includes(seat) || (rooms[id].hasBookAll && wholeRoom)
+        let available = !(allSeatsNotAvailable || busy) || (isAdmin && !busy)
+        let isYourSeat = rooms[id].roomType.toString() === 'meeting' 
             ? (allSeatsNotAvailable && yourReserves.find((r: any) => r.seat.name === seat)) || wholeRoom?.user.username === rooms[id].username
             : allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat)
-
+        // let isPending = 
+        
         return (
             <div key={seat}>
                 <SeatsElement
@@ -158,6 +164,7 @@ function Room({
                     hasBookAll={rooms[id].hasBookAll}
                     available={available}
                     busy={busy}
+                    isPending={isPending}
                     isYourSeat={isYourSeat}
                     wholeRoom={wholeRoom}
                     setSeatName={setSeatName}

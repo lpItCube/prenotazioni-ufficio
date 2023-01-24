@@ -1,6 +1,9 @@
 import axios from "axios";
-import Head from "next/head";
 import { useState } from "react";
+
+// Redux
+import { useSelector } from 'react-redux'
+import { getUserRole } from "../features/authSlice";
 
 // Components
 import HourPicker from "./Calendar/Hourpicker";
@@ -13,6 +16,7 @@ type FromToHour = {
 }
 
 function Calendar({ 
+  reserveData,
   setFromTo, 
   setReserveData,
   setSeatName,
@@ -21,7 +25,7 @@ function Calendar({
 
 
   const [selectedDate, setSelectedDate] = useState(new Date())
-  const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "18" })
+  const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "10" })
   const [openCalendar, setOpenCalendar] = useState(false)
 
   const handleOpenCalendar = () => {
@@ -37,8 +41,6 @@ function Calendar({
   }
 
   async function handleChangeHour(startHour: any, endHour: any) {
-
-    
 
     const fromDate = createNewDate(selectedDate, startHour)
     const toDate = createNewDate(selectedDate, endHour)
@@ -62,11 +64,20 @@ function Calendar({
     setReserveData(res)
   }
 
+  const userRole = useSelector(getUserRole)
+  const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole === 'ADMIN'
+  const notBookAll = userRole === 'USER' && reserveData.length > 0
+  console.log('RESERVE APPROVAL', needApproval)
 
   return (
     <>
+    {/* {notBookAll && <p>Non puoi prenotare tutto</p>} */}
       <div className="date-tool__container">
+
         <BookAll
+          reserveData={reserveData}
+          needApproval={needApproval}
+          notBookAll={notBookAll}
           containerClass={'date-tool__book-all'}
           setSeatName={setSeatName}
           setAction={setAction}

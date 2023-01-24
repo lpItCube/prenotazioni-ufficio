@@ -45,6 +45,8 @@
       animation-name: animatetop;
       animation-duration: 0.4s;
       padding:16px 24px 24px;
+      max-height: 70%;
+      overflow: auto;
     }
     &__body {
       margin-top: 32px;
@@ -53,10 +55,16 @@
         margin-left: auto;
       }
     }
+    &__title {
+      .label {
+        margin-top: 4px;
+      }
+    }
     &__text {
         color:$dark300;
         &--warning {
           color: $yoursBorder;
+          margin-bottom: 32px;
         }
     }
     &__close {
@@ -102,3 +110,66 @@
     cursor: pointer;
     background-color: rgb(15, 48, 15);
   }
+
+
+.approve {
+  &__container {
+    display: flex;
+    flex-direction: column;
+  }
+  &__reserve {
+    border-top: solid 1px $light500;
+    padding-top: 8px;
+    width: $col12;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    &.accepted {
+      border-left: solid 4px $green300;
+    }
+    &.pending {
+      border-left: solid 4px $statusPending;
+    }
+  }
+  &__row {
+    font-size: 0.889rem;
+    padding-right: 8px;
+    &--cta {
+      display: flex;
+      gap:8px;
+      align-items: center;
+      .cta {
+        margin-top: 0;
+        width: 32px;
+        height: 32px;
+        background-color: $warning300;
+        align-items: center;
+        justify-content: space-between;
+        &--approve {
+          background-color: $green300;
+        }
+        .icon {
+          &__inner {
+            &--container {
+              margin: auto;
+              display: flex;
+            }
+          }
+        }
+      }
+    }
+    &--info {
+      width: calc(100% - 72px);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding-right: 16px;
+    }
+    &--user {
+      width: $col12;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+  }
+}

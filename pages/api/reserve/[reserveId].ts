@@ -3,6 +3,7 @@ import prisma from "../../../lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const reserveId = req.query.reserveId as string
+  console.log('DELETE', reserveId)
   try {
     const result = await prisma.reserve.delete({
       where: { id: reserveId }

@@ -44,7 +44,7 @@ function Prenota({ initialData }: any) {
 
   useEffect(() => {
     const fromDate = createNewDate("09")
-    const toDate = createNewDate("18")
+    const toDate = createNewDate("10")
     setFromTo({ from: fromDate, to: toDate })
   }, [])
 
@@ -78,6 +78,7 @@ function Prenota({ initialData }: any) {
     return (
       <>
         <Calendar 
+          reserveData={reserveData}
           setFromTo={setFromTo} 
           setReserveData={setReserveData} 
           setSeatName={setSeatName}
@@ -111,8 +112,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   }
-  const fromDate = createNewDate("08")
-  const toDate = createNewDate("18")
+  const fromDate = createNewDate("09")
+  const toDate = createNewDate("10")
   const initialData = await prisma.reserve.findMany({
     include: {
       seat: true,
