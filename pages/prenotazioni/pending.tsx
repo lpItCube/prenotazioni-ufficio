@@ -4,8 +4,10 @@ import { useSession } from "next-auth/react"
 import axios from 'axios'
 
 // Redux
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { getUserRole } from "../../features/authSlice"
+import { setPendingNotification } from '../../features/notificationSlice'
+
 
 // Utils
 import { getStringDate, getStringHours } from '../../utils/datePharser'
@@ -17,11 +19,15 @@ import { RiDeleteBin3Line } from "react-icons/ri"
 import { TbClipboardCheck } from "react-icons/tb";
 import Spinner from '../../components/Ui/Spinner'
 
-function pending() {
+function pending({
+    hitNotification,
+    setHitNotification
+  }:any) {
 
     const userRole = useSelector(getUserRole)
     const router = useRouter();
     const session = useSession()
+    const dispatch = useDispatch()
     const [isAuthorized, setIsAutorized] = useState(false)
     const [reserves, setReserves] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -66,9 +72,8 @@ function pending() {
             const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
             setReserves(reorderData)
         }
-        // if (toApprove.length === 1 && reservedIndDay.length === 0 || toApprove.length === 0 && reservedIndDay.length === 1) {
-        //   handleCloseModal()
-        // }
+        dispatch(setPendingNotification({pending:reserves.length-1}))
+        setHitNotification(true)
 
     }
 

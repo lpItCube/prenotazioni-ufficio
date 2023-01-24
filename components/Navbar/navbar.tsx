@@ -14,7 +14,10 @@ import { Colors } from '../Ui/Colors'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleNavbar, getNavbarStatus } from '../../features/navigationSlice'
 
-function Navbar() {
+function Navbar({
+  hitNotification,
+  setHitNotification
+}: any) {
 
   const dispatch = useDispatch()
   const navbarStatus: boolean = useSelector(getNavbarStatus)
@@ -33,7 +36,10 @@ function Navbar() {
           session={session}
           icon={<AiOutlineUser size={20} color={Colors.dark500} className='icon' />}
         />
-        <Navigation />
+        <Navigation 
+          hitNotification={hitNotification} 
+          setHitNotification={setHitNotification}
+        />
       </div>
       <div onClick={() => handleOpenNavbar()}className={`navbar-obscurer${navbarStatus ? ' active' : ''}`}></div>
     </>

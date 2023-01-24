@@ -145,6 +145,19 @@
             padding-left: 8px;
             color: $light500
         }
+
+        &--notification {
+            width: 18px;
+            height: 18px;
+            background: $warning500;
+            border-radius: 100%;
+            text-align: center;
+            align-items: center;
+            display: flex;
+            justify-content: space-around;
+            color: white;
+            @include pxToRem(13)
+        }
     }
 
     &__logout {

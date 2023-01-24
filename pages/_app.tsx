@@ -16,6 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
   // console.log(Component.name)
 
   const [appIsLoading, setAppIsLoading] = useState(false)
+  const [hitNotification, setHitNotification] = useState(false)
 
   return (
     <Provider store={store}>
@@ -30,9 +31,16 @@ export default function App({ Component, pageProps }: AppProps) {
                 { appIsLoading 
                   ? 'Loading ...'
                   : <>
-                    <Navbar />
+                    <Navbar
+                      hitNotification={hitNotification} 
+                      setHitNotification={setHitNotification}
+                    />
                     <div className="main-wrapper">
-                      <Component {...pageProps} />
+                      <Component 
+                        hitNotification={hitNotification} 
+                        setHitNotification={setHitNotification}
+                        {...pageProps}  
+                        />
                     </div>
                   </>
                 }

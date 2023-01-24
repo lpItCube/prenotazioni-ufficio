@@ -12,7 +12,8 @@ function CustomLink({
     href, 
     icon, 
     text,
-    isActive
+    isActive,
+    notification
 }: any) {
 
     const dispatch = useDispatch()
@@ -37,6 +38,11 @@ function CustomLink({
                 >
                     {text}
                 </p>
+                {notification > 0 && 
+                    <p
+                        className={'navigation__link--notification min'}
+                    >{notification}</p>
+                }
             </Link>
         </li>
     )

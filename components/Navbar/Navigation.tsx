@@ -1,6 +1,9 @@
+import axios from "axios"
 import CustomLink from "./CustomLink"
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
 
 // Components
 import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5"
@@ -11,15 +14,40 @@ import { Colors } from "../Ui/Colors";
 import Logout from "./Logout";
 
 // Redux
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { getNavbarStatus } from '../../features/navigationSlice'
 import { getUserRole } from "../../features/authSlice";
+import { getPendingNotification, setPendingNotification } from "../../features/notificationSlice"
 
 
-function Navigation() {
+function Navigation({
+    hitNotification,
+    setHitNotification
+  }: any) {
 
     const navbarStatus: boolean = useSelector(getNavbarStatus)
     const userRole: string = useSelector(getUserRole)
+    const session = useSession()
+    const dispatch = useDispatch()
+    const pendingNotification = useSelector(getPendingNotification)
+    const [pendingNotif, setPendingNotif] = useState(pendingNotification)
+
+    useEffect(() => {
+        const getReserves = async () => {
+            const response = await axios.get(`/api/reserve/pending`)
+            dispatch(setPendingNotification({pending:response.data.length}))
+        }
+        if (session.status === "authenticated")
+            getReserves()
+    }, [session])
+
+    useEffect(() => {
+        setPendingNotif(pendingNotification)
+        if(hitNotification) {
+            setPendingNotif(pendingNotification)
+            setHitNotification(false)
+        }
+    }, [pendingNotification, session, hitNotification])
 
     const path = useRouter().pathname
 
@@ -36,6 +64,7 @@ function Navigation() {
                 <ul>
                     <CustomLink
                         href="/prenota"
+                        notification={false}
                         icon={
                             <IoCalendarOutline
                                 size={18}
@@ -46,6 +75,7 @@ function Navigation() {
                     />
                     <CustomLink
                         href="/prenotazioni"
+                        notification={false}
                         icon={
                             <BsJournalCheck
                                 size={18}
@@ -62,17 +92,21 @@ function Navigation() {
                                 href="/prenotazioni"
                                 text="Tutte le prenotazioni"
                                 isActive={path === '/prenotazioni'}
+                                notification={false}
                             />
                             <CustomLink
                                 href="/prenotazioni/pending"
                                 text="Da approvare"
+                                notification={pendingNotif}
                                 isActive={path.includes('prenotazioni') && path.includes('pending')}
                             />
                         </ul>
                     }
 
+
                     <CustomLink
                         href="/profilo"
+                        notification={false}
                         icon={
                             <IoSettingsOutline
                                 size={18}

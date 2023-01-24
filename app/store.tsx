@@ -3,13 +3,15 @@ import navigationReducer from '../features/navigationSlice'
 import modalReducer from '../features/modalSlice'
 import roomReducer from '../features/roomSlice'
 import authReducer from '../features/authSlice'
+import notificationReducer from '../features/notificationSlice'
 
 export const store = configureStore({
     reducer: {
         navigation: navigationReducer,
         modal: modalReducer,
         room: roomReducer,
-        auth: authReducer
+        auth: authReducer,
+        notification: notificationReducer
     }
 })
 
