@@ -68,11 +68,12 @@ function pending({
     const handleApprovation = async (status: any, id: any) => {
         if (status === 'approved') {
             await axios.patch("/api/reserve/approveReserve", {
-                id
+                id,
             })
             const response = await axios.get(`/api/reserve/pending`)
             const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
             setReserves(reorderData)
+
         } else {
             const deleteSeat = await axios.delete("/api/reserve/" + id);
             const response = await axios.get(`/api/reserve/pending`)

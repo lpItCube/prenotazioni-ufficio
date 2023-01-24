@@ -61,7 +61,7 @@ function ModalSingleReserve({
             }
             <Button
                 onClick={() => handleSeat()}
-                className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--secondary-delete'}`}
+                className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
                 type='button'
                 icon={false}
                 text={action === ADD ? 'Conferma' : 'Cancella'}

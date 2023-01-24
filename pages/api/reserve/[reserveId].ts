@@ -5,12 +5,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const reserveId = req.query.reserveId as string
   console.log('DELETE', reserveId)
   try {
+
+    const findToDelete = await prisma.reserve.findUnique({
+      where: {id: reserveId}
+    })
+
+
+    if(!findToDelete) return res.status(204).json({message:'Ricarica la pagina.'})
+
     const result = await prisma.reserve.delete({
       where: { id: reserveId }
     })
+
     res.status(200).json(result)
   } catch(e) {
-    console.log(e)
     res.status(404)
   }
 }
