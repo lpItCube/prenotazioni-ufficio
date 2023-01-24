@@ -13,12 +13,14 @@ import Button from "./Ui/Button"
 import ModalComponent from "./Ui/ModalComponent";
 import { RiDeleteBin3Line } from "react-icons/ri";
 import { TbClipboardCheck } from "react-icons/tb";
-import ModalApprovation from "./Rooms/ModalApprovation";
+import ModalApprovation from "./Modals/ModalApprovation";
+import ModalSingleReserve from "./Modals/ModalSingleReserve";
 
 const ADD = "ADD"
 const DELETE = "DELETE"
 const APPROVE = "APPROVE"
 const DELETESINGLE = "DELETESINGLE"
+const MANAGE = "MANAGE"
 
 function Modal({
   seatName,
@@ -44,7 +46,6 @@ function Modal({
     userReserve = reserveData
   }
 
-  console.log('DELETE', userReserve)
 
   const handleCloseModal = () => {
     dispatch(toggleModal(false))
@@ -55,7 +56,7 @@ function Modal({
   if (reserveData.length > 0) {
     otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole' && reserve.seat.type !== 'it')
   }
-  console.log('APPROVE', reserveData)
+
 
   async function handleSeat() {
 
@@ -80,7 +81,6 @@ function Modal({
         }
       }
 
-      console.log('ACTION', fromTo.from)
       await axios.post("/api/addReserve", {
         seatId: seatId,
         userId: userId,
@@ -117,10 +117,7 @@ function Modal({
 
 
   async function handleApprovation(status: any, id: any) {
-
-
     if (status === 'approved') {
-
       await axios.patch("/api/reserve/approveReserve", {
         id
       })
@@ -131,7 +128,6 @@ function Modal({
       const deleteSeat = await axios.delete("/api/reserve/" + id);
       const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
       setReserveData(reloadData)
-      console.log('DELETE COUNT', userReserve)
       if (userReserve.length === 1) {
         handleCloseModal()
       }
@@ -149,48 +145,17 @@ function Modal({
       {action === ADD || action === DELETESINGLE
         ?
         <ModalComponent
-          modalTitle={`${action === ADD ? 'Aggiungi' : 'Annulla'} prenotazione`}
-          subTitle={`fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}`}
-          refType={'seats-modal'}
+            modalTitle={`${action === 'ADD' ? 'Aggiungi' : 'Annulla'} prenotazione`}
+            subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
+            refType={'seats-modal'}
         >
-          <p
-            className="modal__text txt-h6"
-          >
-            {action === ADD && "Vuoi procedere con la prenotazione del posto "}
-            {action === DELETESINGLE && "Vuoi annullare la prenotazione del posto "}
-            <b>{seatName}</b>?</p>
-            {reserveData && seatName === 'meet-room' && otherReserveInPeriod && otherReserveInPeriod.length > 0 &&
-            <>
-              <br />
-              <p
-                className="modal__text modal__text--warning txt-h6"
-              >Attenzione! Sono già presenti prenotazioni per questi orari, procedendo verranno cancellate.</p>
-              <div className="approve__container">
-                {
-                  userReserve.length > 0 && userReserve.filter((res: any) => res.seat.type === 'meet').map((res: any) => {
-                    const status = res.status === 'accepted' ? 'accepted' : 'pending'
-                    return (
-                      <div className={`approve__reserve ${status}`}>
-                        <div className="approve__row--info">
-                          <div className="approve__row--user">{res.user.username}</div>
-                          <div className="approve__row">{res.seat.name}</div>
-                          {res.from &&
-                            <div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
-                          }
-                        </div>
-                      </div>
-                    )
-                  })
-                }
-              </div>
-            </>
-          }
-          <Button
-            onClick={() => handleSeat()}
-            className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--secondary-delete'}`}
-            type='button'
-            icon={false}
-            text={action === ADD ? 'Conferma' : 'Cancella'}
+          <ModalSingleReserve 
+            action={action}
+            seatName={seatName}
+            reserveData={reserveData}
+            otherReserveInPeriod={otherReserveInPeriod}
+            userReserve={userReserve}
+            handleSeat={handleSeat}
           />
         </ModalComponent>
         : <ModalComponent
@@ -198,6 +163,7 @@ function Modal({
           subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
           refType={'seats-modal'}
         >
+          {/* Modale di modifica multipla ipotetica */}
           <ModalApprovation
             reserve={userReserve}
             approvationAction={handleApprovation}
@@ -209,12 +175,13 @@ function Modal({
         </ModalComponent>
       }
 
-      {userRole === 'ADMIN' &&
+      {userRole === 'ADMIN' && (action === APPROVE || action === MANAGE) &&
         <ModalComponent
           modalTitle={`${action === APPROVE ? 'Approva' : 'Gestisci'} prenotazione`}
-          subTitle={`fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}`}
+          subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
           refType={'approve-modal'}
         >
+          {/* Modale Admin per approvazione pending*/}
           <ModalApprovation
             reserve={reservedIndDay}
             approvationAction={handleApprovation}

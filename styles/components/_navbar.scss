@@ -132,7 +132,6 @@
             }
         }
     }
-
     &__link {
         display: block;
         padding: 16px 8px;
@@ -163,6 +162,31 @@
 
         &--text {
             color: $light300
+        }
+    }
+
+    &__children {
+        .navigation {
+            &__link {
+                padding:12px 16px;
+                &--text {
+                    @include pxToRem(12);
+                }
+            }
+            &__item {
+                background-color: $dark700;
+                &:hover,
+                &.active {
+                    background-color: $green500;
+                    .navigation {
+                        &__link {
+                            &--text {
+                                color:white
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -66,9 +66,21 @@
   &__wrapper {
     padding: 0 16px;
     margin-top: 32px;
+    margin-bottom: 32px;
     @media screen and (min-width:$md) {
       margin-top: 48px;
+      margin-bottom: 48px;
       padding: 0 32px
+    }
+    .table__row {
+      &.reserve {
+        &--accepted {
+          border-left: solid 4px $green300;
+        }
+        &--pending {
+          border-left: solid 4px $statusPending;
+        }
+      }
     }
   }
 

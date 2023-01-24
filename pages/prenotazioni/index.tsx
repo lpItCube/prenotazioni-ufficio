@@ -3,20 +3,20 @@ import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 // Utils
-import { getStringDate, getStringHours } from "../utils/datePharser"
+import { getStringDate, getStringHours } from '../../utils/datePharser'
 
 // Redux
 import { useDispatch, useSelector } from "react-redux"
-import { toggleModal, setModalType } from "../features/modalSlice"
-import { getUserName, getUserRole, getUserId } from "../features/authSlice"
+import { toggleModal, setModalType } from "../../features/modalSlice"
+import { getUserName, getUserRole, getUserId } from "../../features/authSlice"
 
 // Components 
-import Spinner from "../components/Ui/Spinner"
-import { Table, TableHeader, TableBody, TableRow, TableCol } from "../components/Ui/Table"
-import Modal from "../components/modal"
-import { RiDeleteBin3Line } from "react-icons/ri";
-import Button from "../components/Ui/Button"
-import ReservesFilters from "../components/Reserves/ReservesFilters"
+import Spinner from "../../components/Ui/Spinner"
+import { Table, TableHeader, TableBody, TableRow, TableCol } from "../../components/Ui/Table"
+import Modal from "../../components/modal"
+import { RiDeleteBin3Line } from "react-icons/ri"
+import Button from "../../components/Ui/Button"
+import ReservesFilters from "../../components/Reserves/ReservesFilters"
 import { IoEllipsisHorizontalOutline } from 'react-icons/io5'
 
 function Prenotazioni() {
@@ -49,25 +49,32 @@ function Prenotazioni() {
     const getReserves = async () => {
       setIsLoading(true)
       const response = await axios.get(`/api/reserve`)
-      const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? 1 : -1)
-      let sortedResponse = reorderData
+
+      let sortedResponse = response.data
       if (filterMode.value === 'myUser') {
-        sortedResponse = reorderData.filter((res: any) => res.user.id === userId)
+        sortedResponse.filter((res: any) => res.user.id === userId)
       } else if (filterMode.value === 'otherUsers') {
-        sortedResponse = reorderData.filter((res: any) => res.user.id !== userId)
+        sortedResponse.filter((res: any) => res.user.id !== userId)
       }
       if (filterRoom.value !== '') {
-        sortedResponse = sortedResponse.filter((res: any) => res.seat.type === filterRoom.value)
+        if (filterRoom.value === 'it') {
+          sortedResponse.filter((res: any) => res.seat.type === filterRoom.value)
+        } else {
+          sortedResponse.filter((res: any) => res.seat.type === 'meet' || res.seat.type === 'meet-whole')
+        }
       }
       if (filterDay.value !== '') {
-        sortedResponse = sortedResponse.filter((res: any) => new Date(res.from).toDateString() === filterDay.value)
+        sortedResponse.filter((res: any) => new Date(res.from).toDateString() === filterDay.value)
       }
-      setReserves(sortedResponse)
+      const reorderData = sortedResponse.sort((a: any, b: any) => (a.to > b.to) ? 1 : -1)
+      setReserves(reorderData)
+      { console.log('SORTED', reorderData) }
     }
 
-    if (session.status === "authenticated")
 
+    if (session.status === "authenticated")
       getReserves()
+
     if (handleDelete) {
       setHandleDelete(false)
     }
@@ -83,7 +90,7 @@ function Prenotazioni() {
 
   const handleShowFilters = () => {
     setShowFilters(prev => !prev)
-}
+  }
 
   let tableContent: any
 
@@ -95,9 +102,10 @@ function Prenotazioni() {
           return (
             <TableRow
               key={index}
+              className={r.status === 'accepted' ? ' reserve--accepted' : ' reserve--pending'}
             >
               <TableCol
-                className=""
+                className=''
               >
                 <p>{getStringDate(r.from).day} {getStringDate(r.from).month} {getStringDate(r.from).year}</p>
               </TableCol>
@@ -117,15 +125,24 @@ function Prenotazioni() {
                 {r.user.username}
               </TableCol>
               <TableCol
+                className=""
+              >
+                {r.status === 'accepted' ? 'Accettato' : 'In attesa'}
+              </TableCol>
+              <TableCol
                 className="prenotazioni__cta"
               >
-                <Button
-                  className="cta cta--primary-delete cta__icon"
-                  onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
-                  type='button'
-                  icon={<RiDeleteBin3Line size={18} />}
-                  text=''
-                />
+                {(userRole === 'ADMIN' || userRole === 'USER' && r.user.id === userId) &&
+                  <div className='approve__row--cta'>
+                    <Button
+                      className="cta cta--primary-delete cta__icon"
+                      onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
+                      type='button'
+                      icon={<RiDeleteBin3Line size={18} />}
+                      text=''
+                    />
+                  </div>
+                }
               </TableCol>
             </TableRow>
           )
@@ -136,6 +153,7 @@ function Prenotazioni() {
     tableContent = <>
       <TableRow
         key={'not-found'}
+        className=''
       >
         <TableCol
           className="prenotazioni__empty"
@@ -172,23 +190,24 @@ function Prenotazioni() {
               Prenotazioni
             </h2>
             <Button
-                  type='button'
-                  onClick={() => handleShowFilters()}
-                  className='cta cta--border-primary cta__icon cta__icon--reverse prenotazioni__filters-cta'
-                  text='Filtri'
-                  icon={<IoEllipsisHorizontalOutline size={18}/>}
+              type='button'
+              onClick={() => handleShowFilters()}
+              className='cta cta--border-primary cta__icon cta__icon--reverse prenotazioni__filters-cta'
+              text='Filtri'
+              icon={<IoEllipsisHorizontalOutline size={18} />}
 
-              />
+            />
           </div>
           <Table>
 
             <TableHeader
-              headerColumns={['Data', 'Orario', 'Postazione', 'Utente', '']}
+              headerColumns={['Data', 'Orario', 'Postazione', 'Utente', 'Stato', '']}
             />
             <TableBody>
               {isLoading
                 ? <TableRow
                   key={'spinner'}
+                  className=''
                 >
                   <TableCol
                     className="prenotazioni__spinner"

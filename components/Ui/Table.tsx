@@ -72,15 +72,17 @@ export function TableHeader({
 
 
 type TableRowProps = {
-    children: any
+    children: any,
+    className: string
 }
 
 export function TableRow({
-    children
+    children,
+    className
 }: TableRowProps) {
     return (
         <div
-            className='table__row'
+            className={`table__row${className}`}
         >
             {children}
         </div>

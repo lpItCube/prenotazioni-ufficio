@@ -13,11 +13,13 @@ import Logout from "./Logout";
 // Redux
 import { useSelector } from 'react-redux'
 import { getNavbarStatus } from '../../features/navigationSlice'
+import { getUserRole } from "../../features/authSlice";
 
 
 function Navigation() {
 
-    const navbarStatus:boolean = useSelector(getNavbarStatus)
+    const navbarStatus: boolean = useSelector(getNavbarStatus)
+    const userRole: string = useSelector(getUserRole)
 
     const path = useRouter().pathname
 
@@ -47,11 +49,28 @@ function Navigation() {
                         icon={
                             <BsJournalCheck
                                 size={18}
-                                color={path === '/prenotazioni' ? Colors.dark700 : Colors.light500}
+                                color={path.includes('prenotazioni') ? Colors.dark700 : Colors.light500}
                             />}
                         text="Prenotazioni"
-                        isActive={path === '/prenotazioni'}
+                        isActive={path.includes('prenotazioni')}
                     />
+                    {userRole === 'ADMIN' &&
+                        <ul
+                            className="navigation__children"
+                        >
+                            <CustomLink
+                                href="/prenotazioni"
+                                text="Tutte le prenotazioni"
+                                isActive={path === '/prenotazioni'}
+                            />
+                            <CustomLink
+                                href="/prenotazioni/pending"
+                                text="Da approvare"
+                                isActive={path.includes('prenotazioni') && path.includes('pending')}
+                            />
+                        </ul>
+                    }
+
                     <CustomLink
                         href="/profilo"
                         icon={

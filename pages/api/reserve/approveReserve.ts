@@ -4,7 +4,6 @@ import prisma from "../../../lib/prisma";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const reserveData = req.body.id as string
 
-  console.log('APPROVE',req.body)
   try {
     const updateUser = await prisma.reserve.update({
         where: {
