@@ -53,7 +53,14 @@ function pending({
         if (session.status === "authenticated")
             getReserves()
     }, [session])
-
+    
+    useEffect(() => {
+        console.log('UPDATE NOW')
+        dispatch(setPendingNotification({pending:reserves.length}))
+        setHitNotification(true)
+    }, [reserves, session])
+    
+    
     if (!isAuthorized) {
         return
     }

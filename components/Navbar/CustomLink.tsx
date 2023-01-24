@@ -40,7 +40,7 @@ function CustomLink({
                 </p>
                 {notification > 0 && 
                     <p
-                        className={'navigation__link--notification min'}
+                        className={'navigation__link--notification'}
                     >{notification}</p>
                 }
             </Link>

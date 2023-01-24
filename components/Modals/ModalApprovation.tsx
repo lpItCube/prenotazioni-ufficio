@@ -62,7 +62,7 @@ function ModalApprovation({
                     reserve.length > 0 && reserve.map((res: any) => {
                         const status = res.status === 'accepted' ? 'accepted' : 'pending'
                         return (
-                            <div className={`approve__reserve ${status}`}>
+                            <div key={res.id} className={`approve__reserve ${status}`}>
                                 <div className="approve__row--info">
                                     <div className="approve__row--user">{res.user.username}</div>
                                     <div className="approve__row">{res.seat.name}</div>
