@@ -19,37 +19,37 @@ export default function App({ Component, pageProps }: AppProps) {
   const [hitNotification, setHitNotification] = useState(false)
 
   return (
-    <Provider store={store}>
-      <SessionProvider session={pageProps.session}>
+    <SessionProvider session={pageProps.session}>
+      <Provider store={store}>
         {
           Component.name !== "Login" ?
             <>
-              <Header 
+              <Header
                 setAppIsLoading={setAppIsLoading}
               />
               <div className="main-container">
-                { appIsLoading 
+                {appIsLoading
                   ? 'Loading ...'
                   : <>
                     <Navbar
-                      hitNotification={hitNotification} 
+                      hitNotification={hitNotification}
                       setHitNotification={setHitNotification}
                     />
                     <div className="main-wrapper">
-                      <Component 
-                        hitNotification={hitNotification} 
+                      <Component
+                        hitNotification={hitNotification}
                         setHitNotification={setHitNotification}
-                        {...pageProps}  
-                        />
+                        {...pageProps}
+                      />
                     </div>
                   </>
                 }
-                
+
               </div>
             </>
             : <Component {...pageProps} />
         }
-      </SessionProvider >
-    </Provider>
+      </Provider>
+    </SessionProvider >
   )
 }

@@ -31,12 +31,16 @@ function createNewDate(hour: string) {
 function Prenota({ initialData }: any) {
 
 
+
+
   const session = useSession()
   const { status, data } = useSession()
   const [ reserveData, setReserveData ] = useState(initialData)
   const [ fromTo, setFromTo ] = useState<DateRange>({from: null, to: null}) 
   const [seatName, setSeatName] = useState("none")
   const [action, setAction] = useState("")
+
+  console.log('STATUS' , session)
   
   // console.log('IS YOUR ROOM AND IS BOOKABLE?',useSelector(getIsYourRoom), useSelector(getIsBookable))
 

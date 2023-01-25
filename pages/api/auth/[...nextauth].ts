@@ -3,6 +3,7 @@ import CredentialProvider from "next-auth/providers/credentials"
 import prisma from "../../../lib/prisma"
 
 const authOptions: NextAuthOptions = {
+  
   session: {
     strategy: "jwt"
   },
@@ -11,20 +12,37 @@ const authOptions: NextAuthOptions = {
       type: "credentials",
       credentials: {},
       async authorize(credentials, req) {
+        
         const { email, password } = credentials as { email: string, password: string}
 
         const res = await prisma.user.findFirstOrThrow({
-           where: { username: email, password: password }
+            where: { username: email, password: password }
         })
-        
-        return { id: res.id, name: res.username, email: res.id }
+
+        return {
+          id: res.id,
+          name: res.username,
+          email: res.id+res.username
+        }
       }
     })
   ],
+  // secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",
     signOut: "/logout"
   },
+
+  // callbacks: {
+  //   jwt(params) {
+  //     console.log('PARAMS',params)
+  //     if(params.user?.id) {
+  //       params.token.email = params.user.id
+  //     }
+  //     return params.token
+  //   }
+  // },
+  
   // callbacks: {
   //   jwt: ({ token, user }) => {
   //     if (user) {
