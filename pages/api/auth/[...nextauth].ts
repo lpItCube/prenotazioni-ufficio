@@ -1,9 +1,12 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialProvider from "next-auth/providers/credentials"
-import prisma from "../../../lib/prisma"
+import signInCredentials from "../../../services/userService";
+
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error("Please provide process.env.NEXTAUTH_SECRET");
+}
 
 const authOptions: NextAuthOptions = {
-  
   session: {
     strategy: "jwt"
   },
@@ -12,50 +15,34 @@ const authOptions: NextAuthOptions = {
       type: "credentials",
       credentials: {},
       async authorize(credentials, req) {
-        
         const { email, password } = credentials as { email: string, password: string}
-
-        const res = await prisma.user.findFirstOrThrow({
-            where: { username: email, password: password }
-        })
-
-        return {
-          id: res.id,
-          name: res.username,
-          email: res.id+res.username
-        }
+        const res = signInCredentials(email, password)
+        return res
       }
     })
   ],
-  // secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",
     signOut: "/logout"
   },
-
-  // callbacks: {
-  //   jwt(params) {
-  //     console.log('PARAMS',params)
-  //     if(params.user?.id) {
-  //       params.token.email = params.user.id
-  //     }
-  //     return params.token
-  //   }
-  // },
   
-  // callbacks: {
-  //   jwt: ({ token, user }) => {
-  //     if (user) {
-  //       token.sub = user.id;
-  //     }
-  //     return token
-  //   },
-  //   session: async ({ session, token, user }) => {
-  //     if (token)
-  //       session.user = user
-  //     return session
-  //   },
-  // }
+  callbacks: {
+    async jwt({ token, user } ) {
+      /* Step 1: update the token based on the user object */
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      /* Step 2: update the session.user based on the token object */
+      if (token && session.user) {
+        session.user.role = token.role
+      }
+      return session;
+    },
+  },
 }
 
 export default NextAuth(authOptions)

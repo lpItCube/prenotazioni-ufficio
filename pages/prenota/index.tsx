@@ -30,9 +30,6 @@ function createNewDate(hour: string) {
 
 function Prenota({ initialData }: any) {
 
-
-
-
   const session = useSession()
   const { status, data } = useSession()
   const [ reserveData, setReserveData ] = useState(initialData)
@@ -106,16 +103,16 @@ function Prenota({ initialData }: any) {
 export default Prenota
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession({ req: context.req });
+  // const session = await getSession({ req: context.req });
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false
-      }
-    }
-  }
+  // if (!session) {
+  //   return {
+  //     redirect: {
+  //       destination: '/login',
+  //       permanent: false
+  //     }
+  //   }
+  // }
   const fromDate = createNewDate("09")
   const toDate = createNewDate("10")
   const initialData = await prisma.reserve.findMany({
@@ -127,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))  
 
   return {
-    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), session }
+    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)) }
     
   }
 }
