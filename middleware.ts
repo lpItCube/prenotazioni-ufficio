@@ -5,16 +5,17 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
   const protectedPaths = [
     "/prenota", 
     "/api/reserve", 
-    "/api/reserve/:id", 
+    "/api/reserve/:id*", 
     "/api/reserve/approveReserve",
     "/api/reserve/pending",
-    "/api/seats/:seatName",
-    "/api/userReserves/:userId",
-    "/api/users/:username",
+    "/api/seats/:seatName*",
+    "/api/userReserves/:userId*",
+    "/api/users/:username*",
     "/api/addReserve"
   ];
   const matchesProtectedPath = protectedPaths.some((path:any) =>
-    pathname.startsWith(path)
+    console.log('MATCH', path, pathname)
+    // pathname.startsWith(path)
   );
 
   console.log('METCH',matchesProtectedPath)
