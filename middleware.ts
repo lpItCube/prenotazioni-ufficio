@@ -2,7 +2,17 @@ import { getToken } from "next-auth/jwt";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest, _next: NextFetchEvent) {
   const { pathname } = request.nextUrl;
-  const protectedPaths = ["/prenota", "/secure"];
+  const protectedPaths = [
+    "/prenota", 
+    "/api/reserve/", 
+    "/api/reserve/:id", 
+    "/api/reserve/approveReserve",
+    "/api/reserve/pending",
+    "/api/seats/:seatName",
+    "/api/userReserves/:userId",
+    "/api/users/:username",
+    "/api/addReserve"
+  ];
   const matchesProtectedPath = protectedPaths.some((path) =>
     pathname.startsWith(path)
   );
