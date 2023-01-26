@@ -4,18 +4,14 @@ import { useEffect, useState } from "react"
 import prisma from "../../lib/prisma"
 import axios from "axios"
 
-import { getToken } from "next-auth/jwt";
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+// Redux
+import { useSelector, useDispatch } from "react-redux"
+import { getReserves, setReserves } from "../../features/reserveSlice"
 
 // Components
 import Calendar from "../../components/calendar"
 import FirstOffice from "../../components/first-office"
 import Spinner from "../../components/Ui/Spinner"
-
-// Redux
-import { useSelector } from 'react-redux'
-import { getIsBookable, getIsYourRoom } from "../../features/roomSlice"
-// import { getUserRole } from "../../features/authSlice"
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
@@ -38,21 +34,20 @@ function createNewDate(hour: string) {
 
 function Prenota({ initialData }: any) {
 
+  const dispatch = useDispatch()
   const session = useSession()
-  const { status, data } = useSession()
+  const { status } = useSession()
 
-  const [ reserveData, setReserveData ] = useState(initialData)
   const [ fromTo, setFromTo ] = useState<DateRange>({from: null, to: null}) 
   const [seatName, setSeatName] = useState("none")
   const [action, setAction] = useState("")
 
-  const { userData } = useAuthHook()
-  const userRole = userData.role
 
   useEffect(() => {
     const fromDate = createNewDate("09")
     const toDate = createNewDate("10")
     setFromTo({ from: fromDate, to: toDate })
+    dispatch(setReserves({reserveData:initialData}))
   }, [])
 
 
@@ -60,7 +55,7 @@ function Prenota({ initialData }: any) {
     const reloadDataSession = async () => {
       if(fromTo.from && fromTo.to) {
         const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-        setReserveData(reloadData)
+        dispatch(setReserves({reserveData:reloadData}))
       }
     }
 
@@ -80,15 +75,11 @@ function Prenota({ initialData }: any) {
     return (
       <>
         <Calendar 
-          reserveData={reserveData}
           setFromTo={setFromTo} 
-          setReserveData={setReserveData} 
           setSeatName={setSeatName}
           setAction={setAction}
         />
         <FirstOffice 
-          reserveData={reserveData} 
-          setReserveData={setReserveData} 
           fromTo={fromTo} 
           seatName={seatName}
           setSeatName={setSeatName}
@@ -104,16 +95,7 @@ function Prenota({ initialData }: any) {
 export default Prenota
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // const session = await getSession({ req: context.req });
 
-  // if (!session) {
-  //   return {
-  //     redirect: {
-  //       destination: '/login',
-  //       permanent: false
-  //     }
-  //   }
-  // }
   const fromDate = createNewDate("09")
   const toDate = createNewDate("10")
   const initialData = await prisma.reserve.findMany({

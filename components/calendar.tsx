@@ -2,8 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 
 // Redux
-import { useSelector } from 'react-redux'
-// import { getUserRole } from "../features/authSlice";
+import { useSelector, useDispatch } from "react-redux"
+import { getReserves, setReserves } from "../features/reserveSlice"
 
 // Hooks
 import { useAuthHook } from "../hooks/useAuthHook";
@@ -19,18 +19,19 @@ type FromToHour = {
 }
 
 function Calendar({ 
-  reserveData,
   setFromTo, 
-  setReserveData,
   setSeatName,
   setAction
 }: any) {
 
 
+  const dispatch = useDispatch()
+
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "10" })
   const [openCalendar, setOpenCalendar] = useState(false)
   const { userData } = useAuthHook()
+  const reserveData = useSelector(getReserves)
 
   const userRole = userData.role
 
@@ -55,7 +56,8 @@ function Calendar({
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
 
-    setReserveData(res)
+    dispatch(setReserves({reserveData:res}))
+
   }
 
   async function handleConfirmDate(selDate: Date) {
@@ -66,7 +68,7 @@ function Calendar({
     const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
 
     setFromTo({ from: fromDate, to: toDate })
-    setReserveData(res)
+    dispatch(setReserves({reserveData:res}))
   }
 
   // const userRole = useSelector(getUserRole)
@@ -79,7 +81,6 @@ function Calendar({
       <div className="date-tool__container">
 
         <BookAll
-          reserveData={reserveData}
           needApproval={needApproval}
           notBookAll={notBookAll}
           containerClass={'date-tool__book-all'}

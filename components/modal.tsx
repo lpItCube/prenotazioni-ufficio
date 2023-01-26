@@ -3,7 +3,7 @@ import axios from "axios"
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleModal, getModalStatus } from "../features/modalSlice"
-// import { getUserRole, getUserId } from "../features/authSlice";
+import { getReserves, setReserves } from "../features/reserveSlice"
 
 // Hooks 
 import { useAuthHook } from "../hooks/useAuthHook"
@@ -29,13 +29,12 @@ function Modal({
   seatName,
   action,
   username,
-  reserveData,
-  setReserveData,
   fromTo,
   setHandleDelete
 }: any) {
 
   const dispatch = useDispatch()
+  const reserveData = useSelector(getReserves)
   const modalStatus: boolean = useSelector(getModalStatus)
   const { userData } = useAuthHook()
   const userIdHooks: string = userData.id
@@ -105,9 +104,9 @@ function Modal({
     }
 
     handleCloseModal()
-    if (setReserveData && fromTo) {
+    if (fromTo) {
       const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-      setReserveData(reloadData)
+      dispatch(setReserves({reserveData:reloadData}))
     }
 
     if (setHandleDelete) {
@@ -123,14 +122,14 @@ function Modal({
         id
       })
       const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-      setReserveData(reloadData)
+      dispatch(setReserves({reserveData:reloadData}))
     } else {
 
       const deleteSeat = await axios.delete("/api/reserve/" + id);
       if(deleteSeat.status === 204) {
       }
       const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-      setReserveData(reloadData)
+      dispatch(setReserves({reserveData:reloadData}))
       if (userReserve.length === 1) {
         handleCloseModal()
       }
@@ -153,7 +152,6 @@ function Modal({
           <ModalSingleReserve
             action={action}
             seatName={seatName}
-            reserveData={reserveData}
             otherReserveInPeriod={otherReserveInPeriod}
             userReserve={userReserve}
             handleSeat={handleSeat}

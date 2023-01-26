@@ -4,6 +4,7 @@ import modalReducer from '../features/modalSlice'
 import roomReducer from '../features/roomSlice'
 import authReducer from '../features/authSlice'
 import notificationReducer from '../features/notificationSlice'
+import reserveReducer from '../features/reserveSlice'
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
         modal: modalReducer,
         room: roomReducer,
         auth: authReducer,
-        notification: notificationReducer
+        notification: notificationReducer,
+        reserves:reserveReducer
     }
 })
 

@@ -4,13 +4,16 @@ import Button from "../Ui/Button"
 // Utils
 import { getStringHours } from "../../utils/datePharser"
 
+// Redux
+import { useSelector, useDispatch } from "react-redux"
+import { getReserves, setReserves } from "../../features/reserveSlice"
+
 const ADD = "ADD"
 const DELETESINGLE = "DELETESINGLE"
 
 type ModalSingleReserveProps = {
     action: any,
     seatName: any,
-    reserveData: any,
     otherReserveInPeriod: any,
     userReserve: any,
     handleSeat: any
@@ -19,11 +22,13 @@ type ModalSingleReserveProps = {
 function ModalSingleReserve({
     action,
     seatName,
-    reserveData,
     otherReserveInPeriod,
     userReserve,
     handleSeat
 }: ModalSingleReserveProps) {
+
+    const reserveData = useSelector(getReserves)
+
     return (
 
         <>

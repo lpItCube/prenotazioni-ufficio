@@ -8,6 +8,10 @@ import RoomsNavigator from "./Rooms/RoomsNavigator"
 import BookAll from "./Rooms/BookAll"
 import Spinner from "./Ui/Spinner"
 
+// Redux
+import { useSelector, useDispatch } from "react-redux"
+import { getReserves, setReserves } from "../features/reserveSlice"
+
 // Hooks
 import { useAuthHook } from "../hooks/useAuthHook";
 
@@ -17,8 +21,6 @@ type Seats = {
 }
 
 function FirstOffice({
-  reserveData,
-  setReserveData,
   fromTo,
   seatName,
   setSeatName,
@@ -26,9 +28,13 @@ function FirstOffice({
   setAction,
 }: any) {
 
+
+  const dispatch = useDispatch()
+
   const [visibleRoom, setVisibleRoom] = useState(0)
   const [nextRoom, setNextRoom] = useState(1)
   const { userData } = useAuthHook()
+  const reserveData = useSelector(getReserves)
 
   const session = useSession()
   let username = null
@@ -108,12 +114,9 @@ function FirstOffice({
           seatName={seatName}
           action={action}
           username={username}
-          reserveData={reserveData}
-          setReserveData={setReserveData}
           fromTo={fromTo}
         />
         <BookAll
-          reserveData={reserveData}
           needApproval={needApproval}
           notBookAll={notBookAll}
           containerClass={'rooms__book-all'}

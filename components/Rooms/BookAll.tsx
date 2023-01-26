@@ -7,13 +7,12 @@ import Button from "../Ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { getIsBookable, getIsYourRoom } from "../../features/roomSlice";
 import { toggleModal, setModalType } from "../../features/modalSlice";
-// import { getUserRole } from "../../features/authSlice";
+import { getReserves, setReserves } from "../../features/reserveSlice"
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
 
 type BookAllProps = {
-    reserveData:any,
     needApproval:boolean,
     notBookAll: boolean,
     setSeatName: any,
@@ -22,7 +21,6 @@ type BookAllProps = {
 }
 
 function BookAll({
-    reserveData,
     needApproval,
     notBookAll,
     setSeatName,
@@ -34,6 +32,7 @@ function BookAll({
 
     const { userData } = useAuthHook()
     const userRole = userData.role
+    const reserveData = useSelector(getReserves)
 
     const roomIsBookable = useSelector(getIsBookable)
     const isYourRoom = useSelector(getIsYourRoom)
