@@ -28,15 +28,13 @@ const authOptions: NextAuthOptions = {
   },
   
   callbacks: {
-    async jwt({ token, user } ) {
-      /* Step 1: update the token based on the user object */
+    async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
       }
       return token;
     },
     session({ session, token }) {
-      /* Step 2: update the session.user based on the token object */
       if (token && session.user) {
         session.user.role = token.role
       }

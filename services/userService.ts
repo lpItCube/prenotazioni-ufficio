@@ -1,4 +1,5 @@
 import { User } from "next-auth";
+import prisma from "../lib/prisma";
 
 const signInCredentials = async (email: string, password: string): Promise<User> => {
 

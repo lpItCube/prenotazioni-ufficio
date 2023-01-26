@@ -32,14 +32,14 @@ function pending({
     const [reserves, setReserves] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        if (!userRole) return
-        if (userRole === 'ADMIN') {
-            setIsAutorized(true)
-            return
-        }
-        router.push("/prenotazioni");
-    }, []);
+    // useEffect(() => {
+    //     if (!userRole) return
+    //     if (userRole === 'ADMIN') {
+    //         setIsAutorized(true)
+    //         return
+    //     }
+    //     router.push("/prenotazioni");
+    // }, []);
 
 
     useEffect(() => {
@@ -61,9 +61,9 @@ function pending({
     }, [reserves, session])
     
     
-    if (!isAuthorized) {
-        return
-    }
+    // if (!isAuthorized) {
+    //     return
+    // }
 
     const handleApprovation = async (status: any, id: any) => {
         if (status === 'approved') {
