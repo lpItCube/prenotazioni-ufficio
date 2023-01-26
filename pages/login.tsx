@@ -38,13 +38,13 @@ function Login() {
 
     if (res && res!.error) {
       setLoginError(true)
+      setLoadingLogin(false)
     }
     
     else urlToEncode
     ? router.push(decodeURIComponent(urlToEncode))
     : router.push('/prenota')
     
-    setLoadingLogin(false)
   }
   
   if(session.status === 'loading') {

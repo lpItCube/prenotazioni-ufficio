@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 
 // Redux
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setBookable, setIsYourRoom } from '../../features/roomSlice'
-// import { getUserRole } from "../../features/authSlice";
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
@@ -60,6 +59,7 @@ function Room({
     let compareType: string
 
     const { userData } = useAuthHook()
+    const userId = userData.id
     const isAdmin = userData.role === 'ADMIN'
     
     if (rooms[id].roomType.toString() === 'meeting') {
@@ -75,7 +75,7 @@ function Room({
     const busyRes = reserveData.filter((r: Reserve) => r.seat.type === compareType)
     const isYourRoom = wholeRoom?.user.username === rooms[id].username
     const busyResAndRoom = reserveData.filter(({ seat: { type } }: Reserve) => type === "meet" || type === "meet-whole")
-    const isPending = reserveData.find((r: Reserve) => r.status === 'pending' && r.seat.type === 'meet-whole' ) ? true : false
+    const isPending = reserveData.find((r: Reserve) => r.status === 'pending' && r.seat.type === 'meet-whole' && (r.user.id === userId || isAdmin) ) ? true : false
     
     //se hai una prenotazione per quella giornata tutti i posti non sono disponibili
     const allSeatsNotAvailable = yourReserves.length > 0

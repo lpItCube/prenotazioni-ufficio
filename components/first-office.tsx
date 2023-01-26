@@ -8,6 +8,9 @@ import RoomsNavigator from "./Rooms/RoomsNavigator"
 import BookAll from "./Rooms/BookAll"
 import Spinner from "./Ui/Spinner"
 
+// Hooks
+import { useAuthHook } from "../hooks/useAuthHook";
+
 type Seats = {
   meeting: any[],
   it: any[]
@@ -25,9 +28,12 @@ function FirstOffice({
 
   const [visibleRoom, setVisibleRoom] = useState(0)
   const [nextRoom, setNextRoom] = useState(1)
+  const { userData } = useAuthHook()
 
   const session = useSession()
   let username = null
+
+  const userRole = userData.role
 
   if (session.data! !== undefined)
     username = session.data!.user!.name
@@ -51,6 +57,8 @@ function FirstOffice({
     it: ["it-1", "it-2", "it-3", "it-4", "it-5", "it-6", "it-7", "it-8"]
   }
 
+  const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole === 'ADMIN'
+  const notBookAll = userRole === 'USER' && reserveData.length > 0
 
   const setRooms: any = [
     {
@@ -104,11 +112,14 @@ function FirstOffice({
           setReserveData={setReserveData}
           fromTo={fromTo}
         />
-        {/* <BookAll
+        <BookAll
+          reserveData={reserveData}
+          needApproval={needApproval}
+          notBookAll={notBookAll}
           containerClass={'rooms__book-all'}
           setSeatName={setSeatName}
           setAction={setAction}
-        /> */}
+        />
       </div>
     )
 }

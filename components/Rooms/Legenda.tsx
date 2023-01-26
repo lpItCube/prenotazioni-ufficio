@@ -36,6 +36,10 @@ function Legenda() {
             name: 'Non disponibile',
             color: Colors.notAvailable
         },
+        {
+            name: 'In attesa',
+            color: Colors.pending
+        }
     ]
 
 
@@ -63,6 +67,7 @@ function Legenda() {
                 <ModalComponent
                     modalTitle='Legenda'
                     refType='legenda-modal'
+                    subTitle=''
                 >
                     <div className='legenda__modal-container'>
 
