@@ -6,18 +6,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const role = req.query.userRole
 
   console.log('PRE PASSING')
-  if(role !== 'ADMIN') {
-    return res.status(203).json({message:'Unouthorized'})
-  } 
-  else {
-    try {
-      const result = await prisma.user.findUnique({
-        where: { username: username }
-      })
-      res.status(200).json(result)
-    } catch(e) {
-      console.log(e)
-      res.status(404)
-    }
+
+  try {
+    const result = await prisma.user.findUnique({
+      where: { username: username }
+    })
+    res.status(200).json(result)
+  } catch (e) {
+    console.log(e)
+    res.status(404)
   }
 }
