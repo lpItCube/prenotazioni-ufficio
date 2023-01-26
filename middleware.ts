@@ -2,7 +2,17 @@ import { getToken } from "next-auth/jwt";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest, _next: NextFetchEvent) {
   const { pathname } = request.nextUrl;
-  const protectedPaths = ["/prenota"];
+  // const protectedPaths = ["/prenota"];
+  const protectedPaths = [
+      "/prenota", 
+      "/api/reserve", 
+      "/api/reserve/approveReserve",
+      "/api/reserve/pending",
+      "/api/seats",
+      "/api/userReserves",
+      "/api/users",
+      "/api/addReserve"
+  ];
   const matchesProtectedPath = protectedPaths.some((path) =>
     pathname.startsWith(path)
   );
@@ -19,7 +29,7 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
     //   return NextResponse.rewrite(url);
     // }
     if (token) {
-      console.log(token)
+      console.log('TOKEN',token)
     }
   }
   return NextResponse.next();

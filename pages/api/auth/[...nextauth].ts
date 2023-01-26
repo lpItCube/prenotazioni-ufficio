@@ -32,12 +32,14 @@ const authOptions: NextAuthOptions = {
       /* Step 1: update the token based on the user object */
       if (user) {
         token.role = user.role;
+        token.id = user.id
       }
       return token;
     },
     session({ session, token }) {
       /* Step 2: update the session.user based on the token object */
       if (token && session.user) {
+        session.user.id = token.id
         session.user.role = token.role
       }
       return session;

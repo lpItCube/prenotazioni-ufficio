@@ -3,8 +3,8 @@ import { User } from "next-auth";
 const signInCredentials = async (email: string, password: string): Promise<User> => {
 
   enum Role {
-    USER = "user",
-    ADMIN = "admin"
+    USER = "USER",
+    ADMIN = "ADMIN"
   }
 
   const user = await prisma.user.findFirstOrThrow({
