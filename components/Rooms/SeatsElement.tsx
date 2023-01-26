@@ -7,7 +7,10 @@ import ChairFour from "./IsometricOffice/ChairFour"
 // Redux
 import { useSelector, useDispatch } from "react-redux"
 import { toggleModal, getModalStatus, setModalType } from "../../features/modalSlice"
-import { getUserRole } from "../../features/authSlice";
+// import { getUserRole } from "../../features/authSlice";
+
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook";
 
 type SeatsElementProps = {
     seat: any,
@@ -49,7 +52,8 @@ function SeatsElement({
 
     const dispatch = useDispatch()
     const modalStatus:boolean = useSelector(getModalStatus)
-    const isAdmin = useSelector(getUserRole) === 'ADMIN'
+    const { userData } = useAuthHook()
+    const isAdmin = userData.role === 'ADMIN'
 
     console.log('RESERVEDATADATA',roomType)
 

@@ -3,7 +3,10 @@ import axios from "axios"
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleModal, getModalStatus } from "../features/modalSlice"
-import { getUserRole, getUserId } from "../features/authSlice";
+// import { getUserRole, getUserId } from "../features/authSlice";
+
+// Hooks 
+import { useAuthHook } from "../hooks/useAuthHook"
 
 // Utils
 import { getStringDate, getStringHours } from "../utils/datePharser"
@@ -34,14 +37,15 @@ function Modal({
 
   const dispatch = useDispatch()
   const modalStatus: boolean = useSelector(getModalStatus)
-  const userId: string = useSelector(getUserId)
-  const userRole = useSelector(getUserRole)
+  const { userData } = useAuthHook()
+  const userIdHooks: string = userData.id
+  const userRole = userData.role
   const toApprove = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'pending')
   const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'accepted')
 
   let userReserve: any
   if (userRole === 'USER') {
-    userReserve = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.user.id === userId)
+    userReserve = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.user.id === userIdHooks)
   } else {
     userReserve = reserveData
   }
@@ -57,11 +61,20 @@ function Modal({
     otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole' && reserve.seat.type !== 'it')
   }
 
+  const testApi = async () => {
+    const userId = await (await axios.get(`/api/users/${username}`, {
+      params: {
+        userRole:userRole
+      }
+    })).data
+
+    console.log('RESULT', userId)
+  }
 
   async function handleSeat() {
 
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
-    const userId = await (await axios.get(`/api/users/${username}`)).data.id
+
     let bookStatus = 'accepted'
 
     // console.log("FROM: " + fromTo.from)
@@ -69,7 +82,7 @@ function Modal({
 
     if (action === ADD) {
       if (seatName === 'meet-room') {
-        // Quando prenoti tutta la stanza 
+        // Quando prenoti tutta la stanza
 
         bookStatus = userRole === 'ADMIN' ? 'accepted' : 'pending'
         // Se altri utenti hanno prenotato in quell'orario allora elimina le loro prenotazioni
@@ -83,7 +96,7 @@ function Modal({
 
       await axios.post("/api/addReserve", {
         seatId: seatId,
-        userId: userId,
+        userId: userIdHooks,
         reservedDays: [],
         from: new Date(fromTo.from),
         to: new Date(fromTo.to),
@@ -145,6 +158,7 @@ function Modal({
 
   return (
     <>
+    <button onClick={() => testApi()}>API</button>
       {action === ADD || action === DELETESINGLE
         ?
         <ModalComponent
@@ -152,7 +166,7 @@ function Modal({
             subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
             refType={'seats-modal'}
         >
-          <ModalSingleReserve 
+          <ModalSingleReserve
             action={action}
             seatName={seatName}
             reserveData={reserveData}

@@ -1,10 +1,15 @@
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
-import axios from "axios"
 
 // Redux
-import { useDispatch } from 'react-redux'
-import { setUser } from '../features/authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser, getUserId, getUserName, getUserRole } from '../features/authSlice'
+
+type UserData = {
+    role:string,
+    name:string,
+    id:string
+}
 
 export const useAuthHook = () => {
 
@@ -12,35 +17,29 @@ export const useAuthHook = () => {
     const dispatch = useDispatch()
 
     const [roleLoading, setRoleLoading] = useState<Boolean>(false)
-    const [userRole, setUserRole] = useState<String>('')
+    const [userData, setUserData] = useState<UserData>({role:'',name:'',id:''})
     const [errorRole, setErrorRole] = useState<String>()
-    const sessionUsername = session?.data?.user?.name
 
     useEffect(() => {
-        const loadUserRole = async () => {
+        const loadUserRole =  () => {
             setRoleLoading(true)
-            try {
-                const user = await axios.get(`/api/users/${sessionUsername}`)
-                const role = user.data.role
-                const username = user.data.username
-                const userId = user.data.id
+            
+                const role:any = session?.data?.user?.role
+                const username:any = session?.data?.user?.name
+                const userId:any = session?.data?.user?.id
 
-                console.log('USER DATA',user)
-                setUserRole(role)
+                setUserData({role:role, name:username, id:userId})
                 dispatch(setUser({role, username, userId}))
-            } catch (err:any) {
-                setErrorRole(err)
-            }
+            
             setRoleLoading(false)
         }
-
         loadUserRole()
-    }, [sessionUsername])
-
+    }, [session])
+    
 
     return {
         roleLoading,
-        userRole,
+        userData,
         errorRole
     }
 }

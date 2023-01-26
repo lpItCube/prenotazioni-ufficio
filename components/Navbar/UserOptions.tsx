@@ -1,3 +1,6 @@
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook"
+
 type UserProps = {
     session: any,
     icon: any
@@ -7,6 +10,9 @@ function User({
     session,
     icon
 }: UserProps) {
+
+    const { userData } = useAuthHook()
+
     return (
         <div className="user__container">
             <div className="user__image">
@@ -19,7 +25,7 @@ function User({
                 <h2 
                     className="txt-h6"
                 >
-                    {(session.status === "authenticated") ? session?.data?.user?.name : ""}
+                    {userData.name}
                 </h2>
             </div>
         </div>

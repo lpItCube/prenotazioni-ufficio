@@ -5,9 +5,11 @@ import axios from 'axios'
 
 // Redux
 import { useSelector, useDispatch } from "react-redux"
-import { getUserRole } from "../../features/authSlice"
+// import { getUserRole } from "../../features/authSlice"
 import { setPendingNotification } from '../../features/notificationSlice'
 
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook";
 
 // Utils
 import { getStringDate, getStringHours } from '../../utils/datePharser'
@@ -20,11 +22,12 @@ import { TbClipboardCheck } from "react-icons/tb";
 import Spinner from '../../components/Ui/Spinner'
 
 function pending({
-    hitNotification,
     setHitNotification
   }:any) {
 
-    const userRole = useSelector(getUserRole)
+    const { userData } = useAuthHook() 
+
+    const userRole = userData.role
     const router = useRouter();
     const session = useSession()
     const dispatch = useDispatch()
@@ -32,14 +35,16 @@ function pending({
     const [reserves, setReserves] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
+    console.log('SESSION', session)
+
     useEffect(() => {
-        if (!userRole) return
-        if (userRole === 'ADMIN') {
+        if (!session?.data?.user?.role) return
+        if (session?.data?.user?.role === 'ADMIN') {
             setIsAutorized(true)
             return
         }
         router.push("/prenotazioni");
-    }, []);
+    }, [session]);
 
 
     useEffect(() => {
@@ -62,6 +67,7 @@ function pending({
     
     
     if (!isAuthorized) {
+        console.log('UNHOUTORIZED',userRole)
         return
     }
 

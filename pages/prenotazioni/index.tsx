@@ -8,7 +8,10 @@ import { getStringDate, getStringHours } from '../../utils/datePharser'
 // Redux
 import { useDispatch, useSelector } from "react-redux"
 import { toggleModal, setModalType } from "../../features/modalSlice"
-import { getUserName, getUserRole, getUserId } from "../../features/authSlice"
+// import { getUserName, getUserRole, getUserId } from "../../features/authSlice"
+
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook";
 
 // Components 
 import Spinner from "../../components/Ui/Spinner"
@@ -40,9 +43,11 @@ function Prenotazioni() {
   const [filterDay, setFilterDay] = useState<stateObj>({ label: 'Tutte le date', value: '' })
   const [showFilters, setShowFilters] = useState(false)
 
-  const username = useSelector(getUserName)
-  const userRole = useSelector(getUserRole)
-  const userId = useSelector(getUserId)
+  const { userData } = useAuthHook()
+
+  const username = userData.name
+  const userRole = userData.role
+  const userId = userData.id
 
 
   useEffect(() => {

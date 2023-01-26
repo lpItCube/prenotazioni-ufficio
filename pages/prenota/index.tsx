@@ -12,7 +12,10 @@ import Spinner from "../../components/Ui/Spinner"
 // Redux
 import { useSelector } from 'react-redux'
 import { getIsBookable, getIsYourRoom } from "../../features/roomSlice"
-import { getUserRole } from "../../features/authSlice"
+// import { getUserRole } from "../../features/authSlice"
+
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook";
 
 type DateRange = {
   from: string | null,
@@ -37,11 +40,13 @@ function Prenota({ initialData }: any) {
   const [seatName, setSeatName] = useState("none")
   const [action, setAction] = useState("")
 
+  const { userData } = useAuthHook()
+
   console.log('STATUS' , session)
   
   // console.log('IS YOUR ROOM AND IS BOOKABLE?',useSelector(getIsYourRoom), useSelector(getIsBookable))
 
-  const userRole = useSelector(getUserRole)
+  const userRole = userData.role
 
   useEffect(() => {
     const fromDate = createNewDate("09")

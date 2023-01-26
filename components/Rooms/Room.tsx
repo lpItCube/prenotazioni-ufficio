@@ -3,7 +3,10 @@ import { useState, useEffect } from 'react'
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { setBookable, setIsYourRoom } from '../../features/roomSlice'
-import { getUserRole } from "../../features/authSlice";
+// import { getUserRole } from "../../features/authSlice";
+
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook";
 
 // Components
 import RoomHeader from './RoomHeader'
@@ -56,7 +59,8 @@ function Room({
 
     let compareType: string
 
-    const isAdmin = useSelector(getUserRole) === 'ADMIN'
+    const { userData } = useAuthHook()
+    const isAdmin = userData.role === 'ADMIN'
     
     if (rooms[id].roomType.toString() === 'meeting') {
         compareType = 'meet'

@@ -16,17 +16,20 @@ import Logout from "./Logout";
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
 import { getNavbarStatus } from '../../features/navigationSlice'
-import { getUserRole } from "../../features/authSlice";
+// import { getUserRole } from "../../features/authSlice";
 import { getPendingNotification, setPendingNotification } from "../../features/notificationSlice"
 
+// Hooks
+import { useAuthHook } from '../../hooks/useAuthHook'
 
 function Navigation({
     hitNotification,
     setHitNotification
   }: any) {
 
+    const { userData } = useAuthHook()
     const navbarStatus: boolean = useSelector(getNavbarStatus)
-    const userRole: string = useSelector(getUserRole)
+    const userRole: string = userData.role
     const session = useSession()
     const dispatch = useDispatch()
     const pendingNotification = useSelector(getPendingNotification)

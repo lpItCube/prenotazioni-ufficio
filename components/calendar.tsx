@@ -3,7 +3,10 @@ import { useState } from "react";
 
 // Redux
 import { useSelector } from 'react-redux'
-import { getUserRole } from "../features/authSlice";
+// import { getUserRole } from "../features/authSlice";
+
+// Hooks
+import { useAuthHook } from "../hooks/useAuthHook";
 
 // Components
 import HourPicker from "./Calendar/Hourpicker";
@@ -27,6 +30,9 @@ function Calendar({
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [fromToHours, setFromToHours] = useState<FromToHour>({ from: "09", to: "10" })
   const [openCalendar, setOpenCalendar] = useState(false)
+  const { userData } = useAuthHook()
+
+  const userRole = userData.role
 
   const handleOpenCalendar = () => {
     setOpenCalendar(true)
@@ -64,7 +70,7 @@ function Calendar({
     setReserveData(res)
   }
 
-  const userRole = useSelector(getUserRole)
+  // const userRole = useSelector(getUserRole)
   const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole === 'ADMIN'
   const notBookAll = userRole === 'USER' && reserveData.length > 0
   console.log('RESERVE APPROVAL', needApproval)

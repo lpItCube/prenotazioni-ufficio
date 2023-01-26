@@ -7,7 +7,10 @@ import Button from "../Ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { getIsBookable, getIsYourRoom } from "../../features/roomSlice";
 import { toggleModal, setModalType } from "../../features/modalSlice";
-import { getUserRole } from "../../features/authSlice";
+// import { getUserRole } from "../../features/authSlice";
+
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook";
 
 type BookAllProps = {
     reserveData:any,
@@ -29,7 +32,8 @@ function BookAll({
 
     const dispatch = useDispatch()
 
-    const userRole = useSelector(getUserRole)
+    const { userData } = useAuthHook()
+    const userRole = userData.role
 
     const roomIsBookable = useSelector(getIsBookable)
     const isYourRoom = useSelector(getIsYourRoom)
@@ -42,7 +46,7 @@ function BookAll({
     const [alreadyBooked, setAlreadyBooked] = useState(false)
     const [approvalButton, setApprovalButton] = useState(false)
     const [manageButton, setManageButton] = useState(false)
-    console.log('RESERVE ROOM YOUR',roomIsBookable)
+    console.log('RESERVE ROOM YOUR',reservedIndDay)
 
     useEffect(() => {
 
@@ -66,7 +70,7 @@ function BookAll({
         } else {
             setButtonIsVisible(false)
             setAlreadyBooked(false)
-            if (isYourRoom !== notBookAll && userRole === 'USER') {
+            if (isYourRoom !== notBookAll && reservedIndDay.length > 0 && userRole === 'USER') {
                 setAlreadyBooked(true)
             } 
         }
@@ -90,7 +94,7 @@ function BookAll({
         return (
             <div className={containerClass}>
                 {/* {approvalButton && !manageButton && 'APPROVA'}
-                {alreadyBooked && !isYourRoom && 'PRENOTATA DISABLED'}
+                {alreadyBooked && !isYourRoom && reservedIndDay.length > 0 && 'PRENOTATA DISABLED'}
                 {manageButton && 'MANAGE'} */}
                 {roomIsBookable && 
                 
