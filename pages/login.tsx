@@ -1,11 +1,13 @@
 import { FormEventHandler, useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
 
 // Components
 import ErrorAlert from '../components/login/ErrorAlert'
 import LoginForm from '../components/login/LoginForm'
 import Logo from "../components/Ui/Logo";
+import Spinner from "../components/Ui/Spinner"
 
 function Login() {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" })
@@ -13,6 +15,9 @@ function Login() {
   const [loadingLogin, setLoadingLogin] = useState(false)
 
   const router = useRouter()
+  const session = useSession()
+
+  console.log('SESSION',session)
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
@@ -28,18 +33,28 @@ function Login() {
     })
 
 
-    console.log('RESPONSE',res)
+    const urlToEncode:any = res?.url?.split('callbackUrl=')[1]
 
-    if (res!.error) {
+    if (res && res!.error) {
       setLoginError(true)
-      // console.log("Credenziali errate")
       setLoadingLogin(false)
     }
 
-    else router.push('/prenota')
+    else urlToEncode
+      ? router.push(decodeURIComponent(urlToEncode))
+      : router.push('/prenota')
   }
 
-  // console.log(loginError)
+  if(session.status === 'loading') {
+    return <Spinner/>
+  }
+
+  if(session.status === 'authenticated') {
+    router.push('/prenota')
+    return
+  }
+
+
 
   return (
     <div className="loginContainer">

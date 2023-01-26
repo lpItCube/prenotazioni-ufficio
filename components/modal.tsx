@@ -61,20 +61,10 @@ function Modal({
     otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole' && reserve.seat.type !== 'it')
   }
 
-  const testApi = async () => {
-    const userId = await (await axios.get(`/api/users/${username}`, {
-      params: {
-        userRole:userRole
-      }
-    })).data
-
-    console.log('RESULT', userId)
-  }
 
   async function handleSeat() {
 
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
-
     let bookStatus = 'accepted'
 
     // console.log("FROM: " + fromTo.from)
@@ -158,7 +148,6 @@ function Modal({
 
   return (
     <>
-    <button onClick={() => testApi()}>API</button>
       {action === ADD || action === DELETESINGLE
         ?
         <ModalComponent
