@@ -55,8 +55,6 @@ function SeatsElement({
     const { userData } = useAuthHook()
     const isAdmin = userData.role === 'ADMIN'
 
-    console.log('RESERVEDATADATA',roomType)
-
     let elClass = `isometric__chair ${roomType}-seat seat${busy && !isPending ? " busy" : ""}${isYourSeat ? " your" : ""}${available ? " available" : ""}${isPending && roomType === 'meeting' ? " pending" : "" }`
     const handleAddSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
@@ -67,7 +65,6 @@ function SeatsElement({
     const handleDeleteSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
         dispatch(setModalType('seats-modal'))
-        // console.log('OK OPEN')
         setAction(DELETE);
     }
 
@@ -85,9 +82,6 @@ function SeatsElement({
                             } else if (isYourSeat || (isAdmin && busy)) {
                                 handleDeleteSingleSeat()
                             }
-                        }
-                        if(isPending && isAdmin) {
-                            console.log('SEAT CLICK')
                         }
                     } else {
                         if (available || (isAdmin && !busy)) {

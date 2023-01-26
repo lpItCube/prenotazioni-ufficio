@@ -76,8 +76,7 @@ function Room({
     const isYourRoom = wholeRoom?.user.username === rooms[id].username
     const busyResAndRoom = reserveData.filter(({ seat: { type } }: Reserve) => type === "meet" || type === "meet-whole")
     const isPending = reserveData.find((r: Reserve) => r.status === 'pending' && r.seat.type === 'meet-whole' ) ? true : false
-
-    console.log('RESERVEDATADATA',reserveData)
+    
     //se hai una prenotazione per quella giornata tutti i posti non sono disponibili
     const allSeatsNotAvailable = yourReserves.length > 0
     //se non hai prenotato posti in it e non ci sono posti meet occupati da altri, puoi prenotare

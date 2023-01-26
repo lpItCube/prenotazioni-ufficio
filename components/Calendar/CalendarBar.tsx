@@ -30,8 +30,6 @@ function CalendarBar({
   }
 
   const handleChangeHour = async () => {
-    // const target = e.target as HTMLElement
-    // console.log(target.nodeValue)
     const fromValue = (document.getElementById("from") as HTMLInputElement).value
     const toValue = (document.getElementById("to") as HTMLInputElement).value
     setFromToHours({ from: fromValue, to: toValue })

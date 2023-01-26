@@ -13,15 +13,16 @@ function Login() {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" })
   const [loginError, setLoginError] = useState(false)
   const [loadingLogin, setLoadingLogin] = useState(false)
+  const [enterFromLogin, setEnterFromLogin] = useState(false)
 
   const router = useRouter()
   const session = useSession()
 
-  console.log('SESSION',session)
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
+    setEnterFromLogin(true)
     setLoadingLogin(true)
     setLoginError(false)
 
@@ -37,19 +38,20 @@ function Login() {
 
     if (res && res!.error) {
       setLoginError(true)
-      setLoadingLogin(false)
     }
-
+    
     else urlToEncode
-      ? router.push(decodeURIComponent(urlToEncode))
-      : router.push('/prenota')
+    ? router.push(decodeURIComponent(urlToEncode))
+    : router.push('/prenota')
+    
+    setLoadingLogin(false)
   }
-
+  
   if(session.status === 'loading') {
     return <Spinner/>
   }
 
-  if(session.status === 'authenticated') {
+  if(session.status === 'authenticated' && !enterFromLogin) {
     router.push('/prenota')
     return
   }

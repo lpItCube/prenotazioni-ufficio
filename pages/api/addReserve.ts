@@ -15,7 +15,7 @@ type Data = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: Data = req.body
-  // console.log(data)
+
   const seat = await prisma.seat.findUnique({
     where: {id: data.seatId}
   })
@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }) 
       res.status(200).json(result)
     } catch (e) {
-      console.log(e)
+
       res.status(404)
     }
 

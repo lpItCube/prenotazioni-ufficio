@@ -73,7 +73,6 @@ function Prenotazioni() {
       }
       const reorderData = sortedResponse.sort((a: any, b: any) => (a.to > b.to) ? 1 : -1)
       setReserves(reorderData)
-      { console.log('SORTED', reorderData) }
     }
 
 

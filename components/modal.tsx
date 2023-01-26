@@ -67,8 +67,6 @@ function Modal({
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     let bookStatus = 'accepted'
 
-    // console.log("FROM: " + fromTo.from)
-    // console.log("TO: " + fromTo.to)
 
     if (action === ADD) {
       if (seatName === 'meet-room') {
@@ -130,7 +128,6 @@ function Modal({
 
       const deleteSeat = await axios.delete("/api/reserve/" + id);
       if(deleteSeat.status === 204) {
-        console.log('REFRESH!')
       }
       const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
       setReserveData(reloadData)
@@ -143,8 +140,6 @@ function Modal({
     }
 
   }
-
-  console.log('RESERVED', reserveData)
 
   return (
     <>

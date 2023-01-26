@@ -55,7 +55,6 @@ function Calendar({
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
 
-    // console.log('CLICK',fromDate,toDate)
     setReserveData(res)
   }
 
@@ -73,7 +72,6 @@ function Calendar({
   // const userRole = useSelector(getUserRole)
   const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole === 'ADMIN'
   const notBookAll = userRole === 'USER' && reserveData.length > 0
-  console.log('RESERVE APPROVAL', needApproval)
 
   return (
     <>

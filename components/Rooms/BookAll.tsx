@@ -46,7 +46,6 @@ function BookAll({
     const [alreadyBooked, setAlreadyBooked] = useState(false)
     const [approvalButton, setApprovalButton] = useState(false)
     const [manageButton, setManageButton] = useState(false)
-    console.log('RESERVE ROOM YOUR',reservedIndDay)
 
     useEffect(() => {
 
@@ -77,10 +76,6 @@ function BookAll({
 
     }, [roomIsBookable, userRole, isYourRoom, notBookAll, needApproval, reservedIndDay])
 
-
-   
-    console.log('STATUS',isYourRoom)
-    console.log('STATUS',notBookAll)
 
     let buttonText 
     if(approvalButton || manageButton && !isYourRoom) {

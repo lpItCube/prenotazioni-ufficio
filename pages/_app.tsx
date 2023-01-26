@@ -13,7 +13,6 @@ import { Provider } from 'react-redux'
 import Header from '../components/Header'
 
 export default function App({ Component, pageProps }: AppProps) {
-  // console.log(Component.name)
 
   const [appIsLoading, setAppIsLoading] = useState(false)
   const [hitNotification, setHitNotification] = useState(false)

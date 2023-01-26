@@ -11,7 +11,6 @@ const Protected: NextPage = (): JSX.Element => {
   }, [status])
 
   const session = useSession()
-  // console.log(session)
   if (status === "authenticated")
     return (
       <div>

@@ -35,7 +35,6 @@ function pending({
     const [reserves, setReserves] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
-    console.log('SESSION', session)
 
     useEffect(() => {
         if (!session?.data?.user?.role) return
@@ -60,16 +59,10 @@ function pending({
     }, [session])
     
     useEffect(() => {
-        console.log('UPDATE NOW')
         dispatch(setPendingNotification({pending:reserves.length}))
         setHitNotification(true)
     }, [reserves, session])
     
-    
-    if (!isAuthorized) {
-        console.log('UNHOUTORIZED',userRole)
-        return
-    }
 
     const handleApprovation = async (status: any, id: any) => {
         if (status === 'approved') {
@@ -170,8 +163,6 @@ function pending({
             </TableRow>
         </>
     }
-
-    console.log('RESERVES', reserves)
 
     return (
         <div

@@ -4,6 +4,9 @@ import { useEffect, useState } from "react"
 import prisma from "../../lib/prisma"
 import axios from "axios"
 
+import { getToken } from "next-auth/jwt";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+
 // Components
 import Calendar from "../../components/calendar"
 import FirstOffice from "../../components/first-office"
@@ -31,21 +34,19 @@ function createNewDate(hour: string) {
   return textDate
 }
 
+
+
 function Prenota({ initialData }: any) {
 
   const session = useSession()
   const { status, data } = useSession()
+
   const [ reserveData, setReserveData ] = useState(initialData)
   const [ fromTo, setFromTo ] = useState<DateRange>({from: null, to: null}) 
   const [seatName, setSeatName] = useState("none")
   const [action, setAction] = useState("")
 
   const { userData } = useAuthHook()
-
-  console.log('STATUS' , session)
-  
-  // console.log('IS YOUR ROOM AND IS BOOKABLE?',useSelector(getIsYourRoom), useSelector(getIsBookable))
-
   const userRole = userData.role
 
   useEffect(() => {
@@ -66,9 +67,6 @@ function Prenota({ initialData }: any) {
     reloadDataSession()
   }, [session, fromTo])
 
-  useEffect(() => {
-    // console.log("rerender")
-  }, [reserveData])
 
   useEffect(() => {
     //if (status === "unauthenticated" ) Router.replace("/login")
@@ -76,9 +74,7 @@ function Prenota({ initialData }: any) {
     document.dispatchEvent(event);
   }, [status])
 
-  useEffect(() => {
-    // console.log("rerender from date")
-  }, [fromTo])
+
   
   if(status === "authenticated")
     return (
