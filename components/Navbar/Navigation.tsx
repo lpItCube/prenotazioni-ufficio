@@ -34,6 +34,7 @@ function Navigation({
     const dispatch = useDispatch()
     const pendingNotification = useSelector(getPendingNotification)
     const [pendingNotif, setPendingNotif] = useState(pendingNotification)
+    const [hitLogout, setHitLogout] = useState(false)
 
     useEffect(() => {
         const getReserves = async () => {
@@ -55,6 +56,7 @@ function Navigation({
     const path = useRouter().pathname
 
     const handleLogout = () => {
+        setHitLogout(true)
         signOut({ callbackUrl: '/login' })
     }
 
@@ -122,6 +124,7 @@ function Navigation({
             </div>
             <Logout
                 handleLogout={handleLogout}
+                hitLogout={hitLogout}
                 icon={
                     <TbDoorExit
                         size={24}

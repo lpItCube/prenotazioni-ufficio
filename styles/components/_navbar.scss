@@ -168,7 +168,12 @@
         padding: 16px;
         border-top: solid 1px $dark700;
         cursor: pointer;
-
+        .spinner {
+            &__container {
+                width: 24px;
+                height: 24px;
+            }
+        }
         &:hover {
             background-color: $dark700;
         }

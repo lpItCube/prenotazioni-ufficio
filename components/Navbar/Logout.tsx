@@ -1,22 +1,27 @@
-import Link from 'next/link'
+import Spinner from "../Ui/Spinner"
 
-function Logout({ 
+function Logout({
+    hitLogout,
     handleLogout,
-    icon, 
+    icon,
     text
 }: any) {
-    
+
     return (
-        <div 
+        <div
             onClick={() => handleLogout()}
             className='navigation__logout'
         >
-            {icon}
+             {hitLogout
+                ? <Spinner />
+                : icon
+             }
             <p
                 className="navigation__logout--text min"
             >
                 {text}
             </p>
+
         </div>
     )
 }
