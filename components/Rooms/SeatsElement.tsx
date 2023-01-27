@@ -44,9 +44,29 @@ function SeatsElement({
     const isAdmin = userData.role === 'ADMIN'
 
     const status = seatsStatus[index]
-    let elClass 
-    if(status) elClass=`${roomDetails.roomType}-seat seat${status.busy && !status.isPending ? " busy" : ""}${status.isYourSeat ? " your" : ""}${status.available ? " available" : ""}${status.isPending && roomDetails.roomType === 'meet' ? " pending" : "" }`
+    // let elClass 
+    // if(status) elClass=`${roomDetails.roomType}-seat seat${status.busy && !status.isPending ? " busy" : ""}${status.isYourSeat ? " your" : ""}${status.available ? " available" : ""}${status.isPending && roomDetails.roomType === 'meet' ? " pending" : "" }`
     
+    let seatClass
+    if(status) {
+        // occupata e non tua ROSSO
+        if(status.busy && !status.isYourSeat && !status.isPending) {
+            seatClass = 'busy'
+        } 
+        // occupata e è tua GIALLO
+        if(status.busy && status.isYourSeat && !status.isPending ) {
+            seatClass = 'your'
+        }
+        // non occupata
+        if(status.available) {
+            seatClass = 'available'
+        }
+        // pending
+        if(status.isPending && roomDetails.roomType === 'meet') {
+            seatClass = 'pending'
+        }
+    }
+
     const handleAddSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
         dispatch(setModalType('seats-modal'))
@@ -62,7 +82,7 @@ function SeatsElement({
     return (
         <div
             id={seat}
-            className={`isometric__chair ${elClass}`}
+            className={`isometric__chair ${roomDetails.roomType}-seat seat ${seatClass}`}
             onClick={
                 () => {
                     console.log('now')
@@ -85,6 +105,7 @@ function SeatsElement({
                 }
             }
         >
+
             {seatsPosition.seatsFront.indexOf(seat) > -1 && <ChairOne />}
             {seatsPosition.seatsPrimarySx.indexOf(seat) > -1 && <ChairTwo />}
             {seatsPosition.seatsBack.indexOf(seat) > -1 && <ChairThree />}

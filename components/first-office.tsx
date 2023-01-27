@@ -11,6 +11,7 @@ import Spinner from "./Ui/Spinner"
 // Redux
 import { useSelector, useDispatch } from "react-redux"
 import { getReserves, setReserves } from "../features/reserveSlice"
+import { getActualRoom } from "../features/roomSlice"
 
 // Hooks
 import { useAuthHook } from "../hooks/useAuthHook";
@@ -33,6 +34,7 @@ function FirstOffice({
   const [nextRoom, setNextRoom] = useState(1)
   const { userData } = useAuthHook()
   const reserveData = useSelector(getReserves)
+  const actualRoom = useSelector(getActualRoom)
 
   const session = useSession()
   let username = null
@@ -62,7 +64,9 @@ function FirstOffice({
   }
 
   const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole === 'ADMIN'
-  const notBookAll = userRole === 'USER' && reserveData.length > 0
+  const notBookAll = userRole === 'USER' && reserveData.filter((res:any) => res.seat.type === actualRoom).length > 0
+
+  console.log(notBookAll)
 
   const setRooms: any = [
     {
