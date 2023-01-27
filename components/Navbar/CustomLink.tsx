@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // Redux
-import { useSelector, useDispatch } from 'react-redux'
-import { toggleNavbar, getNavbarStatus } from '../../features/navigationSlice'
+import { useDispatch } from 'react-redux'
+import { toggleNavbar } from '../../features/navigationSlice'
 
 
 import Link from 'next/link'

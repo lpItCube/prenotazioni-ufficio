@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next"
-import { getSession, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import prisma from "../../lib/prisma"
 import axios from "axios"

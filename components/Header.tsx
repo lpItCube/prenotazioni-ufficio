@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 // Components
 import Logo from './Ui/Logo'
 import { TbDoorExit } from "react-icons/tb"
-import { Colors } from './Ui/Colors'
 import Button from './Ui/Button'
 
 // Hooks

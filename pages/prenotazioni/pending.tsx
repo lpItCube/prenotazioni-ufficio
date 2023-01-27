@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
 import { useSession } from "next-auth/react"
 import axios from 'axios'
 
 // Redux
-import { useSelector, useDispatch } from "react-redux"
-// import { getUserRole } from "../../features/authSlice"
+import { useDispatch } from "react-redux"
 import { setPendingNotification } from '../../features/notificationSlice'
-
-// Hooks
-import { useAuthHook } from "../../hooks/useAuthHook";
 
 // Utils
 import { getStringDate, getStringHours } from '../../utils/datePharser'

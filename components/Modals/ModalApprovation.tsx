@@ -1,5 +1,5 @@
 // Utils
-import { getStringDate, getStringHours } from "../../utils/datePharser"
+import { getStringHours } from "../../utils/datePharser"
 
 // Components
 import Button from "../Ui/Button"

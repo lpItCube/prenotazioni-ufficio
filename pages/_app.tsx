@@ -1,8 +1,7 @@
 import '../styles/style.scss'
 import type { AppProps } from 'next/app'
 import Navbar from '../components/Navbar/navbar'
-import { getSession, SessionProvider } from 'next-auth/react'
-import { GetServerSideProps } from 'next'
+import { SessionProvider } from 'next-auth/react'
 import { useState } from 'react'
 
 // Redux

@@ -7,7 +7,6 @@ import ChairFour from "./IsometricOffice/ChairFour"
 // Redux
 import { useSelector, useDispatch } from "react-redux"
 import { toggleModal, getModalStatus, setModalType } from "../../features/modalSlice"
-// import { getUserRole } from "../../features/authSlice";
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";

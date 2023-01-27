@@ -5,8 +5,8 @@ import Button from "../Ui/Button"
 import { getStringHours } from "../../utils/datePharser"
 
 // Redux
-import { useSelector, useDispatch } from "react-redux"
-import { getReserves, setReserves } from "../../features/reserveSlice"
+import { useSelector } from "react-redux"
+import { getReserves } from "../../features/reserveSlice"
 import Spinner from "../Ui/Spinner"
 
 const ADD = "ADD"

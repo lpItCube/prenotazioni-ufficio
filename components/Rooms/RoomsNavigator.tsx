@@ -5,7 +5,6 @@ type RoomsNavigatorProps = {
 
 // Components
 import { GrLinkNext } from 'react-icons/gr'
-import { Colors } from '../Ui/Colors'
 
 function RoomsNavigator({
     nextName,

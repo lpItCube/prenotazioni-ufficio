@@ -1,7 +1,4 @@
-import Link from 'next/link'
-import { useState } from 'react'
-import { useRouter } from 'next/router'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 
 // Components
 import Logo from '../Ui/Logo'

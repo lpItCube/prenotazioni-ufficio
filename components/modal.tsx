@@ -3,7 +3,7 @@ import axios from "axios"
 
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
-import { toggleModal, getModalStatus } from "../features/modalSlice"
+import { toggleModal } from "../features/modalSlice"
 import { getReserves, setReserves } from "../features/reserveSlice"
 import { getActualRoom } from "../features/roomSlice"
 
@@ -29,7 +29,6 @@ const MANAGE = "MANAGE"
 function Modal({
   seatName,
   action,
-  username,
   singleReserve,
   fromTo,
   setHandleDelete

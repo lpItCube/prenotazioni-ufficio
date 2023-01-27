@@ -5,10 +5,6 @@ import { useEffect, useState } from "react"
 // Utils
 import { getStringDate, getStringHours } from '../../utils/datePharser'
 
-// Redux
-import { useDispatch, useSelector } from "react-redux"
-// import { getUserName, getUserRole, getUserId } from "../../features/authSlice"
-
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
 
@@ -198,7 +194,6 @@ function Prenotazioni() {
         className="prenotazioni__container"
       >
         <ReservesFilters
-          userRole={userRole}
           filterMode={filterMode}
           setFilterMode={setFilterMode}
           filterDay={filterDay}

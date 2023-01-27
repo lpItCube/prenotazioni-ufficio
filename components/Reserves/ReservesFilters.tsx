@@ -5,7 +5,6 @@ import Select from "../Ui/Select"
 import Option from '../Ui/Option'
 
 type ReserveFiltersProps = {
-    userRole: string,
     setFilterMode: any,
     setFilterDay: any,
     setFilterRoom: any,
@@ -16,7 +15,6 @@ type ReserveFiltersProps = {
 }
 
 function ReservesFilters({
-    userRole,
     setFilterMode,
     setFilterDay,
     setFilterRoom,

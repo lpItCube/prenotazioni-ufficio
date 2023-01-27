@@ -10,7 +10,6 @@ const Protected: NextPage = (): JSX.Element => {
     if (status === "unauthenticated" ) Router.replace("/login")
   }, [status])
 
-  const session = useSession()
   if (status === "authenticated")
     return (
       <div>

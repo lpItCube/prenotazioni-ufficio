@@ -9,24 +9,16 @@ import { getIsYourRoom } from '../../features/roomSlice';
 import { getReserves } from '../../features/reserveSlice';
 
 type InfoTableProps = {
-    wholeRoom: any,
     currentRoom: any,
     seats: any,
-    busySeats: any,
-    busyRes: any,
     yourReserves: any,
-    compareType: any,
     className: string
 }
 
 function InfoTable({
-    wholeRoom,
     currentRoom,
     seats,
-    busySeats,
-    busyRes,
     yourReserves,
-    compareType,
     className
 }: InfoTableProps) {
 

@@ -16,7 +16,6 @@ import Logout from "./Logout";
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
 import { getNavbarStatus } from '../../features/navigationSlice'
-// import { getUserRole } from "../../features/authSlice";
 import { getPendingNotification, setPendingNotification } from "../../features/notificationSlice"
 
 // Hooks

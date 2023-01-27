@@ -1,10 +1,8 @@
 import { GetStaticPaths, GetStaticProps } from "next"
-import { useSession } from "next-auth/react"
 import FirstOffice from "../../components/first-office"
 import prisma from '../../lib/prisma'
 
 function PrenotaDate({ reserveData, date }: any) {
-  const session = useSession()
 
   return (
     <FirstOffice reserveData={reserveData} date={date} />

@@ -7,7 +7,7 @@ import Button from "../Ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { getIsBookable, getIsYourRoom } from "../../features/roomSlice";
 import { toggleModal, setModalType } from "../../features/modalSlice";
-import { getReserves, setReserves } from "../../features/reserveSlice"
+import { getReserves } from "../../features/reserveSlice"
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";

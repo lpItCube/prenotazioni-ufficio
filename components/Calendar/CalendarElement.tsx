@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 
 // Components
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { Colors } from '../Ui/Colors';
 
 type CalendarProps = {
     selectedDate: any,

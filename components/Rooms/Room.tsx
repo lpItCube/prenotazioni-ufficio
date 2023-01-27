@@ -177,22 +177,11 @@ function Room({
                 <div className="room__info">
                     <RoomHeader
                         roomName={rooms[id].roomName}
-                        hasBookAll={rooms[id].hasBookAll}
-                        isYourRoom={isYourRoom}
-                        roomIsBookable={roomIsBookable}
-                        setSeatName={setSeatName}
-                        setAction={setAction}
-                        ADD={ADD}
-                        DELETE={DELETE}
                     />
                     <InfoTable
-                        wholeRoom={wholeRoom}
                         currentRoom={rooms[visibleRoom]}
                         seats={seats}
-                        busySeats={busySeats}
-                        busyRes={busyRes}
                         yourReserves={yourReserves}
-                        compareType={compareType}
                         className='only-desk'
                     />
                     <Legenda/>
@@ -212,13 +201,9 @@ function Room({
                     }
                 </div>
                 <InfoTable
-                     wholeRoom={wholeRoom}
                     currentRoom={rooms[visibleRoom]}
                     seats={seats}
-                    busySeats={busySeats}
-                    busyRes={busyRes}
                     yourReserves={yourReserves}
-                    compareType={compareType}
                     className='only-smart'
                 />
             </div>

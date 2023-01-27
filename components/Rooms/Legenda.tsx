@@ -7,7 +7,7 @@ import Button from '../Ui/Button';
 import ModalComponent from '../Ui/ModalComponent';
 
 // Redux
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import { toggleModal, setModalType } from '../../features/modalSlice';
 
 type LegendaProps = {

@@ -9,8 +9,8 @@ import BookAll from "./Rooms/BookAll"
 import Spinner from "./Ui/Spinner"
 
 // Redux
-import { useSelector, useDispatch } from "react-redux"
-import { getReserves, setReserves } from "../features/reserveSlice"
+import { useSelector } from "react-redux"
+import { getReserves } from "../features/reserveSlice"
 import { getActualRoom } from "../features/roomSlice"
 
 // Hooks
