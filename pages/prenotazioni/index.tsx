@@ -50,18 +50,18 @@ function Prenotazioni() {
   const userId = userData.id
 
   useEffect(() => {
-    const getReserves = async () => {
-      setIsLoading(true)
-      const response = await axios.get(`/api/reserve`)
+    setIsLoading(true)
+  }, [])
 
+  useEffect(() => {
+    
+    const getReserves = async (method:any) => {
+
+      const response = await axios.get(`/api/reserve/currentUser?currentUser=${userId}&method=${method}`)
       let sortedResponse
 
       sortedResponse = response.data
-      if (filterMode.value === 'myUser') {
-        sortedResponse = sortedResponse.filter((res: any) => res.user.id === userId)
-      } else if (filterMode.value === 'otherUsers') {
-        sortedResponse = sortedResponse.filter((res: any) => res.user.id !== userId)
-      }
+      
       if (filterRoom.value !== '') {
         if (filterRoom.value === 'it') {
           sortedResponse = sortedResponse.filter((res: any) => res.seat.type === filterRoom.value)
@@ -73,17 +73,20 @@ function Prenotazioni() {
         sortedResponse = sortedResponse.filter((res: any) => new Date(res.from).toDateString() === filterDay.value)
       }
       const reorderData = sortedResponse.sort((a: any, b: any) => (a.to > b.to) ? 1 : -1)
+     
       setReserves(reorderData)
+      setIsLoading(false)
     }
 
-
-    if (session.status === "authenticated")
-      getReserves()
+    if(userId) {
+      setIsLoading(true)
+      getReserves(filterMode.value)
+    }
 
     if (handleDelete) {
       setHandleDelete(false)
     }
-    setIsLoading(false)
+    // setIsLoading(false)
   }, [session, handleDelete, filterMode, filterRoom, filterDay, userId])
 
 
@@ -170,7 +173,7 @@ function Prenotazioni() {
     </>
   }
 
-  if (session.status === "authenticated" && !isLoading)
+ 
     return (
       <div
         className="prenotazioni__container"
@@ -227,7 +230,7 @@ function Prenotazioni() {
             seatName={modalData.seatName}
             action={modalData.action}
             username={modalData.username}
-            reserveData={modalData.reserveData}
+            singleReserve={modalData.reserveData}
             setReserveData={null}
             fromTo={null}
             setHandleDelete={setHandleDelete}
@@ -235,7 +238,7 @@ function Prenotazioni() {
         </div>
       </div>
     )
-  else return <div><Spinner /></div>
+  
 }
 
 export default Prenotazioni

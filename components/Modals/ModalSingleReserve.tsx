@@ -16,7 +16,8 @@ type ModalSingleReserveProps = {
     seatName: any,
     otherReserveInPeriod: any,
     userReserve: any,
-    handleSeat: any
+    handleSeat: any,
+    singleReserve:any
 }
 
 function ModalSingleReserve({
@@ -24,7 +25,8 @@ function ModalSingleReserve({
     seatName,
     otherReserveInPeriod,
     userReserve,
-    handleSeat
+    handleSeat,
+    singleReserve
 }: ModalSingleReserveProps) {
 
     const reserveData = useSelector(getReserves)
@@ -38,7 +40,12 @@ function ModalSingleReserve({
                 {action === ADD && "Vuoi procedere con la prenotazione del posto "}
                 {action === DELETESINGLE && "Vuoi annullare la prenotazione del posto "}
                 <b>{seatName}</b>?</p>
-                {reserveData && seatName === 'meet-room' && otherReserveInPeriod && otherReserveInPeriod.length > 0 &&
+                {reserveData 
+                && seatName === 'meet-room' 
+                && otherReserveInPeriod 
+                && otherReserveInPeriod.length > 0 
+                && action === !DELETESINGLE
+                &&
                 <>
                     <br />
                     <p

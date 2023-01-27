@@ -29,6 +29,7 @@ function Modal({
   seatName,
   action,
   username,
+  singleReserve,
   fromTo,
   setHandleDelete
 }: any) {
@@ -60,13 +61,11 @@ function Modal({
     otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole' && reserve.seat.type !== 'it')
   }
 
-
   async function handleSeat() {
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     let bookStatus = 'accepted'
 
-    
-    console.log('ADD')
+
     if (action === ADD) {
       if (seatName === 'meet-room') {
         
@@ -98,12 +97,12 @@ function Modal({
 
       let reserveToDelete
 
-      if (reserveData.length > 0) {
+      if (reserveData.length > 0 && !singleReserve) {
         reserveToDelete = reserveData.find((reserve: any) => reserve.seat.name === seatName)
       } else {
-        reserveToDelete = reserveData
+        reserveToDelete = singleReserve
       }
-
+      
       const deleteSeat = await axios.delete("/api/reserve/" + reserveToDelete.id);
 
     }
@@ -154,12 +153,14 @@ function Modal({
             subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
             refType={'seats-modal'}
         >
+          DELETE SINGLE
           <ModalSingleReserve
             action={action}
             seatName={seatName}
             otherReserveInPeriod={otherReserveInPeriod}
             userReserve={userReserve}
             handleSeat={handleSeat}
+            singleReserve={singleReserve}
           />
         </ModalComponent>
         : <ModalComponent
