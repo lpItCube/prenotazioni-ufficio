@@ -3,8 +3,6 @@ import { useState, useEffect, useRef } from 'react'
 // Components
 import Select from "../Ui/Select"
 import Option from '../Ui/Option'
-import Button from '../Ui/Button'
-import { IoEllipsisHorizontalOutline } from 'react-icons/io5'
 
 type ReserveFiltersProps = {
     userRole: string,
@@ -58,8 +56,6 @@ function ReservesFilters({
 
 
     }, [])
-
-
 
     
     const handleOpenUsers = () => {

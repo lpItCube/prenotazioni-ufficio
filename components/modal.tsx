@@ -92,7 +92,6 @@ function Modal({
         status: bookStatus
       })
 
-      console.log('ADD ID USER', addReserve)
       
 
     } else if (action === DELETE || action === DELETESINGLE) {
@@ -162,7 +161,6 @@ function Modal({
             userReserve={userReserve}
             handleSeat={handleSeat}
           />
-          SINGLE
         </ModalComponent>
         : <ModalComponent
           modalTitle={`${action === ADD ? 'Aggiungi' : 'Gestisci'} prenotazione`}

@@ -49,27 +49,28 @@ function Prenotazioni() {
   const userRole = userData.role
   const userId = userData.id
 
-
   useEffect(() => {
     const getReserves = async () => {
       setIsLoading(true)
       const response = await axios.get(`/api/reserve`)
 
-      let sortedResponse = response.data
+      let sortedResponse
+
+      sortedResponse = response.data
       if (filterMode.value === 'myUser') {
-        sortedResponse.filter((res: any) => res.user.id === userId)
+        sortedResponse = sortedResponse.filter((res: any) => res.user.id === userId)
       } else if (filterMode.value === 'otherUsers') {
-        sortedResponse.filter((res: any) => res.user.id !== userId)
+        sortedResponse = sortedResponse.filter((res: any) => res.user.id !== userId)
       }
       if (filterRoom.value !== '') {
         if (filterRoom.value === 'it') {
-          sortedResponse.filter((res: any) => res.seat.type === filterRoom.value)
+          sortedResponse = sortedResponse.filter((res: any) => res.seat.type === filterRoom.value)
         } else {
-          sortedResponse.filter((res: any) => res.seat.type === 'meet' || res.seat.type === 'meet-whole')
+          sortedResponse = sortedResponse.filter((res: any) => res.seat.type === 'meet' || res.seat.type === 'meet-whole')
         }
       }
       if (filterDay.value !== '') {
-        sortedResponse.filter((res: any) => new Date(res.from).toDateString() === filterDay.value)
+        sortedResponse = sortedResponse.filter((res: any) => new Date(res.from).toDateString() === filterDay.value)
       }
       const reorderData = sortedResponse.sort((a: any, b: any) => (a.to > b.to) ? 1 : -1)
       setReserves(reorderData)
@@ -83,7 +84,7 @@ function Prenotazioni() {
       setHandleDelete(false)
     }
     setIsLoading(false)
-  }, [session, handleDelete, filterMode, filterRoom, filterDay])
+  }, [session, handleDelete, filterMode, filterRoom, filterDay, userId])
 
 
   const handleDeleteRow = (seatName: string, action: string, username: string, reserveData: any) => {
