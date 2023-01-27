@@ -5,6 +5,7 @@ import axios from "axios"
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleModal, getModalStatus } from "../features/modalSlice"
 import { getReserves, setReserves } from "../features/reserveSlice"
+import { getActualRoom } from "../features/roomSlice"
 
 // Hooks 
 import { useAuthHook } from "../hooks/useAuthHook"
@@ -40,9 +41,12 @@ function Modal({
   const userIdHooks: string = userData.id
   const userRole = userData.role
   const [hitModalButton, setHitModalButton] = useState({loading:false, id:null})
+  const actualRoom = useSelector(getActualRoom)
   
   const toApprove = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'pending')
   const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'accepted')
+
+  
 
   let userReserve: any
   if (userRole === 'USER') {
@@ -50,6 +54,13 @@ function Modal({
   } else {
     userReserve = reserveData
   }
+  
+  if(userReserve.length > 0) {
+    userReserve = actualRoom === 'meet' 
+      ? userReserve.filter((res:any) => res.seat.type === actualRoom || res.seat.type === 'meet-whole')
+      : userReserve.filter((res:any) => res.seat.type === actualRoom)
+  }
+
 
 
   const handleCloseModal = () => {

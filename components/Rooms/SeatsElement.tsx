@@ -65,6 +65,7 @@ function SeatsElement({
             className={`isometric__chair ${elClass}`}
             onClick={
                 () => {
+                    console.log('now')
                     setSeatName(seat);
                     if (roomDetails.hasBookAll) {
                         if (!wholeRoom) {

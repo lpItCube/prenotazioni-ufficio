@@ -57,7 +57,6 @@ function InfoTable({
         const filtredReserves = reservesData.filter((res: any) => res.seat.type === filterBookRooms)
         const yourSeat = filtredReserves.filter((res:any) => res.user.id === userId )
         setCurrentReserves(filtredReserves)
-
         // Conta quanti posti restano disponibili per l'utente
         if(!isAdmin && yourReserves.length > 0) {
             // Quanti posti disponibili?

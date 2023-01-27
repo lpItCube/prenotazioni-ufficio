@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { setBookable, setIsYourRoom } from '../../features/roomSlice'
+import { setBookable, setIsYourRoom, setActualRoom } from '../../features/roomSlice'
 import { getReserves } from '../../features/reserveSlice';
 
 // Hooks
@@ -102,6 +102,7 @@ function Room({
     // Set redux room is bookable -> se è IT non è completamente prenotabile
     useEffect(() => {
         dispatch(setBookable(rooms[visibleRoom].hasBookAll))
+        dispatch(setActualRoom(rooms[visibleRoom].roomType))
     }, [visibleRoom])
 
     // Set redux is your room
