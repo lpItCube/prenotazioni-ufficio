@@ -23,27 +23,13 @@ import Spinner from '../../components/Ui/Spinner'
 
 function pending({
     setHitNotification
-  }:any) {
+}: any) {
 
-    const { userData } = useAuthHook() 
-
-    const userRole = userData.role
-    const router = useRouter();
     const session = useSession()
     const dispatch = useDispatch()
-    const [isAuthorized, setIsAutorized] = useState(false)
     const [reserves, setReserves] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-
-
-    useEffect(() => {
-        if (!session?.data?.user?.role) return
-        if (session?.data?.user?.role === 'ADMIN') {
-            setIsAutorized(true)
-            return
-        }
-        router.push("/prenotazioni");
-    }, [session]);
+    const [hitManageButton, setHitManageButton] = useState({ loading: false, id: null })
 
 
     useEffect(() => {
@@ -54,17 +40,17 @@ function pending({
             setReserves(reorderData)
             setIsLoading(false)
         }
-        if (session.status === "authenticated")
-            getReserves()
+        getReserves()
     }, [session])
-    
+
     useEffect(() => {
-        dispatch(setPendingNotification({pending:reserves.length}))
+        dispatch(setPendingNotification({ pending: reserves.length }))
         setHitNotification(true)
     }, [reserves, session])
-    
+
 
     const handleApprovation = async (status: any, id: any) => {
+        setHitManageButton({ loading: true, id })
         if (status === 'approved') {
             await axios.patch("/api/reserve/approveReserve", {
                 id,
@@ -79,7 +65,8 @@ function pending({
             const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
             setReserves(reorderData)
         }
-        dispatch(setPendingNotification({pending:reserves.length-1}))
+        dispatch(setPendingNotification({ pending: reserves.length - 1 }))
+        setHitManageButton({ loading: false, id: null })
         setHitNotification(true)
 
     }
@@ -123,26 +110,28 @@ function pending({
                             <TableCol
                                 className="prenotazioni__cta"
                             >
-                                <div className='approve__row--cta'>
+                                {hitManageButton.loading && hitManageButton.id === r.id
+                                    ?   <Spinner/>
+                                    :   <div className='approve__row--cta'>
 
-                                    <Button
-                                        className={`cta cta--secondary-ok cta--approve`}
-                                        onClick={() => handleApprovation('approved', r.id)}
-                                        // onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
-                                        type='button'
-                                        icon={<TbClipboardCheck size={18} />}
-                                        text=''
-                                    />
-                                    <Button
-                                        className={`cta cta--secondary-delete`}
-                                        onClick={() => handleApprovation('disapproved', r.id)}
-                                        // onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
-                                        type='button'
-                                        icon={<RiDeleteBin3Line size={18} />}
-                                        text=''
-                                    />
-                                </div>
-
+                                            <Button
+                                                className={`cta cta--secondary-ok cta--approve`}
+                                                onClick={() => handleApprovation('approved', r.id)}
+                                                // onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
+                                                type='button'
+                                                icon={<TbClipboardCheck size={18} />}
+                                                text=''
+                                            />
+                                            <Button
+                                                className={`cta cta--secondary-delete`}
+                                                onClick={() => handleApprovation('disapproved', r.id)}
+                                                // onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
+                                                type='button'
+                                                icon={<RiDeleteBin3Line size={18} />}
+                                                text=''
+                                            />
+                                        </div>
+                                }
                             </TableCol>
                         </TableRow>
                     )
@@ -197,15 +186,6 @@ function pending({
                         }
                     </TableBody>
                 </Table>
-                {/* <Modal
-                    seatName={modalData.seatName}
-                    action={modalData.action}
-                    username={modalData.username}
-                    reserveData={modalData.reserveData}
-                    setReserveData={null}
-                    fromTo={null}
-                    setHandleDelete={setHandleDelete}
-                /> */}
             </div>
         </div>
     )

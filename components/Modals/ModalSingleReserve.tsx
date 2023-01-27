@@ -7,6 +7,7 @@ import { getStringHours } from "../../utils/datePharser"
 // Redux
 import { useSelector, useDispatch } from "react-redux"
 import { getReserves, setReserves } from "../../features/reserveSlice"
+import Spinner from "../Ui/Spinner"
 
 const ADD = "ADD"
 const DELETESINGLE = "DELETESINGLE"
@@ -17,7 +18,10 @@ type ModalSingleReserveProps = {
     otherReserveInPeriod: any,
     userReserve: any,
     handleSeat: any,
-    singleReserve:any
+    hitModalButton: {
+        loading:boolean,
+        id:any
+    }
 }
 
 function ModalSingleReserve({
@@ -26,7 +30,7 @@ function ModalSingleReserve({
     otherReserveInPeriod,
     userReserve,
     handleSeat,
-    singleReserve
+    hitModalButton
 }: ModalSingleReserveProps) {
 
     const reserveData = useSelector(getReserves)
@@ -71,13 +75,17 @@ function ModalSingleReserve({
                     </div>
                 </>
             }
-            <Button
-                onClick={() => handleSeat()}
-                className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
-                type='button'
-                icon={false}
-                text={action === ADD ? 'Conferma' : 'Cancella'}
-            />
+            {console.log(hitModalButton.loading)}
+            {!hitModalButton.loading 
+                ? <Button
+                    onClick={() => handleSeat()}
+                    className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
+                    type='button'
+                    icon={false}
+                    text={action === ADD ? 'Conferma' : 'Cancella'}
+                />
+                : <Spinner/>
+            }
         </>
     )
 }

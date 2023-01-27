@@ -3,6 +3,7 @@ import { getStringDate, getStringHours } from "../../utils/datePharser"
 
 // Components
 import Button from "../Ui/Button"
+import Spinner from "../Ui/Spinner"
 
 type ModalApprovationProps = {
     reserve: any,
@@ -10,7 +11,11 @@ type ModalApprovationProps = {
     buttonIconDelete: any,
     buttonIconAccept:any,
     pendingControl: boolean,
-    pendingReserve: any
+    pendingReserve: any,
+    hitModalButton:{
+        loading:boolean,
+        id:any
+    }
 }
 
 function ModalApprovation({
@@ -19,7 +24,8 @@ function ModalApprovation({
     buttonIconDelete,
     buttonIconAccept,
     pendingControl,
-    pendingReserve
+    pendingReserve,
+    hitModalButton
 }: ModalApprovationProps) {
     return (
         <>
@@ -28,7 +34,7 @@ function ModalApprovation({
                     {pendingReserve.map((res: any) => {
                         const status = res.status === 'accepted' ? 'accepted' : 'pending'
                         return (
-                            <div className={`approve__reserve ${status}`}>
+                            <div key={res.id} className={`approve__reserve ${status}`}>
                                 <div className="approve__row--info">
                                     <div className="approve__row--user">{res.user.username}</div>
                                     <div className="approve__row">{res.seat.name}</div>
@@ -36,22 +42,26 @@ function ModalApprovation({
                                         <div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
                                     }
                                 </div>
-                                <div className="approve__row--cta">
-                                    <Button
-                                        onClick={() => approvationAction('approved', res.id)}
-                                        className={`cta cta--secondary-ok cta--approve`}
-                                        type='button'
-                                        icon={buttonIconAccept}
-                                        text={''}
-                                    />
-                                    <Button
-                                        onClick={() => approvationAction('disapproved', res.id)}
-                                        className={`cta cta--secondary-delete`}
-                                        type='button'
-                                        icon={buttonIconDelete}
-                                        text={''}
-                                    />
-                                </div>
+                                {hitModalButton.id === res.id && hitModalButton.loading
+                                    ?   <Spinner/>
+                                    :   <div className="approve__row--cta">
+                                            <Button
+                                                onClick={() => approvationAction('approved', res.id)}
+                                                className={`cta cta--secondary-ok cta--approve`}
+                                                type='button'
+                                                icon={buttonIconAccept}
+                                                text={''}
+                                            />
+                                            <Button
+                                                onClick={() => approvationAction('disapproved', res.id)}
+                                                className={`cta cta--secondary-delete`}
+                                                type='button'
+                                                icon={buttonIconDelete}
+                                                text={''}
+                                            />
+                                        </div>
+                                }
+                                
                             </div>
                         )
                     })}
@@ -70,15 +80,19 @@ function ModalApprovation({
                                         <div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
                                     }
                                 </div>
-                                <div className="approve__row--cta">
-                                    <Button
-                                        onClick={() => approvationAction('disapproved', res.id)}
-                                        className={`cta cta--secondary-delete`}
-                                        type='button'
-                                        icon={buttonIconDelete}
-                                        text={''}
-                                    />
-                                </div>
+                                {hitModalButton.id === res.id && hitModalButton.loading
+                                    ?   <Spinner/>
+                                    :   <div className="approve__row--cta">
+                                            <Button
+                                                onClick={() => approvationAction('disapproved', res.id)}
+                                                className={`cta cta--secondary-delete`}
+                                                type='button'
+                                                icon={buttonIconDelete}
+                                                text={''}
+                                            />
+                                        </div>
+                                }
+                                
                             </div>
                         )
                     })

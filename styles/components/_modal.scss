@@ -54,6 +54,15 @@
         margin-top: 32px;
         margin-left: auto;
       }
+      .spinner {
+        &__container {
+          margin-left: auto;
+          margin-right: 24px;
+          margin-top: 32px;
+          width: 32px;
+          height: 32px;
+        }
+      }
     }
     &__title {
       .label {
@@ -116,6 +125,12 @@
   &__container {
     display: flex;
     flex-direction: column;
+    .spinner {
+      &__container {
+        margin:auto;
+        margin-right: 0;
+      }
+    }
   }
   &__reserve {
     border-top: solid 1px $light500;

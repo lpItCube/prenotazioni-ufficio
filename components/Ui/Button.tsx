@@ -3,7 +3,7 @@ type ButtonProps = {
     className:string,
     type:any,
     icon:any,
-    text:string
+    text:any
 }
 
 function Button({

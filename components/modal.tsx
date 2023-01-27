@@ -1,3 +1,4 @@
+import { useState } from "react"
 import axios from "axios"
 
 // Redux
@@ -9,7 +10,7 @@ import { getReserves, setReserves } from "../features/reserveSlice"
 import { useAuthHook } from "../hooks/useAuthHook"
 
 // Utils
-import { getStringDate, getStringHours } from "../utils/datePharser"
+import { getStringHours } from "../utils/datePharser"
 
 // Components
 import Button from "./Ui/Button"
@@ -36,10 +37,11 @@ function Modal({
 
   const dispatch = useDispatch()
   const reserveData = useSelector(getReserves)
-  const modalStatus: boolean = useSelector(getModalStatus)
   const { userData } = useAuthHook()
   const userIdHooks: string = userData.id
   const userRole = userData.role
+  const [hitModalButton, setHitModalButton] = useState({loading:false, id:null})
+  
   const toApprove = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'pending')
   const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'accepted')
 
@@ -52,6 +54,7 @@ function Modal({
 
 
   const handleCloseModal = () => {
+    setHitModalButton({loading:false, id:null})
     dispatch(toggleModal(false))
   }
 
@@ -62,6 +65,7 @@ function Modal({
   }
 
   async function handleSeat() {
+    setHitModalButton({loading:true, id:null})
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     let bookStatus = 'accepted'
 
@@ -121,6 +125,7 @@ function Modal({
 
 
   async function handleApprovation(status: any, id: any) {
+    setHitModalButton({loading:true, id:id})
     if (status === 'approved') {
       await axios.patch("/api/reserve/approveReserve", {
         id
@@ -130,10 +135,9 @@ function Modal({
     } else {
 
       const deleteSeat = await axios.delete("/api/reserve/" + id);
-      if(deleteSeat.status === 204) {
-      }
       const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
       dispatch(setReserves({reserveData:reloadData}))
+      setHitModalButton({loading:false, id:null})
       if (userReserve.length === 1) {
         handleCloseModal()
       }
@@ -153,14 +157,13 @@ function Modal({
             subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
             refType={'seats-modal'}
         >
-          DELETE SINGLE
           <ModalSingleReserve
             action={action}
             seatName={seatName}
             otherReserveInPeriod={otherReserveInPeriod}
             userReserve={userReserve}
             handleSeat={handleSeat}
-            singleReserve={singleReserve}
+            hitModalButton={hitModalButton}
           />
         </ModalComponent>
         : <ModalComponent
@@ -175,6 +178,7 @@ function Modal({
             buttonIconAccept={false}
             pendingControl={false}
             pendingReserve={[]}
+            hitModalButton={hitModalButton}
           />
         </ModalComponent>
       }
@@ -192,6 +196,7 @@ function Modal({
             buttonIconAccept={<TbClipboardCheck size={18} />}
             pendingControl={true}
             pendingReserve={toApprove}
+            hitModalButton={hitModalButton}
           />
         </ModalComponent>
       }
