@@ -13,41 +13,29 @@ import { toggleModal, getModalStatus, setModalType } from "../../features/modalS
 import { useAuthHook } from "../../hooks/useAuthHook";
 
 type SeatsElementProps = {
+    index:any,
     seat: any,
-    roomType: string,
-    hasBookAll: boolean,
-    available: boolean,
-    busy: boolean,
-    isPending:boolean,
-    isYourSeat: boolean,
+    roomDetails:any,
+    seatsStatus:any,
     wholeRoom: any,
     setSeatName: any,
     setAction: any,
     ADD: string,
     DELETE: string,
-    seatsFront: any,
-    seatsPrimarySx: any,
-    seatsPrimaryDx: any,
-    seatsBack: any,
+    seatsPosition:any,
 }
 
 function SeatsElement({
+    index,
     seat,
-    roomType,
-    hasBookAll,
-    available,
-    busy,
-    isPending,
-    isYourSeat,
+    roomDetails,
+    seatsStatus,
     wholeRoom,
     setSeatName,
     setAction,
     ADD,
     DELETE,
-    seatsFront,
-    seatsPrimarySx,
-    seatsPrimaryDx,
-    seatsBack,
+    seatsPosition
 }: SeatsElementProps) {
 
     const dispatch = useDispatch()
@@ -55,8 +43,10 @@ function SeatsElement({
     const { userData } = useAuthHook()
     const isAdmin = userData.role === 'ADMIN'
 
+    const status = seatsStatus[index]
+    let elClass 
+    if(status) elClass=`${roomDetails.roomType}-seat seat${status.busy && !status.isPending ? " busy" : ""}${status.isYourSeat ? " your" : ""}${status.available ? " available" : ""}${status.isPending && roomDetails.roomType === 'meet' ? " pending" : "" }`
     
-    let elClass = `isometric__chair ${roomType}-seat seat${busy && !isPending ? " busy" : ""}${isYourSeat ? " your" : ""}${available ? " available" : ""}${isPending && roomType === 'meet' ? " pending" : "" }`
     const handleAddSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
         dispatch(setModalType('seats-modal'))
@@ -72,32 +62,32 @@ function SeatsElement({
     return (
         <div
             id={seat}
-            className={elClass}
+            className={`isometric__chair ${elClass}`}
             onClick={
                 () => {
                     setSeatName(seat);
-                    if (hasBookAll) {
+                    if (roomDetails.hasBookAll) {
                         if (!wholeRoom) {
-                            if (available || (isAdmin && !busy)) {
+                            if (status.available || (isAdmin && !status.busy)) {
                                 handleAddSingleSeat()
-                            } else if (isYourSeat || (isAdmin && busy)) {
+                            } else if (status.isYourSeat || (isAdmin && status.busy)) {
                                 handleDeleteSingleSeat()
                             }
                         }
                     } else {
-                        if (available || (isAdmin && !busy)) {
+                        if (status.available || (isAdmin && !status.busy)) {
                             handleAddSingleSeat()
-                        } else if (isYourSeat || (isAdmin && busy)) {
+                        } else if (status.isYourSeat || (isAdmin && status.busy)) {
                             handleDeleteSingleSeat()
                         }
                     }
                 }
             }
         >
-            {seatsFront.indexOf(seat) > -1 && <ChairOne />}
-            {seatsPrimarySx.indexOf(seat) > -1 && <ChairTwo />}
-            {seatsBack.indexOf(seat) > -1 && <ChairThree />}
-            {seatsPrimaryDx.indexOf(seat) > -1 && <ChairFour />}
+            {seatsPosition.seatsFront.indexOf(seat) > -1 && <ChairOne />}
+            {seatsPosition.seatsPrimarySx.indexOf(seat) > -1 && <ChairTwo />}
+            {seatsPosition.seatsBack.indexOf(seat) > -1 && <ChairThree />}
+            {seatsPosition.seatsPrimaryDx.indexOf(seat) > -1 && <ChairFour />}
         </div>
 
 

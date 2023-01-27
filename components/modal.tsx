@@ -23,7 +23,6 @@ import ModalSingleReserve from "./Modals/ModalSingleReserve";
 const ADD = "ADD"
 const DELETE = "DELETE"
 const APPROVE = "APPROVE"
-const DELETESINGLE = "DELETESINGLE"
 const MANAGE = "MANAGE"
 
 function Modal({
@@ -97,7 +96,7 @@ function Modal({
 
       
 
-    } else if (action === DELETE || action === DELETESINGLE) {
+    } else if (action === DELETE) {
 
       let reserveToDelete
 
@@ -150,7 +149,7 @@ function Modal({
 
   return (
     <>
-      {action === ADD || action === DELETESINGLE
+      {action === ADD
         ?
         <ModalComponent
             modalTitle={`${action === 'ADD' ? 'Aggiungi' : 'Annulla'} prenotazione`}

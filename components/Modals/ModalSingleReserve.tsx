@@ -10,7 +10,6 @@ import { getReserves, setReserves } from "../../features/reserveSlice"
 import Spinner from "../Ui/Spinner"
 
 const ADD = "ADD"
-const DELETESINGLE = "DELETESINGLE"
 
 type ModalSingleReserveProps = {
     action: any,
@@ -42,13 +41,11 @@ function ModalSingleReserve({
                 className="modal__text txt-h6"
             >
                 {action === ADD && "Vuoi procedere con la prenotazione del posto "}
-                {action === DELETESINGLE && "Vuoi annullare la prenotazione del posto "}
                 <b>{seatName}</b>?</p>
                 {reserveData 
                 && seatName === 'meet-room' 
                 && otherReserveInPeriod 
                 && otherReserveInPeriod.length > 0 
-                && action === !DELETESINGLE
                 &&
                 <>
                     <br />

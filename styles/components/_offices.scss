@@ -259,15 +259,17 @@
             z-index: 15;
         }
         .st368 {
-            fill:$statusNotAvailable
+            fill:$statusNotAvailable;
+            transition: 0.2s ease-in-out;
         }
         .st369 {
             fill: $notAvailableBorder;
+            transition: 0.2s ease-in-out;
         }
 
         &.available {
             .st368 {
-                fill:$statusAvailable
+                fill:$statusAvailable;
             }
             .st369 {
                 fill: $availableBorder;
@@ -284,7 +286,7 @@
         }
         &.your {
             .st368 {
-                fill:$statusYours
+                fill:$statusYours;
             }
             .st369 {
                 fill: $yoursBorder;
@@ -303,7 +305,8 @@
             cursor: pointer;
             &:hover {
                 .st368 {
-                    fill:$chairBase
+                    fill:$chairBase;
+                    transition: 0.4s ease-in-out;
                 }
             }
         }

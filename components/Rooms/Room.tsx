@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 
 // Redux
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setBookable, setIsYourRoom } from '../../features/roomSlice'
+import { getReserves } from '../../features/reserveSlice';
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
@@ -42,6 +43,13 @@ type RoomProps = {
     rooms: any
 }
 
+type SeatsPosition = {
+    seatsFront:String[],
+    seatsPrimarySx:String[],
+    seatsPrimaryDx:String[],
+    seatsBack:String[]
+}
+
 function Room({
     id,
     visibleRoom,
@@ -61,6 +69,8 @@ function Room({
     const { userData } = useAuthHook()
     const userId = userData.id
     const isAdmin = userData.role === 'ADMIN'
+    const reserves = useSelector(getReserves)
+    const [seatsStatus, setSeatsStatus] = useState({})
     
     if (rooms[id].roomType.toString() === 'meet') {
         compareType = 'meet'
@@ -75,7 +85,6 @@ function Room({
     const busyRes = reserveData.filter((r: Reserve) => r.seat.type === compareType)
     const isYourRoom = wholeRoom?.user.id === userId
     const busyResAndRoom = reserveData.filter(({ seat: { type } }: Reserve) => type === "meet" || type === "meet-whole")
-    const isPending = reserveData.find((r: Reserve) => r.status === 'pending' && r.seat.type === 'meet-whole' && (r.user.id === userId || isAdmin) ) ? true : false
     //se hai una prenotazione per quella giornata tutti i posti non sono disponibili
     const allSeatsNotAvailable = yourReserves.length > 0
     //se non hai prenotato posti in it e non ci sono posti meet occupati da altri, puoi prenotare
@@ -83,15 +92,12 @@ function Room({
     let busySeats = busyRes.map((s: Reserve) => s.seat.name)
 
     // Costruzione statica delle sedie nelle due stanze
-    const seatsFront: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-1", "meet-2", "meet-3"] : ["it-1", "it-2", "it-3", "it-4"]
-    const seatsPrimarySx: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-4"] : []
-    const seatsPrimaryDx: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-5"] : []
-    const seatsBack: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-6", "meet-7", "meet-8"] : ["it-5", "it-6", "it-7", "it-8"]
-
-    const [booked, setBooked] = useState<number>(0)
-    const [yourBooked, setYourBooked] = useState<number>(0)
-    const [availableForYou, setAvailableForYou] = useState<number>(0)
-
+    const seatsPosition:SeatsPosition = {
+        seatsFront: rooms[id].roomType.toString() === 'meet' ? ["meet-1", "meet-2", "meet-3"] : ["it-1", "it-2", "it-3", "it-4"],
+        seatsPrimarySx: rooms[id].roomType.toString() === 'meet' ? ["meet-4"] : [],
+        seatsPrimaryDx: rooms[id].roomType.toString() === 'meet' ? ["meet-5"] : [],
+        seatsBack: rooms[id].roomType.toString() === 'meet' ? ["meet-6", "meet-7", "meet-8"] : ["it-5", "it-6", "it-7", "it-8"]
+    }
 
     // Set redux room is bookable -> se è IT non è completamente prenotabile
     useEffect(() => {
@@ -113,34 +119,46 @@ function Room({
         }, 2000)
     }, [visibleRoom])
  
+    
 
-    const Fornitures = seats[rooms[id].roomType].map((seat: any, k: number) => {
-        let busy = busySeats.includes(seat) || (rooms[id].hasBookAll && wholeRoom)
-        let available = !(allSeatsNotAvailable || busy) || (isAdmin && !busy)
-        let isYourSeat = rooms[id].roomType.toString() === 'meet' 
-            ? (allSeatsNotAvailable && yourReserves.find((r: any) => r.seat.name === seat)) || wholeRoom?.user.username === rooms[id].username
-            : allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat)
-        
+    useEffect(() => {
+        const roomObj:any = []
+        const busyRes = reserveData.filter((r: Reserve) => r.seat.type === rooms[visibleRoom].roomType)
+        seats[rooms[visibleRoom].roomType].map((seat: any, index: number) => {
+       
+            const busy = Boolean(busyRes.filter((r: Reserve) => r.seat.name === seat).length || (rooms[visibleRoom].hasBookAll && wholeRoom) )
+            const available = !(allSeatsNotAvailable || busy) || (isAdmin && !busy)
+            const isYourSeat = rooms[id].roomType.toString() === 'meet' 
+                ? Boolean((allSeatsNotAvailable && yourReserves.find((r: any) => r.seat.name === seat)) || wholeRoom?.user.username === rooms[id].username)
+                : Boolean(allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat))
+            const isPending = Boolean(reserveData.find((r: Reserve) => r.status === 'pending' && r.seat.type === 'meet-whole' && (r.user.id === userId || isAdmin) ))
+            roomObj.push({
+                seatId:seat,
+                busy,
+                available,
+                isYourSeat,
+                isPending
+            })
+        })
+
+        setSeatsStatus(roomObj)
+
+    }, [visibleRoom, reserveData])
+
+    const Fornitures = seats[rooms[id].roomType].map((seat: any, index: number) => {
         return (
             <div key={seat}>
                 <SeatsElement
+                    index={index}
                     seat={seat}
-                    roomType={rooms[id].roomType}
-                    // elClass={elClass}
-                    hasBookAll={rooms[id].hasBookAll}
-                    available={available}
-                    busy={busy}
-                    isPending={isPending}
-                    isYourSeat={isYourSeat}
+                    roomDetails={rooms[id]}
+                    seatsStatus={seatsStatus}
                     wholeRoom={wholeRoom}
                     setSeatName={setSeatName}
                     setAction={setAction}
                     ADD={ADD}
                     DELETE={DELETE}
-                    seatsFront={seatsFront}
-                    seatsPrimarySx={seatsPrimarySx}
-                    seatsPrimaryDx={seatsPrimaryDx}
-                    seatsBack={seatsBack}
+                    seatsPosition={seatsPosition}
                 />
                 <Desk
                     className={`${rooms[id].roomType}-desk`}
