@@ -5,16 +5,14 @@ import prisma from "../../lib/prisma"
 import axios from "axios"
 
 // Redux
-import { useSelector, useDispatch } from "react-redux"
-import { getReserves, setReserves } from "../../features/reserveSlice"
+import { useDispatch } from "react-redux"
+import { setReserves } from "../../features/reserveSlice"
 
 // Components
 import Calendar from "../../components/calendar"
 import FirstOffice from "../../components/first-office"
 import Spinner from "../../components/Ui/Spinner"
 
-// Hooks
-import { useAuthHook } from "../../hooks/useAuthHook";
 
 type DateRange = {
   from: string | null,
@@ -64,7 +62,6 @@ function Prenota({ initialData }: any) {
 
 
   useEffect(() => {
-    //if (status === "unauthenticated" ) Router.replace("/login")
     const event = new Event("visibilitychange");
     document.dispatchEvent(event);
   }, [status])

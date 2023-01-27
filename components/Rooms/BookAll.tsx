@@ -68,7 +68,7 @@ function BookAll({
         } else {
             setButtonIsVisible(false)
             setAlreadyBooked(false)
-            if (isYourRoom !== notBookAll && reservedIndDay.length > 0 && userRole === 'USER') {
+            if (isYourRoom !== notBookAll && userRole === 'USER' || reservedIndDay.length > 0 && userRole === 'USER') {
                 setAlreadyBooked(true)
             } 
         }

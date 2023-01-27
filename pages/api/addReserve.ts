@@ -16,6 +16,8 @@ type Data = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: Data = req.body
 
+  
+
   const seat = await prisma.seat.findUnique({
     where: {id: data.seatId}
   })
@@ -54,12 +56,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   else if (roomReserved && seat?.type === "meet")
     res.status(403).json("Non puoi prenotare la stanza già occupata")
   else 
+  
     try {
       const result = await prisma.reserve.create({
         data: {
           ...data
         }
       }) 
+      console.log('CREA',result)
       res.status(200).json(result)
     } catch (e) {
 

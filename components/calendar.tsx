@@ -32,7 +32,6 @@ function Calendar({
   const [openCalendar, setOpenCalendar] = useState(false)
   const { userData } = useAuthHook()
   const reserveData = useSelector(getReserves)
-
   const userRole = userData.role
 
   const handleOpenCalendar = () => {
@@ -47,26 +46,20 @@ function Calendar({
     return textDate
   }
 
-  async function handleChangeHour(startHour: any, endHour: any) {
+  const handleChangeHour = async (startHour: any, endHour: any) => {
 
     const fromDate = createNewDate(selectedDate, startHour)
     const toDate = createNewDate(selectedDate, endHour)
     const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
-
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
-
     dispatch(setReserves({reserveData:res}))
-
   }
 
-  async function handleConfirmDate(selDate: Date) {
-
+  const handleConfirmDate = async (selDate: Date) => {
     const fromDate = createNewDate(selDate, fromToHours.from)
     const toDate = createNewDate(selDate, fromToHours.to)
-
     const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
-
     setFromTo({ from: fromDate, to: toDate })
     dispatch(setReserves({reserveData:res}))
   }

@@ -62,7 +62,7 @@ function Room({
     const userId = userData.id
     const isAdmin = userData.role === 'ADMIN'
     
-    if (rooms[id].roomType.toString() === 'meeting') {
+    if (rooms[id].roomType.toString() === 'meet') {
         compareType = 'meet'
     } else {
         compareType = 'it'
@@ -70,39 +70,37 @@ function Room({
 
     const reserveData = rooms[id].reserveData
 
-    let yourReserves = reserveData.filter((r: Reserve) => r.user.username === rooms[id].username)
+    let yourReserves = reserveData.filter((r: Reserve) => r.user.id === userId)
     const wholeRoom = reserveData.find((r: Reserve) => r.seat.type === "meet-whole")
     const busyRes = reserveData.filter((r: Reserve) => r.seat.type === compareType)
-    const isYourRoom = wholeRoom?.user.username === rooms[id].username
+    const isYourRoom = wholeRoom?.user.id === userId
     const busyResAndRoom = reserveData.filter(({ seat: { type } }: Reserve) => type === "meet" || type === "meet-whole")
     const isPending = reserveData.find((r: Reserve) => r.status === 'pending' && r.seat.type === 'meet-whole' && (r.user.id === userId || isAdmin) ) ? true : false
-    
     //se hai una prenotazione per quella giornata tutti i posti non sono disponibili
     const allSeatsNotAvailable = yourReserves.length > 0
     //se non hai prenotato posti in it e non ci sono posti meet occupati da altri, puoi prenotare
-    const roomIsBookable = (!yourReserves?.find((r: Reserve) => r.seat.type === "it") || isAdmin) && busyResAndRoom.find((r: Reserve) => r.user.username !== rooms[id].username) === undefined
+    const roomIsBookable = (!yourReserves?.find((r: Reserve) => r.seat.type === "it") || isAdmin) && busyResAndRoom.find((r: Reserve) => r.user.id !== userId) === undefined
     let busySeats = busyRes.map((s: Reserve) => s.seat.name)
 
-    const seatsFront: String[] = rooms[id].roomType.toString() === 'meeting' ? ["meet-1", "meet-2", "meet-3"] : ["it-1", "it-2", "it-3", "it-4"]
-    const seatsPrimarySx: String[] = rooms[id].roomType.toString() === 'meeting' ? ["meet-4"] : []
-    const seatsPrimaryDx: String[] = rooms[id].roomType.toString() === 'meeting' ? ["meet-5"] : []
-    const seatsBack: String[] = rooms[id].roomType.toString() === 'meeting' ? ["meet-6", "meet-7", "meet-8"] : ["it-5", "it-6", "it-7", "it-8"]
-
-    
+    // Costruzione statica delle sedie nelle due stanze
+    const seatsFront: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-1", "meet-2", "meet-3"] : ["it-1", "it-2", "it-3", "it-4"]
+    const seatsPrimarySx: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-4"] : []
+    const seatsPrimaryDx: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-5"] : []
+    const seatsBack: String[] = rooms[id].roomType.toString() === 'meet' ? ["meet-6", "meet-7", "meet-8"] : ["it-5", "it-6", "it-7", "it-8"]
 
     const [booked, setBooked] = useState<number>(0)
     const [yourBooked, setYourBooked] = useState<number>(0)
     const [availableForYou, setAvailableForYou] = useState<number>(0)
 
 
-    // Set redux room is bookable
+    // Set redux room is bookable -> se è IT non è completamente prenotabile
     useEffect(() => {
         dispatch(setBookable(rooms[visibleRoom].hasBookAll))
     }, [visibleRoom])
 
     // Set redux is your room
     useEffect(() => {
-        dispatch(setIsYourRoom(isYourRoom))
+        dispatch(setIsYourRoom(wholeRoom?.user.id === userId))
     }, [isYourRoom])
 
     // Controlla l'animazione
@@ -115,48 +113,13 @@ function Room({
         }, 2000)
     }, [visibleRoom])
  
-    // Setta quanti posti sono prenotati per giorno
-    useEffect(() => {
-        if (wholeRoom && rooms[id].hasBookAll) {
-            // Tutta la stanza è prenotata
-            setBooked(seats[rooms[id].roomType].length)
-        } else if (!wholeRoom && busySeats || !rooms[id].hasBookAll && busySeats) {
-            // Solo alcuni posti sono prenotati, oppure non è prenotabile tutta la stanza
-            setBooked(busySeats.length)
-        } else {
-            setBooked(0)
-        }
-    }, [busyRes, wholeRoom])
-
-    // Conta quanti posti restano disponibili per l'utente
-    useEffect(() => {
-        if (!isAdmin && allSeatsNotAvailable) {
-            setAvailableForYou(0)
-        } else {
-            setAvailableForYou(seats[rooms[id].roomType].length - booked)
-        }
-    }, [busyRes])
-
-
-    useEffect(() => {
-        const checkIsRoom = yourReserves?.find((r: Reserve) => r.seat.type === "meet-whole")
-        if (checkIsRoom && rooms[id].hasBookAll) {
-            // Hai prenotato tutta la stanza
-            setYourBooked(seats[rooms[id].roomType].length)
-        } else {
-            // Ne hai prenotate una, alcune o nessuna
-            const yourSeats = yourReserves.filter((res: any) => res.seat.type === compareType)
-            setYourBooked(yourSeats.length)
-        }
-    }, [isYourRoom, busyRes, yourReserves])
 
     const Fornitures = seats[rooms[id].roomType].map((seat: any, k: number) => {
         let busy = busySeats.includes(seat) || (rooms[id].hasBookAll && wholeRoom)
         let available = !(allSeatsNotAvailable || busy) || (isAdmin && !busy)
-        let isYourSeat = rooms[id].roomType.toString() === 'meeting' 
+        let isYourSeat = rooms[id].roomType.toString() === 'meet' 
             ? (allSeatsNotAvailable && yourReserves.find((r: any) => r.seat.name === seat)) || wholeRoom?.user.username === rooms[id].username
             : allSeatsNotAvailable && yourReserves.find((r: Reserve) => r.seat.name === seat)
-        // let isPending = 
         
         return (
             <div key={seat}>
@@ -204,16 +167,19 @@ function Room({
                         DELETE={DELETE}
                     />
                     <InfoTable
-                        totlaPlace={seats[rooms[id].roomType].length}
-                        booked={booked}
-                        yourBooked={yourBooked}
-                        availableForYou={availableForYou}
+                        wholeRoom={wholeRoom}
+                        currentRoom={rooms[visibleRoom]}
+                        seats={seats}
+                        busySeats={busySeats}
+                        busyRes={busyRes}
+                        yourReserves={yourReserves}
+                        compareType={compareType}
                         className='only-desk'
                     />
                     <Legenda/>
                 </div>
                 <div className="room__container">
-                    {rooms[id].roomType.toString() === 'meeting'
+                    {rooms[id].roomType.toString() === 'meet'
                         ? (
                             <MeetingRoom>
                                 {Fornitures}
@@ -227,10 +193,13 @@ function Room({
                     }
                 </div>
                 <InfoTable
-                    totlaPlace={seats[rooms[id].roomType].length}
-                    booked={booked}
-                    yourBooked={yourBooked}
-                    availableForYou={availableForYou}
+                     wholeRoom={wholeRoom}
+                    currentRoom={rooms[visibleRoom]}
+                    seats={seats}
+                    busySeats={busySeats}
+                    busyRes={busyRes}
+                    yourReserves={yourReserves}
+                    compareType={compareType}
                     className='only-smart'
                 />
             </div>

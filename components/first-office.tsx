@@ -16,7 +16,7 @@ import { getReserves, setReserves } from "../features/reserveSlice"
 import { useAuthHook } from "../hooks/useAuthHook";
 
 type Seats = {
-  meeting: any[],
+  meet: any[],
   it: any[]
 }
 
@@ -28,8 +28,6 @@ function FirstOffice({
   setAction,
 }: any) {
 
-
-  const dispatch = useDispatch()
 
   const [visibleRoom, setVisibleRoom] = useState(0)
   const [nextRoom, setNextRoom] = useState(1)
@@ -59,7 +57,7 @@ function FirstOffice({
   }
 
   let allSeats: Seats = {
-    meeting: ["meet-1", "meet-2", "meet-3", "meet-4", "meet-5", "meet-6", "meet-7", "meet-8"],
+    meet: ["meet-1", "meet-2", "meet-3", "meet-4", "meet-5", "meet-6", "meet-7", "meet-8"],
     it: ["it-1", "it-2", "it-3", "it-4", "it-5", "it-6", "it-7", "it-8"]
   }
 
@@ -70,7 +68,7 @@ function FirstOffice({
     {
       username: username,
       reserveData: reserveData,
-      roomType: "meeting",
+      roomType: "meet",
       roomName: "Sala riunioni",
       hasBookAll: true,
       setSeatName: setSeatName,

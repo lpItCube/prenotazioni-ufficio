@@ -62,13 +62,14 @@ function Modal({
 
 
   async function handleSeat() {
-
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     let bookStatus = 'accepted'
 
-
+    
+    console.log('ADD')
     if (action === ADD) {
       if (seatName === 'meet-room') {
+        
         // Quando prenoti tutta la stanza
 
         bookStatus = userRole === 'ADMIN' ? 'accepted' : 'pending'
@@ -81,7 +82,8 @@ function Modal({
         }
       }
 
-      await axios.post("/api/addReserve", {
+      
+      const addReserve = await axios.post("/api/addReserve", {
         seatId: seatId,
         userId: userIdHooks,
         reservedDays: [],
@@ -89,6 +91,10 @@ function Modal({
         to: new Date(fromTo.to),
         status: bookStatus
       })
+
+      console.log('ADD ID USER', addReserve)
+      
+
     } else if (action === DELETE || action === DELETESINGLE) {
 
       let reserveToDelete
@@ -156,13 +162,13 @@ function Modal({
             userReserve={userReserve}
             handleSeat={handleSeat}
           />
+          SINGLE
         </ModalComponent>
         : <ModalComponent
           modalTitle={`${action === ADD ? 'Aggiungi' : 'Gestisci'} prenotazione`}
           subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
           refType={'seats-modal'}
         >
-          {/* Modale di modifica multipla ipotetica */}
           <ModalApprovation
             reserve={userReserve}
             approvationAction={handleApprovation}
@@ -180,7 +186,6 @@ function Modal({
           subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
           refType={'approve-modal'}
         >
-          {/* Modale Admin per approvazione pending*/}
           <ModalApprovation
             reserve={reservedIndDay}
             approvationAction={handleApprovation}
