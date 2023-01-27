@@ -117,7 +117,6 @@ function pending({
                                             <Button
                                                 className={`cta cta--secondary-ok cta--approve`}
                                                 onClick={() => handleApprovation('approved', r.id)}
-                                                // onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
                                                 type='button'
                                                 icon={<TbClipboardCheck size={18} />}
                                                 text=''
@@ -125,7 +124,6 @@ function pending({
                                             <Button
                                                 className={`cta cta--secondary-delete`}
                                                 onClick={() => handleApprovation('disapproved', r.id)}
-                                                // onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
                                                 type='button'
                                                 icon={<RiDeleteBin3Line size={18} />}
                                                 text=''

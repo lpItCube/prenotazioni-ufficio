@@ -7,7 +7,6 @@ import { getStringDate, getStringHours } from '../../utils/datePharser'
 
 // Redux
 import { useDispatch, useSelector } from "react-redux"
-import { toggleModal, setModalType } from "../../features/modalSlice"
 // import { getUserName, getUserRole, getUserId } from "../../features/authSlice"
 
 // Hooks
@@ -24,13 +23,11 @@ import { IoEllipsisHorizontalOutline } from 'react-icons/io5'
 
 function Prenotazioni() {
 
-  const dispatch = useDispatch()
 
   const session = useSession()
-  const [reserves, setReserves] = useState([])
+  const [allReserves, setAllReserves] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [handleDelete, setHandleDelete] = useState(false)
-  const [modalData, setModalData] = useState<any>({ seatName: '', action: '', username: '', reserveData: '' })
 
 
   type stateObj = {
@@ -42,10 +39,10 @@ function Prenotazioni() {
   const [filterRoom, setFilterRoom] = useState<stateObj>({ label: 'Tutte le stanze', value: '' })
   const [filterDay, setFilterDay] = useState<stateObj>({ label: 'Tutte le date', value: '' })
   const [showFilters, setShowFilters] = useState(false)
+  const [hitDeleteButton, setHitDeleteButton] = useState({loading:false, id:null})
 
   const { userData } = useAuthHook()
 
-  const username = userData.name
   const userRole = userData.role
   const userId = userData.id
 
@@ -57,6 +54,7 @@ function Prenotazioni() {
     
     const getReserves = async (method:any) => {
 
+      
       const response = await axios.get(`/api/reserve/currentUser?currentUser=${userId}&method=${method}`)
       let sortedResponse
 
@@ -74,26 +72,29 @@ function Prenotazioni() {
       }
       const reorderData = sortedResponse.sort((a: any, b: any) => (a.to > b.to) ? 1 : -1)
      
-      setReserves(reorderData)
+      setAllReserves(reorderData)
       setIsLoading(false)
+      setHitDeleteButton({loading:false,id:null})
     }
 
     if(userId) {
-      setIsLoading(true)
+      if(!hitDeleteButton.loading) {
+        setIsLoading(true)
+      }
       getReserves(filterMode.value)
+
     }
 
     if (handleDelete) {
       setHandleDelete(false)
     }
-    // setIsLoading(false)
-  }, [session, handleDelete, filterMode, filterRoom, filterDay, userId])
+  }, [session, handleDelete, filterMode, filterRoom, filterDay, userId, hitDeleteButton.loading])
 
 
-  const handleDeleteRow = (seatName: string, action: string, username: string, reserveData: any) => {
-    setModalData({ seatName: seatName, action: action, username: username, reserveData: reserveData })
-    dispatch(toggleModal(true));
-    dispatch(setModalType('seats-modal'))
+  const handleDeleteRow = async (reserveData: any) => {
+
+    setHitDeleteButton({loading:true, id:reserveData.id})
+    const deleteSeat = await axios.delete("/api/reserve/" + reserveData.id);
   }
 
   const handleShowFilters = () => {
@@ -103,10 +104,10 @@ function Prenotazioni() {
   let tableContent: any
 
 
-  if (reserves.length > 0) {
+  if (allReserves.length > 0) {
     tableContent = (
       <>
-        {reserves.map((r: any, index: number) => {
+        {allReserves.map((r: any, index: number) => {
           return (
             <TableRow
               key={index}
@@ -141,15 +142,20 @@ function Prenotazioni() {
                 className="prenotazioni__cta"
               >
                 {(userRole === 'ADMIN' || userRole === 'USER' && r.user.id === userId) &&
-                  <div className='approve__row--cta'>
-                    <Button
-                      className="cta cta--primary-delete cta__icon"
-                      onClick={() => handleDeleteRow(r.seat.name, 'DELETESINGLE', username, r)}
-                      type='button'
-                      icon={<RiDeleteBin3Line size={18} />}
-                      text=''
-                    />
-                  </div>
+                <>
+                  {hitDeleteButton.loading && hitDeleteButton.id === r.id
+                    ? <Spinner/>
+                    : <div className='approve__row--cta'>
+                        <Button
+                          className="cta cta--primary-delete cta__icon"
+                          onClick={() => handleDeleteRow(r)}
+                          type='button'
+                          icon={<RiDeleteBin3Line size={18} />}
+                          text=''
+                        />
+                      </div>
+                  }
+                </>
                 }
               </TableCol>
             </TableRow>
@@ -157,6 +163,19 @@ function Prenotazioni() {
         })}
       </>
     )
+  } else if(isLoading) {
+    tableContent = <>
+      <TableRow
+        key={'not-found'}
+        className=''
+      >
+        <TableCol
+          className="prenotazioni__empty"
+        >
+          <Spinner/>
+        </TableCol>
+      </TableRow>
+    </>
   } else {
     tableContent = <>
       <TableRow
@@ -212,7 +231,7 @@ function Prenotazioni() {
               headerColumns={['Data', 'Orario', 'Postazione', 'Utente', 'Stato', '']}
             />
             <TableBody>
-              {isLoading
+              {isLoading && !hitDeleteButton
                 ? <TableRow
                   key={'spinner'}
                   className=''
@@ -226,15 +245,6 @@ function Prenotazioni() {
               }
             </TableBody>
           </Table>
-          <Modal
-            seatName={modalData.seatName}
-            action={modalData.action}
-            username={modalData.username}
-            singleReserve={modalData.reserveData}
-            setReserveData={null}
-            fromTo={null}
-            setHandleDelete={setHandleDelete}
-          />
         </div>
       </div>
     )
