@@ -89,9 +89,9 @@ function FirstOffice({
     }
   ]
 
-  return session.data === undefined ?
-    <div><Spinner/></div> :
-    (
+  return (
+    <div className="rooms__center">
+
       <div className="rooms__external">
         <RoomsNavigator
           nextName={setRooms[nextRoom].roomName}
@@ -126,6 +126,7 @@ function FirstOffice({
           setAction={setAction}
         />
       </div>
+    </div>
     )
 }
 

@@ -36,7 +36,7 @@ function Prenota({ initialData }: any) {
   const session = useSession()
   const { status } = useSession()
 
-  const [ fromTo, setFromTo ] = useState<DateRange>({from: null, to: null}) 
+  const [fromTo, setFromTo] = useState<DateRange>({ from: null, to: null })
   const [seatName, setSeatName] = useState("none")
   const [action, setAction] = useState("")
 
@@ -45,15 +45,15 @@ function Prenota({ initialData }: any) {
     const fromDate = createNewDate("09")
     const toDate = createNewDate("10")
     setFromTo({ from: fromDate, to: toDate })
-    dispatch(setReserves({reserveData:initialData}))
+    dispatch(setReserves({ reserveData: initialData }))
   }, [])
 
 
   useEffect(() => {
     const reloadDataSession = async () => {
-      if(fromTo.from && fromTo.to) {
+      if (fromTo.from && fromTo.to) {
         const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-        dispatch(setReserves({reserveData:reloadData}))
+        dispatch(setReserves({ reserveData: reloadData }))
       }
     }
 
@@ -67,26 +67,30 @@ function Prenota({ initialData }: any) {
   }, [status])
 
 
-  
-  if(status === "authenticated")
-    return (
-      <>
-        <Calendar 
-          setFromTo={setFromTo} 
-          setSeatName={setSeatName}
-          setAction={setAction}
-        />
-        <FirstOffice 
-          fromTo={fromTo} 
+
+
+  return (
+    <>
+      <Calendar
+        setFromTo={setFromTo}
+        setSeatName={setSeatName}
+        setAction={setAction}
+      />
+      {status === 'authenticated'
+        ? <FirstOffice
+          fromTo={fromTo}
           seatName={seatName}
           setSeatName={setSeatName}
           action={action}
           setAction={setAction}
         />
-      </>
+        : <div className="spinner__center"><Spinner /></div>
+      }
 
-    )
-  else return <div><Spinner/></div>
+    </>
+
+  )
+
 }
 
 export default Prenota
@@ -101,10 +105,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user: true
     }
   })
-  const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))  
+  const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))
 
   return {
     props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)) }
-    
+
   }
 }
