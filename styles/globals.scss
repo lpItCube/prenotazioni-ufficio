@@ -13,10 +13,6 @@ a {
   text-decoration: none;
 }
 
-/* li {
-  list-style: none;
-} */
-
 #__next {
   height: 100%
 }
@@ -30,15 +26,6 @@ a {
   font-family: 'Poppins', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: black;
-    background: #d7d8e4;
-  }
-}
 
 .main {
   &-container {
@@ -59,127 +46,4 @@ a {
     left:240px;
   }
  }
-}
-
-.test-log-out {
-  padding: 20px;
-  width: 100%;
-  justify-content: end;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.test-log-out img {
-  margin-left: 10px;
-}
-
-.test-log-out:hover {
-  background: #4CAF50;
-}
-
-.content-page {
-  display: flex;
-}
-
-// .content-user{
-//   display: flex;
-//   align-items: center;
-//   justify-content: flex-start;
-
-//   width: 100%;
-//   padding: 20px;
-
-// }
-
-.user-img{
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-  background: #4CAF50;
-  margin-right: 10px;
-}
-
-
-.confirm-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  width: 200px;
-  border-radius: 2px;
-  padding: 5px 10px;
-  font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-
-.content-menu{
-
-}
-
-// .resAndCalContainer {
-//   // display: flex;
-//   width: calc(100% - 240px);
-//   left:240px;
-//   position: relative;
-// }
-
-
-
-@media (max-width: 600px) {
-
-  .main-container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .content-page{
-    flex-direction: column;
-  }
-
-  .toggle-button {
-    display: flex;
-  }
-
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-    height: fit-content;
-    width: 100%;
-  }
-
-  .content-user{
-    display: none;
-  }
-
-  .navbar-links {
-    display: none;
-    width: 100%;
-  }
-
-  .navbar-links ul {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .navbar-links li {
-    text-align: center;
-  }
-
-  .navbar-links li a {
-    padding: .5rem 1rem;
-  }
-
-  .navbar-links.active {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .test-log-out{
-    background: #4CAF50;
-    padding: 15px;
-    margin-top: 20px;
-  }
-
 }

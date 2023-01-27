@@ -26,7 +26,7 @@ function Login() {
     setLoadingLogin(true)
     setLoginError(false)
 
-    
+
     const res = await signIn("credentials", {
       email: userInfo.email,
       password: userInfo.password,
@@ -34,28 +34,37 @@ function Login() {
     })
 
 
-    const urlToEncode:any = res?.url?.split('callbackUrl=')[1]
+    const urlToEncode: any = res?.url?.split('callbackUrl=')[1]
 
     if (res && res!.error) {
       setLoginError(true)
       setLoadingLogin(false)
     }
-    
+
     else urlToEncode
-    ? router.push(decodeURIComponent(urlToEncode))
-    : router.push('/prenota')
-    
-  }
-  
-  if(session.status === 'loading') {
-    return <Spinner/>
+      ? router.push(decodeURIComponent(urlToEncode))
+      : router.push('/prenota')
+
   }
 
-  if(session.status === 'authenticated' && !enterFromLogin) {
+
+  if (session.status === 'authenticated' && !enterFromLogin) {
     router.push('/prenota')
     return
   }
 
+  let loginForm
+
+  if (session.status === 'loading') {
+    loginForm = <Spinner />
+  } else {
+    loginForm = <LoginForm
+      handleSubmit={handleSubmit}
+      setUserInfo={setUserInfo}
+      userInfo={userInfo}
+      isLoading={loadingLogin}
+    />
+  }
 
 
   return (
@@ -68,12 +77,7 @@ function Login() {
             text={'Inserisci username e password corretti'}
           />
         }
-        <LoginForm
-          handleSubmit={handleSubmit}
-          setUserInfo={setUserInfo}
-          userInfo={userInfo}
-          isLoading={loadingLogin}
-        />
+        {loginForm}
       </div>
     </div>
   )
