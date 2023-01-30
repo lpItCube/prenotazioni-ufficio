@@ -66,7 +66,7 @@ function FirstOffice({
   const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole === 'ADMIN'
   const notBookAll = userRole === 'USER' && reserveData.filter((res:any) => res.seat.type === actualRoom).length > 0
 
-  console.log(notBookAll)
+  // console.log(notBookAll)
 
   const setRooms: any = [
     {

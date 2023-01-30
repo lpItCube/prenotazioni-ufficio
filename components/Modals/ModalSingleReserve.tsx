@@ -72,7 +72,7 @@ function ModalSingleReserve({
                     </div>
                 </>
             }
-            {console.log(hitModalButton.loading)}
+            {/* {console.log(hitModalButton.loading)} */}
             {!hitModalButton.loading 
                 ? <Button
                     onClick={() => handleSeat()}

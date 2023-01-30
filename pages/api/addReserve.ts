@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ...data
         }
       }) 
-      console.log('CREA',result)
+      // console.log('CREA',result)
       res.status(200).json(result)
     } catch (e) {
 
