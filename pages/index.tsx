@@ -1,8 +1,18 @@
+import { useEffect } from "react";
 import { GetStaticProps } from "next"
 import prisma from '../lib/prisma';
+import { useRouter } from "next/router"
+import Spinner from "../components/Ui/Spinner";
 
 function Home() {
-  return <h1>Home Page</h1>
+
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('/prenota')
+  },[])
+
+  return <Spinner/>
 }
 
 export default Home
