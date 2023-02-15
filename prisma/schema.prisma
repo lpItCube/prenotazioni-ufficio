@@ -37,6 +37,39 @@ model Reserve {
   status       String?
 }
 
+model Domain {
+  id           String @id @default(uuid())
+  name         String
+  office       Office[]
+}
+
+model Office {
+  id           String @id @default(uuid())
+  name         String
+  domain       Domain @relation(fields: [domainId], references: [id])
+  domainId     String
+  room         Room[]
+}
+
+model Room {
+  id           String @id @default(uuid())
+  name         String
+  office       Office @relation(fields: [officeId], references: [id])
+  officeId     String
+  gridPoints   Json?
+  xSize        Int?
+  ySize        Int?
+}
+
+// model GridPoint {
+//   id           String @id @default(uuid())
+//   x            Int
+//   y            Int
+//   info         String?
+//   room         Room  @relation(fields: [roomId], references: [id])
+//   roomId       String
+// }
+
 enum Role {
   USER
   ADMIN

@@ -3,7 +3,7 @@ import { getToken } from "next-auth/jwt";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest, _next: NextFetchEvent) {
   const { pathname } = request.nextUrl;
-  const protectedPaths = ["/prenotazioni/pending", "/secure", "/api/users", "/prenotazioni/pending"];
+  const protectedPaths = ["/secure", "/api/users", "/prenotazioni/pending"];
   const loggedPaths = ["/prenota", "/prenotazioni", "/secure", "/api/users"]
 
 

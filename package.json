@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^4.7.1",
+    "@prisma/client": "^4.10.1",
     "@reduxjs/toolkit": "^1.9.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
@@ -30,6 +30,6 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.1",
-    "prisma": "^4.7.1"
+    "prisma": "^4.10.1"
   }
 }
