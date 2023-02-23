@@ -2,12 +2,14 @@
 import { DefaultSession, DefaultUser } from "next-auth";
 // Define a role enum
 export enum Role {
-  USER = "USER",
-  ADMIN = "ADMIN"
+  SUPERADMIN = "SUPERADMIN",
+  ADMIN = "ADMIN",
+  USER = "USER"
 }
 // common interface for JWT and Session
 interface IUser extends DefaultUser {
-  role?: Role;
+  domainId?: string
+  role?: Role
   id?: Any
 }
 declare module "next-auth" {
@@ -19,3 +21,5 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT extends IUser {}
 }
+
+declare module 'next-auth/client'

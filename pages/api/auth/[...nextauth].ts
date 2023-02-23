@@ -31,7 +31,8 @@ const authOptions: NextAuthOptions = {
     async jwt({ token, user } ) {
       /* Step 1: update the token based on the user object */
       if (user) {
-        token.role = user.role;
+        token.domainId = user.domainId
+        token.role = user.role
         token.id = user.id
       }
       return token;
@@ -39,10 +40,11 @@ const authOptions: NextAuthOptions = {
     session({ session, token }) {
       /* Step 2: update the session.user based on the token object */
       if (token && session.user) {
+        session.user.domainId = token.domainId
         session.user.id = token.id
         session.user.role = token.role
       }
-      return session;
+      return session
     },
   },
 }

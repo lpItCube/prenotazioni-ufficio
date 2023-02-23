@@ -1,6 +1,32 @@
 import axios from "axios"
+import { useSession } from "next-auth/react"
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { RiContactsBookLine } from "react-icons/ri"
+import { useSelector, useDispatch } from "react-redux"
+import { getModalStatus, setModalType, toggleModal } from "../features/modalSlice"
+import { setReserves } from "../features/reserveSlice"
+import Modal from "./modal"
+
+// id           String @id @default(uuid())
+// user         User   @relation(fields: [userId], references: [id])
+// userId       String
+// seat         Seat   @relation(fields: [seatId], references: [id])
+// seatId       String
+// reservedDays String[]
+// from         DateTime 
+// to           DateTime
+// status       String?
+
+type Reserve = {
+  id: string,
+  user: any
+  userId: string,
+  seat: Seat,
+  seatId: string,
+  from: Date,
+  to: Date,
+  status: string
+}
 
 type Room = {
   id: string,
@@ -21,9 +47,22 @@ type XYSizes = {
   y: number
 }
 
-function CreateRoom({roomId}: any) {
+type Seat = {
+  name: string
+  type: string
+  roomId: string
+}
+
+function CreateRoom({fromTo, action, setAction, roomId}: any) {
   const [room, setRoom] = useState<Room|undefined>(undefined)
   const [xYSizes, setxYSizes] = useState<XYSizes|undefined>(undefined)
+  const [seatName, setSeatName] = useState("none")
+
+  const session = useSession()
+  let username: string|null|undefined = null
+
+  if (session.data! !== undefined)
+    username = session.data!.user!.name
   
   useEffect(() => {
     const getRoom = async() => {
@@ -41,21 +80,30 @@ function CreateRoom({roomId}: any) {
   }
 
   return (
-    <div className="room-creation">
-      <input id="inputX" type="number"></input>
-      <input id="inputY" type="number"></input>
-      <button onClick={() => {handleXY()}}>Submit Input</button>
-      <div className="room-grid">
-        {(room && room.xSize && room.ySize) ? <Grid roomId={roomId} setRoom={setRoom} room={room}/> 
-        : xYSizes && <Grid roomId={roomId} setRoom={setRoom} room={{ xSize: xYSizes.x, ySize: xYSizes.y, gridPoints: [] }} />}
+    <>
+      <div className="room-creation">
+        <input id="inputX" type="number"></input>
+        <input id="inputY" type="number"></input>
+        <button onClick={() => {handleXY()}}>Submit Input</button>
+        <div className="room-grid">
+          {(room && room.xSize && room.ySize) ? <Grid fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={room}/> 
+          : xYSizes && <Grid fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={{ xSize: xYSizes.x, ySize: xYSizes.y, gridPoints: [], name: room!.name }} />}
+        </div>
       </div>
-    </div>
+      <Modal
+          seatName={seatName}
+          action={action}
+          username={username}
+          fromTo={fromTo}
+        />
+    </>
   )
 }
 
-function Grid({ roomId, setRoom, room }: { roomId: string, setRoom: any, room: Room|any }) {
+function Grid({ fromTo, setSeatName, setAction, roomId, setRoom, room }: { fromTo:any, setSeatName: any, setAction: any, roomId: string, setRoom: any, room: Room|any }) {
   const { xSize, ySize, gridPoints } = room;
   const [grid, setGrid] = useState<GridPoint[][]>([]);
+  const [seats, setSeats] = useState<Seat[]>([])
   const [selectedOption, setSelectedOption] = useState<"table" | "chair">("table");
   const [selectedCell, setSelectedCell] = useState<GridPoint | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -78,9 +126,21 @@ function Grid({ roomId, setRoom, room }: { roomId: string, setRoom: any, room: R
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (!selectedCell) return;
     const newGrid = grid.map((row) =>
-      row.map((cell) => {
-        if (cell.x === selectedCell.x && cell.y === selectedCell.y) {
-          return { ...cell, info: e.target.value };
+    row.map((cell) => {
+      if (cell.x === selectedCell.x && cell.y === selectedCell.y) {
+          var seatName: string|null = null
+          if (e.target.value === "hChair" || e.target.value === "vChair") {
+            seatName = `${room.name}-${cell.x}-${cell.y}`
+            const newSeat = {name: seatName, type: "", roomId: roomId}
+            if (!seats.find((seat) => seat.name === seatName))
+              setSeats([...seats, newSeat])
+          } else {
+            const seatToDelete = `${room.name}-${cell.x}-${cell.y}`
+            if (seats.find((seat) => seat.name === seatToDelete)) {
+              setSeats(seats.filter((seat) => seat.name !== seatToDelete))
+            }
+          }
+          return { ...cell, info: e.target.value, seatName: seatName }
         }
         return cell;
       })
@@ -89,9 +149,19 @@ function Grid({ roomId, setRoom, room }: { roomId: string, setRoom: any, room: R
   };
 
   const handleSave = async() => {
+    console.log(seats)
     const newRoom = {...room, gridPoints: grid.flat()}
     const res = await axios.put("/api/room/", {...newRoom, id: roomId})
     console.log("update -> ", res)
+    if (seats.length > 0) {
+      try {
+        await axios.delete(`/api/seats/${roomId}`)
+        const res2 = await axios.post("/api/seats/", {seats})
+        console.log("update2 -> ", res2)
+      } catch (e) {
+        console.log(e)
+      }
+    }
   };
 
   return (
@@ -104,7 +174,7 @@ function Grid({ roomId, setRoom, room }: { roomId: string, setRoom: any, room: R
               <td
                 key={columnIndex}
                 onClick={() => handleCellClick(cell)}
-                style={{ height: "50px", width: "50px"}}
+                style={{ height: "50px", width: "50px" }}
               >
                 {selectedCell === cell ? (
                   <select value={cell.info} onChange={handleOptionChange}>
@@ -119,7 +189,7 @@ function Grid({ roomId, setRoom, room }: { roomId: string, setRoom: any, room: R
                     <option value="quarter-circle-bottom-right" style={{backgroundImage: "url('/chair.svg')"}}>bRight</option>
                   </select>
                 ) : (
-                  <CellContent cell={cell} />
+                  <CellContent fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
                 )}
               </td>
             ))}
@@ -132,12 +202,12 @@ function Grid({ roomId, setRoom, room }: { roomId: string, setRoom: any, room: R
   )
 }
 
-const CellContent = ({ cell }: any) => {
+const CellContent = ({ fromTo, reserves, setSeatName, setAction, cell }: any) => {
   if (cell.info === "hChair") {
     return (
       <div style={{ position: "relative", textAlign: "center" }}>
         <hr style={{ position: "absolute", top: "22px", left: "0", width: "100%" }} />
-        <Canvas /> 
+        <Seat fromTo={fromTo} reserves={reserves} setSeatName={setSeatName} setAction={setAction} cell={cell} /> 
       </div>
     );
   } else if (cell.info === "vChair") {
@@ -145,7 +215,7 @@ const CellContent = ({ cell }: any) => {
       <div style={{ position: "relative", textAlign: "center" }}>
         <div style={{ position: "relative", alignItems: "center", justifyContent:"center", height: "100%" }}>
           <div style={{ position: "absolute", left: "24px", height: "100%", borderLeft: "1px solid grey" }}></div>
-          <Canvas /> 
+          <Seat fromTo={fromTo} reserves={reserves} setSeatName={setSeatName} setAction={setAction} cell={cell} /> 
         </div>
       </div>
     );
@@ -174,14 +244,70 @@ const CellContent = ({ cell }: any) => {
     else return <div></div>
 };
 
-function Canvas() {
+function Seat({fromTo, setSeatName, setAction, cell}: any) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [reserves, setReserves] = useState<Reserve[]>([])
+  const [canvasClass, setCanvasClass] = useState("")
+
+  const session = useSession()
+  let username: string|null|undefined = null
+
+  if (session.data! !== undefined)
+    username = session.data!.user!.name
+
+  const dispatch = useDispatch()
+  const modalStatus: boolean = useSelector(getModalStatus)
+
+  const handleAddSingleSeat = () => {
+    dispatch(toggleModal(!modalStatus))
+    dispatch(setModalType('seats-modal'))
+    setAction("ADD")
+  }
+
+  const handleDeleteSingleSeat = () => {
+    dispatch(toggleModal(!modalStatus))
+    dispatch(setModalType('seats-modal'))
+    setAction("DELETE")
+  }
+
+  useEffect(() => {
+    console.log(reserves[0])
+    // const yourReserve = reserves[0].user.username === username
+    // const free = reserves.length === 0
+
+    // var canvClass = ""
+    // if (yourReserve || free)
+    //   canvClass.concat("clickable")
+    
+
+    // setCanvasClass(canvClass)
+  }, [reserves])
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     drawCanvas(canvas)
-  }, []);
+  }, [canvasClass])
+
+  useEffect(() => {
+    const getReserves = async() => {
+      if (username != null && username != undefined) {
+        console.log(cell.seatName)
+        const res = await (await axios.get(`/api/seatReserves/${cell.seatName}`)).data
+        // const filteredRes = res.filter((r: any) => r.seat.name === cell.seatName)
+        const filteredRes = res.filter((r:any) => 
+          !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
+        ))
+        setReserves(filteredRes)
+        console.log(res)
+        console.log(filteredRes)
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        drawCanvas(canvas)
+      }
+    }
+    getReserves()
+  }, [fromTo])
 
   function drawCanvas(canvas: any) {
     const ctx = canvas.getContext("2d");
@@ -190,12 +316,16 @@ function Canvas() {
     var xPos = (canvas.width / 2) - (20 / 2);
     var yPos = (canvas.height / 2) - (20 / 2);
     ctx.roundRect(xPos, yPos, 20, 20, 5);
-    ctx.fillStyle = "orange";
+    if (reserves.length > 0)
+      ctx.fillStyle = "red";
+    else
+      ctx.fillStyle = "orange";
     ctx.fill();
     ctx.stroke();
   }
+
   return (
-    <canvas style={{ position: "relative", zIndex: "1" }} ref={canvasRef} width={40} height={40} />
+    <canvas onClick={() => {setSeatName(cell.seatName); handleAddSingleSeat()}} className={canvasClass} style={{ position: "relative", zIndex: "1" }} ref={canvasRef} width={40} height={40} />
   )
 }
 

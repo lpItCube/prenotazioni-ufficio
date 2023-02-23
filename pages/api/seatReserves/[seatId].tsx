@@ -2,12 +2,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const username = req.query.userId as string
+  const seatId = req.query.seatId as string
+  console.log("gatto")
+  console.log(seatId)
   try {
     const result = await prisma.reserve.findMany({
       where: { 
-        user: {
-          username: username
+        seat: {
+          name: seatId
         }
       },
       include: {

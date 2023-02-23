@@ -14,8 +14,10 @@ model User {
   id       String   @id @default(uuid())
   username String   @unique
   password String
-  role     Role    @default(USER)
+  role     Role     @default(USER)
   reserve Reserve[]
+  domain   Domain   @relation(fields: [domainId], references: [id])
+  domainId String
 }
 
 model Seat {
@@ -23,6 +25,8 @@ model Seat {
   name    String    @unique
   type    String   
   reserve Reserve[]
+  room    Room      @relation(fields: [roomId], references: [id])
+  roomId  String
 } 
 
 model Reserve {
@@ -39,13 +43,14 @@ model Reserve {
 
 model Domain {
   id           String @id @default(uuid())
-  name         String
+  name         String @unique
   office       Office[]
+  user         User[]
 }
 
 model Office {
   id           String @id @default(uuid())
-  name         String
+  name         String @unique
   domain       Domain @relation(fields: [domainId], references: [id])
   domainId     String
   room         Room[]
@@ -56,6 +61,7 @@ model Room {
   name         String
   office       Office @relation(fields: [officeId], references: [id])
   officeId     String
+  seat         Seat[]
   gridPoints   Json?
   xSize        Int?
   ySize        Int?
@@ -71,6 +77,7 @@ model Room {
 // }
 
 enum Role {
-  USER
+  SUPERADMIN
   ADMIN
+  USER
 }

@@ -4,8 +4,9 @@ import prisma from "../lib/prisma";
 const signInCredentials = async (email: string, password: string): Promise<User> => {
 
   enum Role {
-    USER = "USER",
-    ADMIN = "ADMIN"
+    SUPERADMIN = "SUPERADMIN",
+    ADMIN = "ADMIN",
+    USER = "USER"
   }
 
   const user = await prisma.user.findFirstOrThrow({
@@ -19,6 +20,7 @@ const signInCredentials = async (email: string, password: string): Promise<User>
     id: user.id,
     name: user.username,
     email: user.id+user.username,
+    domainId: user.domainId,
     role: Role[user.role]
   }
 }

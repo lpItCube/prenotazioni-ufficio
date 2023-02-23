@@ -1,8 +1,10 @@
 import { GetServerSideProps } from "next"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
+import { getToken } from "next-auth/jwt";
 import prisma from "../../lib/prisma"
 import axios from "axios"
+import { getSession } from 'next-auth/react';
 
 // Redux
 import { useDispatch } from "react-redux"
@@ -12,6 +14,8 @@ import { setReserves } from "../../features/reserveSlice"
 import Calendar from "../../components/calendar"
 import FirstOffice from "../../components/first-office"
 import Spinner from "../../components/Ui/Spinner"
+import { NextRequest } from "next/server";
+import HandleOffice from "../../components/handleOffice";
 
 
 type DateRange = {
@@ -30,7 +34,7 @@ function createNewDate(hour: string) {
 
 
 
-function Prenota({ initialData }: any) {
+function Prenota({ initialData, domain }: any) {
 
   const dispatch = useDispatch()
   const session = useSession()
@@ -76,14 +80,15 @@ function Prenota({ initialData }: any) {
         setSeatName={setSeatName}
         setAction={setAction}
       />
-      {status === 'authenticated'
-        ? <FirstOffice
-          fromTo={fromTo}
-          seatName={seatName}
-          setSeatName={setSeatName}
-          action={action}
-          setAction={setAction}
-        />
+      {status === 'authenticated' ?
+        <HandleOffice fromTo={fromTo} action={action} setAction={setAction} domain={domain} />
+        // <FirstOffice
+        //   fromTo={fromTo}
+        //   seatName={seatName}
+        //   setSeatName={setSeatName}
+        //   action={action}
+        //   setAction={setAction}
+        // />
         : <div className="spinner__center"><Spinner /></div>
       }
 
@@ -96,6 +101,16 @@ function Prenota({ initialData }: any) {
 export default Prenota
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  
+  const session = await getSession(context)
+  if (session === null || session.user === null) return { props: {initialData: null} }
+  console.log(session.user!)
+  const domain = await prisma.domain.findUnique({ 
+    where: {id: session.user?.domainId!},
+    include: { office: { include: { room: true } } }
+  })
+
+  console.log("DOMAIN -> ", domain)
 
   const fromDate = createNewDate("09")
   const toDate = createNewDate("10")
@@ -108,7 +123,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))
 
   return {
-    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)) }
-
+    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), domain: domain }
   }
 }

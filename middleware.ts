@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
   const { pathname } = request.nextUrl;
   const protectedPaths = ["/secure", "/api/users", "/prenotazioni/pending"];
   const loggedPaths = ["/prenota", "/prenotazioni", "/secure", "/api/users"]
-
+  // console.log(await getToken({ req: request }))
 
   // Prendere una rotta all volta, altrimenti il sistema fa il redirect alla login
   const currentPath = loggedPaths.filter((curr: any) => pathname.includes(curr))
