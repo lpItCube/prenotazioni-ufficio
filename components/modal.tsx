@@ -75,9 +75,7 @@ function Modal({
 
   async function handleSeat() {
     setHitModalButton({loading:true, id:null})
-    console.log("AKODIKAODKAODK")
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
-    console.log("maronna " + seatId)
     let bookStatus = 'accepted'
     
 

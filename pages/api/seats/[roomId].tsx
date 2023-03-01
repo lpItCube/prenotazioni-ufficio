@@ -15,7 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === "DELETE") {
     const roomId = req.query.roomId as string
-    console.log("DIO -> ", roomId)
     try {
       const result = await prisma.seat.deleteMany({
         where: { roomId: roomId }

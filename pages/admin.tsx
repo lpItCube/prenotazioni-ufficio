@@ -1,7 +1,7 @@
 import axios from "axios"
 import { GetStaticProps } from "next"
 import { useEffect, useState } from "react"
-import CreateRoom from "../components/createRoom"
+import HandleRoom from "../components/handleRoom"
 import prisma from "../lib/prisma"
 
 type Domain = {
@@ -127,7 +127,7 @@ function Admin() {
         </div>
       }
 
-      { selectedRoom && <CreateRoom roomId={selectedRoom} /> }
+      { selectedRoom && <HandleRoom roomId={selectedRoom} create={true} /> }
 
     </div>
   )

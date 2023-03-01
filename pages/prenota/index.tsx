@@ -23,7 +23,6 @@ type DateRange = {
   to: string | null
 }
 
-
 function createNewDate(hour: string) {
   const currYear = new Date().getFullYear()
   const currMonth = ("0" + (new Date().getMonth() + 1)).slice(-2)
@@ -31,8 +30,6 @@ function createNewDate(hour: string) {
   const textDate = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
   return textDate
 }
-
-
 
 function Prenota({ initialData, domain }: any) {
 

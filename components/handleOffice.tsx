@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import CreateRoom from "./createRoom"
+import HandleRoom from "./handleRoom"
 
 type Domain = {
   id: string
@@ -63,7 +63,7 @@ function HandleOffice({fromTo, action, setAction, domain} : {fromTo: any, action
         </div>
       }
       { selectedRoom &&
-        <CreateRoom fromTo={fromTo} action={action} setAction={setAction} roomId={selectedRoom.id}/>
+        <HandleRoom fromTo={fromTo} action={action} setAction={setAction} roomId={selectedRoom.id} create={false} />
       }
     </div>
   )
