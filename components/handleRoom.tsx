@@ -82,14 +82,15 @@ function HandleRoom({fromTo, action, setAction, roomId, create}: any) {
           <input id="inputY" type="number"></input>
           <button onClick={() => {handleXY()}}>Submit Input</button>
           <div className="room-grid">
-            {xYSizes && <GridCreate create={create} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={{ xSize: xYSizes.x, ySize: xYSizes.y, gridPoints: [], name: room!.name }} />}
+            { (room && room.xSize && room.ySize) ? <GridCreate fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={room}/>
+             : xYSizes && <GridCreate fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={{ xSize: xYSizes.x, ySize: xYSizes.y, gridPoints: [], name: room!.name }} />}
           </div>
         </div>
         ) : (
           <>
           <div className="room-creation">
             <div className="room-grid">
-              {(room && room.xSize && room.ySize) && <Grid create={create} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={room}/>}
+              {(room && room.xSize && room.ySize) && <Grid fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={room}/>}
             </div>
           </div>
           <Modal seatName={seatName} action={action} username={username} fromTo={fromTo}/>
@@ -100,7 +101,7 @@ function HandleRoom({fromTo, action, setAction, roomId, create}: any) {
   )
 }
 
-function Grid({create, fromTo, setSeatName, setAction, roomId, setRoom, room} : any) {
+function Grid({ fromTo, setSeatName, setAction, roomId, room} : any) {
   const { xSize, ySize, gridPoints } = room;
   const [grid, setGrid] = useState<GridPoint[][]>([])
   const [reserves, setReserves] = useState<Reserve[]|undefined>(undefined)
@@ -137,10 +138,7 @@ function Grid({create, fromTo, setSeatName, setAction, roomId, setRoom, room} : 
         {grid.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {row.map((cell, columnIndex) => (
-              <td
-                key={columnIndex}
-                style={{ height: "50px", width: "50px" }}
-              >      
+              <td key={columnIndex} style={{ height: "50px", width: "50px" }}>      
                 <CellContent reserves={reserves} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
               </td>
             ))}
@@ -153,24 +151,11 @@ function Grid({create, fromTo, setSeatName, setAction, roomId, setRoom, room} : 
 
 }
 
-function GridCreate({ create, fromTo, setSeatName, setAction, roomId, setRoom, room }: { create: boolean, fromTo:any, setSeatName: any, setAction: any, roomId: string, setRoom: any, room: Room|any }) {
+function GridCreate({ fromTo, setSeatName, setAction, roomId, setRoom, room }: { fromTo:any, setSeatName: any, setAction: any, roomId: string, setRoom: any, room: Room|any }) {
   const { xSize, ySize, gridPoints } = room;
   const [grid, setGrid] = useState<GridPoint[][]>([]);
   const [seats, setSeats] = useState<Seat[]>([])
   const [selectedCell, setSelectedCell] = useState<GridPoint | null>(null)
-  const [reserves, setReserves] = useState<Reserve[]|[]>([])
-
-  // useEffect(() => {
-  //   const getRoomReserves = async () => {
-  //     //TODO: ADD LOADING MODAL
-  //     const res = await (await axios.get(`/api/roomReserves/${roomId}`)).data
-  //     const filteredRes = res.filter((r: Reserve) => 
-  //         !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
-  //       ))
-  //     setReserves(filteredRes)
-  //   }
-  //   getRoomReserves()
-  // }, [fromTo])
 
   useEffect(() => {
     const newGrid: GridPoint[][] = [];
@@ -213,15 +198,15 @@ function GridCreate({ create, fromTo, setSeatName, setAction, roomId, setRoom, r
   };
 
   const handleSave = async() => {
+    console.log(seats)
     const newRoom = {...room, gridPoints: grid.flat()}
     await axios.put("/api/room/", {...newRoom, id: roomId})
-    if (seats.length > 0) {
-      try {
-        await axios.delete(`/api/seats/${roomId}`)
+    try {
+      await axios.delete(`/api/seats/${roomId}`)
+      if (seats.length > 0)
         await axios.post("/api/seats/", {seats})
-      } catch (e) {
-        console.log(e)
-      }
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -234,7 +219,7 @@ function GridCreate({ create, fromTo, setSeatName, setAction, roomId, setRoom, r
             {row.map((cell, columnIndex) => (
               <td
                 key={columnIndex}
-                onClick={ create ? () => handleCellClick(cell) : () => {} }
+                onClick={() => handleCellClick(cell)}
                 style={{ height: "50px", width: "50px" }}
               >
                 {selectedCell === cell ? (
@@ -250,7 +235,7 @@ function GridCreate({ create, fromTo, setSeatName, setAction, roomId, setRoom, r
                     <option value="quarter-circle-bottom-right" style={{backgroundImage: "url('/chair.svg')"}}>bRight</option>
                   </select>
                 ) : (
-                  <CellContent reserves={reserves} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
+                  <CellContent create={true} reserves={[]} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
                 )}
               </td>
             ))}
@@ -263,52 +248,52 @@ function GridCreate({ create, fromTo, setSeatName, setAction, roomId, setRoom, r
   )
 }
 
-const CellContent = ({ reserves, fromTo, setSeatName, setAction, cell }: any) => {
+const CellContent = ({ create, reserves, fromTo, setSeatName, setAction, cell }: any) => {
   if (cell.info === "hChair") {
     return (
       <div style={{ position: "relative", textAlign: "center" }}>
         <hr style={{ position: "absolute", top: "22px", left: "0", width: "100%" }} />
         { 
         reserves && 
-          <Seat reserves={reserves} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
+          <Seat create={create} reserves={reserves} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
         }
       </div>
-    );
-  } else if (cell.info === "vChair") {
+    )
+  }
+  if (cell.info === "vChair") {
     return (
       <div style={{ position: "relative", textAlign: "center" }}>
         <div style={{ position: "relative", alignItems: "center", justifyContent:"center", height: "100%" }}>
           <div style={{ position: "absolute", left: "24px", height: "100%", borderLeft: "1px solid grey" }}></div>
           { 
           reserves &&
-            <Seat reserves={reserves} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
+            <Seat create={create} reserves={reserves} fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
           }
         </div>
       </div>
     );
-  } else if(cell.info === "vLine") {
+  } 
+  if(cell.info === "vLine") {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent:"center", height: "100%" }}>
         <div style={{ height: "100%", borderLeft: "1px solid grey" }}></div>
       </div>
     );
-  } else if(cell.info === "hLine") {
+  } 
+  if(cell.info === "hLine") {
     return (
       <hr style={{  width: "100%" }} />
-    );
-  } else if(
-      cell.info === "quarter-circle-top-left" || 
-      cell.info === "quarter-circle-top-right" ||
-      cell.info === "quarter-circle-bottom-left" ||
-      cell.info === "quarter-circle-bottom-right"
-    ) {
+    )
+  }
+  if(["quarter-circle-top-left", "quarter-circle-top-right", "quarter-circle-bottom-left", 
+      "quarter-circle-bottom-right"].includes(cell.info)) {
     return (
       <div className={"box-"+cell.info} style={{ display: "flex", height: "100%" }}>
         <div className={cell.info}></div>
       </div>
-    );
+    )
   }
-    else return <div></div>
+  else return <div></div>
 }
 
 type SeatProps = {
@@ -316,7 +301,7 @@ type SeatProps = {
   canvasClass: string
 }
 
-function Seat({reserves, fromTo, setSeatName, setAction, cell}: any) {
+function Seat({create, reserves, fromTo, setSeatName, setAction, cell}: any) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [seatProps, setSeatProps] = useState<SeatProps>({color: "green", canvasClass: ""})
 
@@ -345,26 +330,28 @@ function Seat({reserves, fromTo, setSeatName, setAction, cell}: any) {
   }
 
   useEffect(() => {
-    const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
-    const seatReserves = reserves.filter((r: Reserve) => r.seat.name === cell.seatName)
-    const isAdmin = role === "ADMIN"
-
-    console.log(reserves)
-
-    var canvasClass = ""
-    var color = ""
-
-    const yourReserve = yourReserveInRoom && yourReserveInRoom.id === seatReserves[0].id
-    if (yourReserve)
-      setSeatProps({color: "yellow", canvasClass: "clickable del"})
-    else if (yourReserveInRoom && !isAdmin) setSeatProps({color: "grey", canvasClass: ""})
-  
-    else {
-      const free = seatReserves.length === 0
-      const color = free ? "green" : "red"
-      const canvasClass = free ? "clickable" : isAdmin ? "clickable del" : ""
-      setSeatProps({color: color, canvasClass: canvasClass})
+    if (create) {
+      setSeatProps({color: "orange", canvasClass: ""})
+      return
     }
+    const isAdmin = role === "ADMIN"
+    const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
+    const seatReserve = reserves.find((r: Reserve) => r.seat.name === cell.seatName)
+
+    const yourReserve = yourReserveInRoom && yourReserveInRoom?.id === seatReserve?.id
+    if (yourReserve) {
+      setSeatProps({color: "yellow", canvasClass: "clickable del"})
+      return
+    }
+    if (yourReserveInRoom && !isAdmin) {
+      setSeatProps({color: "grey", canvasClass: ""})
+      return
+    }
+
+    const free = !seatReserve
+    const color = free ? "green" : "red"
+    const canvasClass = free ? "clickable" : isAdmin ? "clickable del" : ""
+    setSeatProps({color: color, canvasClass: canvasClass})
     
   }, [reserves])
 
