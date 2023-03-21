@@ -94,6 +94,10 @@ a {
   align-items: end;
 }
 
-.clickable {
+canvas.clickable {
   cursor: pointer;
+}
+
+canvas.clickable:hover {
+  background-color: grey;
 }

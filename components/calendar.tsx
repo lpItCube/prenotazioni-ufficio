@@ -12,6 +12,7 @@ import { useAuthHook } from "../hooks/useAuthHook";
 import HourPicker from "./Calendar/Hourpicker";
 import DatePicker from "./Calendar/DatePicker";
 import BookAll from "./Rooms/BookAll";
+import { getActualRoom } from "../features/roomSlice";
 
 type FromToHour = {
   from: string,
@@ -32,6 +33,7 @@ function Calendar({
   const [openCalendar, setOpenCalendar] = useState(false)
   const { userData } = useAuthHook()
   const reserveData = useSelector(getReserves)
+  const roomId = useSelector(getActualRoom)
   const userRole = userData.role
 
   const handleOpenCalendar = () => {
@@ -50,10 +52,14 @@ function Calendar({
 
     const fromDate = createNewDate(selectedDate, startHour)
     const toDate = createNewDate(selectedDate, endHour)
-    const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
+    // const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
+    const res = await (await axios.get(`/api/roomReserves/${roomId}`)).data
+      const filteredRes = res.filter((r: any) => 
+        !(new Date(r.from) > new Date(fromDate as string) || new Date(r.to) < new Date(toDate as string)
+      ))
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
-    dispatch(setReserves({reserveData:res}))
+    dispatch(setReserves({reserveData:filteredRes}))
   }
 
   const handleConfirmDate = async (selDate: Date) => {

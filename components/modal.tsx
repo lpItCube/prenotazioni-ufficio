@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 
 // Redux
@@ -20,6 +20,7 @@ import { RiDeleteBin3Line } from "react-icons/ri";
 import { TbClipboardCheck } from "react-icons/tb";
 import ModalApprovation from "./Modals/ModalApprovation";
 import ModalSingleReserve from "./Modals/ModalSingleReserve";
+import { setUser } from "../features/authSlice"
 
 const ADD = "ADD"
 const DELETE = "DELETE"
@@ -27,6 +28,7 @@ const APPROVE = "APPROVE"
 const MANAGE = "MANAGE"
 
 function Modal({
+  username,
   seatName,
   action,
   singleReserve,
@@ -36,6 +38,7 @@ function Modal({
 
   const dispatch = useDispatch()
   const reserveData = useSelector(getReserves)
+  const roomId = useSelector(getActualRoom)
   const { userData } = useAuthHook()
   const userIdHooks: string = userData.id
   const userRole = userData.role
@@ -45,22 +48,22 @@ function Modal({
   const toApprove = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'pending')
   const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'accepted')
 
+  const [userReserve, setUserReserve] = useState([])
+
+  useEffect(() => {
+    if (userRole === 'USER') {
+      setUserReserve(reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.user.id === userIdHooks))
+    } else {
+      setUserReserve(reserveData)
+    }
+    // if(userReserve.length > 0) {
+    //   userReserve = actualRoom === 'meet' 
+    //     ? userReserve.filter((res:any) => res.seat.type === actualRoom || res.seat.type === 'meet-whole')
+    //     : userReserve.filter((res:any) => res.seat.type === actualRoom)
+    // }
+  }, [reserveData])
+
   
-
-  let userReserve: any
-  if (userRole === 'USER') {
-    userReserve = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.user.id === userIdHooks)
-  } else {
-    userReserve = reserveData
-  }
-  
-  if(userReserve.length > 0) {
-    userReserve = actualRoom === 'meet' 
-      ? userReserve.filter((res:any) => res.seat.type === actualRoom || res.seat.type === 'meet-whole')
-      : userReserve.filter((res:any) => res.seat.type === actualRoom)
-  }
-
-
 
   const handleCloseModal = () => {
     setHitModalButton({loading:false, id:null})
@@ -93,7 +96,6 @@ function Modal({
           })
         }
       }
-
       
       const addReserve = await axios.post("/api/addReserve", {
         seatId: seatId,
@@ -103,8 +105,6 @@ function Modal({
         to: new Date(fromTo.to),
         status: bookStatus
       })
-
-      
 
     } else if (action === DELETE) {
 
@@ -122,7 +122,11 @@ function Modal({
 
     handleCloseModal()
     if (fromTo) {
-      const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+      // const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+      const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
+      const reloadData = reserves.filter((r: any) => 
+        !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
+      ))
       dispatch(setReserves({reserveData:reloadData}))
     }
 
@@ -134,17 +138,25 @@ function Modal({
 
 
   async function handleApprovation(status: any, id: any) {
+    console.log("disapprove id: ", id)
+    console.log("status: ", status)
     setHitModalButton({loading:true, id:id})
     if (status === 'approved') {
       await axios.patch("/api/reserve/approveReserve", {
         id
       })
-      const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+      const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
+      const reloadData = reserves.filter((r: any) => 
+        !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
+      ))
       dispatch(setReserves({reserveData:reloadData}))
     } else {
 
       const deleteSeat = await axios.delete("/api/reserve/" + id);
-      const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+      const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
+      const reloadData = reserves.filter((r: any) => 
+        !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
+      ))
       dispatch(setReserves({reserveData:reloadData}))
       setHitModalButton({loading:false, id:null})
       if (userReserve.length === 1) {

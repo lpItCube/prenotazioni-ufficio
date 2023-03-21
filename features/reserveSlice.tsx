@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    reserveData:[]
+    reserveData:[],
+    username: ""
 }
 
 const reserveSlice = createSlice({
@@ -10,7 +11,7 @@ const reserveSlice = createSlice({
     reducers: {
         setReserves: (state, action) => {
             state.reserveData = action.payload.reserveData
-        },
+        }
     }
 })
 

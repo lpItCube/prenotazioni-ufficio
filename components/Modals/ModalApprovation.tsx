@@ -27,6 +27,7 @@ function ModalApprovation({
     pendingReserve,
     hitModalButton
 }: ModalApprovationProps) {
+  // console.log("modal reserve: ", reserve)
     return (
         <>
             {pendingControl && pendingReserve.length > 0 &&
