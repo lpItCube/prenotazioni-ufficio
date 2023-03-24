@@ -6,7 +6,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const room = await prisma.room.findUnique({
-      where: { id: roomId }
+      where: { id: roomId },
+      include: { seat: { include: { reserve: true } } }
     })
 
     res.status(200).json(room)

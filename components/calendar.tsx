@@ -53,21 +53,21 @@ function Calendar({
     const fromDate = createNewDate(selectedDate, startHour)
     const toDate = createNewDate(selectedDate, endHour)
     // const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
-    const res = await (await axios.get(`/api/roomReserves/${roomId}`)).data
-      const filteredRes = res.filter((r: any) => 
-        !(new Date(r.from) > new Date(fromDate as string) || new Date(r.to) < new Date(toDate as string)
-      ))
+    // const res = await (await axios.get(`/api/roomReserves/${roomId}`)).data
+    //   const filteredRes = res.filter((r: any) => 
+    //     !(new Date(r.from) > new Date(fromDate as string) || new Date(r.to) < new Date(toDate as string)
+    //   ))
+    // dispatch(setReserves({reserveData:filteredRes}))
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
-    dispatch(setReserves({reserveData:filteredRes}))
   }
-
+  
   const handleConfirmDate = async (selDate: Date) => {
     const fromDate = createNewDate(selDate, fromToHours.from)
     const toDate = createNewDate(selDate, fromToHours.to)
-    const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
+    // const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
     setFromTo({ from: fromDate, to: toDate })
-    dispatch(setReserves({reserveData:res}))
+    // dispatch(setReserves({reserveData:res}))
   }
 
   // const userRole = useSelector(getUserRole)

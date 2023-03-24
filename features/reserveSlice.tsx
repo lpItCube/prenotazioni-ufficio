@@ -10,6 +10,7 @@ const reserveSlice = createSlice({
     initialState,
     reducers: {
         setReserves: (state, action) => {
+            console.log("from reserveSlice ", action.payload.reserveData)
             state.reserveData = action.payload.reserveData
         }
     }

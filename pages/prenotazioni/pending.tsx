@@ -47,13 +47,20 @@ function pending({
     const handleApprovation = async (status: any, id: any) => {
         setHitManageButton({ loading: true, id })
         if (status === 'approved') {
-            await axios.patch("/api/reserve/approveReserve", {
-                id,
+            const reserve = await (await axios.get(`/api/reserve/${id}`)).data
+            const room = reserve!.seat!.room!
+            const reservesInRoom = await (await axios.get(`/api/roomReserves/${room.id}`)).data
+            const reserveToDelete = reservesInRoom.filter((r: any) => 
+                !(new Date(r.from) > new Date(reserve.to as string) || new Date(r.to) < new Date(reserve.from as string)) && r.id !== id
+            )
+            await reserveToDelete.forEach(async (r: any) => {
+                await axios.delete("/api/reserve/" + r.id)
             })
+            await axios.patch("/api/reserve/approveReserve", {id})
+
             const response = await axios.get(`/api/reserve/pending`)
             const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
             setReserves(reorderData)
-
         } else {
             const deleteSeat = await axios.delete("/api/reserve/" + id);
             const response = await axios.get(`/api/reserve/pending`)
@@ -63,7 +70,6 @@ function pending({
         dispatch(setPendingNotification({ pending: reserves.length - 1 }))
         setHitManageButton({ loading: false, id: null })
         setHitNotification(true)
-
     }
 
     let tableContent: any

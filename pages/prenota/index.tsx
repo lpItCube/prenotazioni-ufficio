@@ -51,24 +51,20 @@ function Prenota({ initialData, domain }: any) {
 
 
   useEffect(() => {
-    const reloadDataSession = async () => {
-      if (fromTo.from && fromTo.to) {
-        const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-        dispatch(setReserves({ reserveData: reloadData }))
-      }
-    }
+    // const reloadDataSession = async () => {
+    //   if (fromTo.from && fromTo.to) {
+    //     const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+    //     dispatch(setReserves({ reserveData: reloadData }))
+    //   }
+    // }
 
-    reloadDataSession()
+    // reloadDataSession()
   }, [session, fromTo])
-
 
   useEffect(() => {
     const event = new Event("visibilitychange");
     document.dispatchEvent(event);
   }, [status])
-
-
-
 
   return (
     <>

@@ -10,6 +10,7 @@ import { getReserves } from "../../features/reserveSlice"
 import Spinner from "../Ui/Spinner"
 
 const ADD = "ADD"
+const ADDALL = "ADDALL"
 
 type ModalSingleReserveProps = {
     action: any,
@@ -35,55 +36,51 @@ function ModalSingleReserve({
     const reserveData = useSelector(getReserves)
 
     return (
-
-        <>
-            <p
-                className="modal__text txt-h6"
-            >
-                {action === ADD && "Vuoi procedere con la prenotazione del posto "}
-                <b>{seatName}</b>?</p>
-                {reserveData 
-                && seatName === 'meet-room' 
-                && otherReserveInPeriod 
-                && otherReserveInPeriod.length > 0 
-                &&
-                <>
-                    <br />
-                    <p
-                        className="modal__text modal__text--warning txt-h6"
-                    >Attenzione! Sono già presenti prenotazioni per questi orari, procedendo verranno cancellate.</p>
-                    <div className="approve__container">
-                        {
-                            userReserve.length > 0 && userReserve.filter((res: any) => res.seat.type === 'meet').map((res: any) => {
-                                const status = res.status === 'accepted' ? 'accepted' : 'pending'
-                                return (
-                                    <div key={res.id} className={`approve__reserve ${status}`}>
-                                        <div className="approve__row--info">
-                                            <div className="approve__row--user">{res.user.username}</div>
-                                            <div className="approve__row">{res.seat.name}</div>
-                                            {res.from &&
-                                                <div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
-                                            }
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                </>
+      <>
+      <p className="modal__text txt-h6">
+          {action === ADD && "Vuoi procedere con la prenotazione del posto "}
+          <b>{seatName}</b>?</p>
+          {reserveData 
+          && seatName === 'meet-room' 
+          && otherReserveInPeriod 
+          && otherReserveInPeriod.length > 0 
+          &&
+          <>
+          <br />
+          <p
+              className="modal__text modal__text--warning txt-h6"
+          >Attenzione! Sono già presenti prenotazioni per questi orari, procedendo verranno cancellate.</p>
+          <div className="approve__container">
+            {
+            userReserve.length > 0 && userReserve.filter((res: any) => res.seat.type === 'meet').map((res: any) => {
+              const status = res.status === 'accepted' ? 'accepted' : 'pending'
+              return (
+                <div key={res.id} className={`approve__reserve ${status}`}>
+                  <div className="approve__row--info">
+                    <div className="approve__row--user">{res.user.username}</div>
+                    <div className="approve__row">{res.seat.name}</div>
+                    {res.from &&
+                        <div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
+                    }
+                  </div>
+                </div>
+              )
+            })
             }
-            {/* {console.log(hitModalButton.loading)} */}
-            {!hitModalButton.loading 
-                ? <Button
-                    onClick={() => handleSeat()}
-                    className={`cta ${action === ADD ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
-                    type='button'
-                    icon={false}
-                    text={action === ADD ? 'Conferma' : 'Cancella'}
-                />
-                : <Spinner/>
-            }
-        </>
+          </div>
+          </>
+      }
+      {/* {console.log(hitModalButton.loading)} */}
+      {!hitModalButton.loading 
+        ? <Button
+            onClick={() => handleSeat()}
+            className={`cta ${action === ADD || action === ADDALL ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
+            type='button'
+            icon={false}
+            text={action === ADD || action === ADDALL ? 'Conferma' : 'Cancella'}/>
+        : <Spinner/>
+      }
+      </>
     )
 }
 
