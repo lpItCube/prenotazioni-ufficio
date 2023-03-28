@@ -54,7 +54,7 @@ function HandleRoom({fromTo, action, setAction, roomId, create}: any) {
   const [xYSizes, setxYSizes] = useState<XYSizes|undefined>(undefined)
   const [seatName, setSeatName] = useState("none")
   const dispatch = useDispatch()
-
+  
   useEffect(() => {
     dispatch(setActualRoom(roomId))
     const getRoom = async() => {
@@ -91,6 +91,7 @@ function HandleRoom({fromTo, action, setAction, roomId, create}: any) {
     <>
       {create ? (
         <div className="room-creation">
+          Numbers
           <input id="inputX" type="number"></input>
           <input id="inputY" type="number"></input>
           <button onClick={handleXY}>Submit Input</button>
@@ -217,6 +218,7 @@ function GridCreate({ setSeatName, setAction, roomId, setRoom, room }: { fromTo:
 
   const handleSave = async() => {
     const newRoom = {...room, gridPoints: grid.flat()}
+    console.log(newRoom)
     await axios.put("/api/room/", {...newRoom, id: roomId})
     try {
       await axios.delete(`/api/seats/${roomId}`)

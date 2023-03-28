@@ -103,6 +103,7 @@ function Admin() {
 
       { domains.length > 0 && selectedDomain && 
         <div>
+          
           <select value={selectedOffice} onChange={handleSelectOffice}>
             <option value="">-- Select an office --</option>
             {offices.map((office, key) => 

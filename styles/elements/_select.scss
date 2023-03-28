@@ -25,6 +25,7 @@
         overflow-x: hidden;
         opacity: 0;
         pointer-events: none;
+        z-index: 1;
         @include animate(0.2s ease-in-out);
         &.is-open {
             margin-top: 8px;

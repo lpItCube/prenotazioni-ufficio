@@ -43,10 +43,10 @@ function HandleOffice({fromTo, action, setAction, domain} : {fromTo: any, action
   return (
     <div>
       <div>
-        <label>Select an office</label>
+        <label>Select an office aaa</label>
         <select onChange={handleSelectOffice}>
           <option value="">-- Select an option --</option>
-          {domain!.office!.map((office: any, key: number) => 
+          {domain?.office!.map((office: any, key: number) => 
             <option key={key} value={office.id}>{office.name}</option>
           )}
         </select>

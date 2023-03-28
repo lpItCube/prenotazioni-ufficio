@@ -3,7 +3,8 @@ type SelectProps = {
     value:any,
     children:any,
     onClick:any,
-    openOption:boolean
+    openOption:boolean,
+    refState?:any
 }
 
 function Select({
@@ -11,12 +12,14 @@ function Select({
     value,
     children,
     onClick,
-    openOption
+    openOption,
+    refState
 }: SelectProps ) {
   return (
     <div
         className="select__container"
         onClick={onClick()}
+        ref={refState}
     >
         <p className="select__label label">{label}</p>
         <div className="select__value-container">
