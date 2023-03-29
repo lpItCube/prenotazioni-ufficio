@@ -16,7 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         include: {
           office: {
             include: { room: true }
-          }
+          },
+          user: true
         }
       })
       res.status(200).json(domains)
