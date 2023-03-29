@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Select from '../Ui/Select'
 import Option from '../Ui/Option'
 import Button from '../Ui/Button'
@@ -72,7 +72,14 @@ function CreateAction(props: CreateActionProps) {
   } = props
 
   const [method, setMethod] = useState<number>(FormMethod.SELEZIONA)
-  
+
+  useEffect(() => {
+    if(optionList.length > 0) {
+      setMethod(FormMethod.SELEZIONA)
+    } else {
+      setMethod(FormMethod.AGGIUNGI)
+    }
+  }, [optionList, currentStepper])
 
   const containerVariants = {
     initial: {
@@ -121,7 +128,10 @@ function CreateAction(props: CreateActionProps) {
     }
   }
 
-  const tabButton: ITabButton[] = [{ text: 'Seleziona', value: FormMethod.SELEZIONA }, { text: 'Aggiungi', value: FormMethod.AGGIUNGI }]
+  const tabButton: ITabButton[] = [
+    { text: 'Seleziona', value: FormMethod.SELEZIONA, disabled:optionList.length === 0 }, 
+    { text: 'Aggiungi', value: FormMethod.AGGIUNGI, disabled:false }
+  ]
 
   const toggleMethod = (tab: number) => {
     setMethod(tab)

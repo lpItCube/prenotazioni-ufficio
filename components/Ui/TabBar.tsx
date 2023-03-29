@@ -21,6 +21,7 @@ function TabBar(props: TabBarProps) {
                         key={tab.value}
                         className={`tabBar__button ${currentTab === tab.value ? 'selected' : 'static'}`}
                         onClick={() => onClick(tab.value)}
+                        disabled={tab.disabled}
                     >
                         {tab.text}
                     </button>

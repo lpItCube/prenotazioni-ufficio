@@ -1,4 +1,5 @@
 export interface ITabButton{
     text: string,
-    value: number
+    value: number,
+    disabled: boolean
 }
