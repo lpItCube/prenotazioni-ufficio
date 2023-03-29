@@ -1,59 +1,264 @@
-import React from 'react'
+import { useState } from 'react'
 import Select from '../Ui/Select'
 import Option from '../Ui/Option'
+import Button from '../Ui/Button'
+import { TbEdit } from "react-icons/tb";
+import { Colors } from '../Ui/Colors';
+import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from '../../_shared';
+import { motion, AnimatePresence } from 'framer-motion';
+import TabBar from '../Ui/TabBar';
+import { ITabButton } from '../../types';
+import Input from '../Ui/Input';
+import { IoAddCircleOutline } from "react-icons/io5";
 
-
-interface CreateActionProps {
-    refState: any,
-    label: string,
-    defaultSelect: string,
-    selectObj: {
-        label: string,
-        value: string
-    },
-    handleSelect: () => any,
-    openOption: boolean,
-    setSelect: (selectObj: { label: string, value: string }) => void,
-    optionList: any
+type OptionItem = {
+  value: string,
+  label: string
 }
 
-function CreateAction(props:CreateActionProps) {
-    const {
-        refState,
-        label,
-        defaultSelect,
-        selectObj,
-        handleSelect,
-        openOption,
-        setSelect,
-        optionList
-    } = props
-    return (
-        <>
-            <Select
-                label={label}
-                value={selectObj ? selectObj.label : defaultSelect}
-                onClick={() => handleSelect}
-                openOption={openOption}
-                refState={refState}
+interface CreateActionProps {
+  refState: any,
+  label: string,
+  defaultSelect: string,
+  selectObj: {
+    label: string,
+    value: string
+  },
+  openOption: boolean,
+  optionList: any,
+  isActive: boolean,
+  currentStepper: number,
+  stepperState: number,
+  createName: string,
+  direction: number,
+  setDirection: (num: number) => void,
+  setCreateName: (name: string) => void,
+  handleCreation: (type: number) => any,
+  handleSelect: () => any,
+  setSelect: (selectObj: { label: string, value: string }) => void,
+  setStepperState: (num: number) => void,
+  setSelectedDomain: (item: OptionItem) => void,
+  setSelectedOffice: (item: OptionItem) => void,
+  setSelectedRoom: (item: OptionItem) => void,
+}
+
+const enum FormMethod {
+  SELEZIONA,
+  AGGIUNGI
+}
+
+function CreateAction(props: CreateActionProps) {
+  const {
+    refState,
+    label,
+    defaultSelect,
+    selectObj,
+    openOption,
+    optionList,
+    isActive,
+    currentStepper,
+    stepperState,
+    createName,
+    direction,
+    setDirection,
+    handleCreation,
+    setCreateName,
+    handleSelect,
+    setSelect,
+    setStepperState,
+    setSelectedDomain,
+    setSelectedOffice,
+    setSelectedRoom
+  } = props
+
+  const [method, setMethod] = useState<number>(FormMethod.SELEZIONA)
+  
+
+  const containerVariants = {
+    initial: {
+      opacity: 0,
+      x: direction === DirectionMode.POSITIVE ? '100%' : '-100%',
+    },
+    animate: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut',
+      },
+    },
+    exit: {
+      opacity: 0,
+      x: direction === DirectionMode.POSITIVE ? '-100%' : '100%',
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut',
+      },
+    },
+  };
+
+  const buttonEnter = {
+    initial: {
+      scale: 0,
+      opacity:0
+    },
+    animate: {
+      scale: 1,
+      opacity:1,
+      transition: {
+        delay:0.2,
+        duration: 0.3,
+        ease: 'easeInOut',
+      },
+    },
+    exit: {
+      scale: 0,
+      opacity:0,
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut',
+      },
+    }
+  }
+
+  const tabButton: ITabButton[] = [{ text: 'Seleziona', value: FormMethod.SELEZIONA }, { text: 'Aggiungi', value: FormMethod.AGGIUNGI }]
+
+  const toggleMethod = (tab: number) => {
+    setMethod(tab)
+  }
+
+  const placeholder: string = stepperState === StepperState.DOMAIN
+    ? 'Aggiungi un dominio'
+    : stepperState === StepperState.OFFICE
+      ? 'Aggiungi un ufficio'
+      : stepperState === StepperState.ROOM
+        ? 'Aggiungi una stanza'
+        : ''
+
+  return (
+    <AnimatePresence>
+      
+      {isActive
+        ? (
+          <div
+            className="creation-stepper__modal-wrapper"
+            key={currentStepper}
+          >
+            <motion.div
+              className='creation-stepper__modal-container'
+              variants={containerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
             >
-                <Option
-                    key="domain-empty"
-                    onClick={() => setSelect({label: defaultSelect, value:''})}
-                    label={defaultSelect}
-                    className=""
+              <h3
+                className='creation-stepper__modal-title'
+              >
+                {label}
+              </h3>
+              <div className='creation-stepper__actions-wrapper'>
+                <TabBar
+                  tabButton={tabButton}
+                  onClick={toggleMethod}
+                  currentTab={method}
                 />
-                {optionList.map((domain: any, key: number) =>
-                    <Option
-                        key={key}
-                        onClick={() => setSelect({ label: domain.name, value: domain.id })}
-                        label={domain.name}
-                        className=""
-                    />
-                )}
-            </Select>
-        </>
-    )
+                <div className={`creation-stepper__actions-container${createName ? ' w-cta' : ''}`}>
+                  {method === FormMethod.SELEZIONA
+                    ? (
+                      <Select
+                        label={''}
+                        value={selectObj ? selectObj.label : defaultSelect}
+                        onClick={() => handleSelect}
+                        openOption={openOption}
+                        refState={refState}
+                      >
+                        {optionList.map((domain: any, key: number) =>
+                          <Option
+                            key={key}
+                            onClick={() => setSelect({ label: domain.name, value: domain.id })}
+                            label={domain.name}
+                            className=""
+                          />
+                        )}
+                      </Select>
+                    )
+                    : (
+                      <>
+                        <Input
+                          label={''}
+                          value={createName}
+                          onChange={setCreateName}
+                          placeholder={placeholder}
+                        />
+                        <AnimatePresence>
+                          {createName &&
+                            <motion.div
+                              className='creation-stepper__actions-cta'
+                              variants={buttonEnter}
+                              key='cta'
+                              initial="initial"
+                              animate="animate"
+                              exit="exit"
+                            >
+                              <Button
+                                onClick={() => handleCreation(currentStepper)}
+                                className={`cta cta--primary cta__icon${!createName ? ' disabled' : ''}`}
+                                type='button'
+                                icon={<IoAddCircleOutline size={20} color={Colors.white} />}
+                                text={''}
+                                disabled={!createName}
+                              />
+                            </motion.div>
+                          }
+                        </AnimatePresence>
+                      </>
+                    )
+                  }
+
+
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )
+        : selectObj.label !== defaultSelect && stepperState >= currentStepper
+          ? (
+            <motion.div
+              variants={containerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <p>{selectObj.label}</p>
+              <Button
+                onClick={() => {
+                  setDirection(DirectionMode.NEGATIVE)
+                  setTimeout(() => {
+                    setStepperState(currentStepper)
+                    if (currentStepper === StepperState.DOMAIN) {
+                      setSelectedDomain(DEFAULT_DOMAIN_VALUE)
+                    } else if (currentStepper === StepperState.OFFICE) {
+                      setSelectedOffice(DEFAULT_OFFICE_VALUE)
+                      setSelectedRoom(DEFAULT_ROOM_VALUE)
+                    } else if (currentStepper === StepperState.ROOM) {
+                      setSelectedRoom(DEFAULT_ROOM_VALUE)
+                    }
+                  },100)
+                }}
+                className={`cta cta--primary`}
+                type='button'
+                icon={<TbEdit size={18} color={Colors.white} />}
+                text={'Modifica'}
+              />
+            </motion.div>
+          )
+          : (
+            null
+          )
+      }
+
+    </AnimatePresence>
+  )
 }
 
 export default CreateAction

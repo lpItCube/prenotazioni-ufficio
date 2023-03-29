@@ -143,4 +143,9 @@
             }
         }
     }
+
+    &.disabled {
+        background-color: $light500;
+        pointer-events: none;
+    }
 }

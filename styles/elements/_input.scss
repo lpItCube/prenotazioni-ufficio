@@ -1,0 +1,14 @@
+.input {
+    &__value {
+        &-container {
+            @include pxToRem(16);
+            border: none;
+            cursor: auto;
+            &:focus,
+            &:focus-visible {
+                border:none;
+                outline: none;
+            }
+        }
+    }
+}

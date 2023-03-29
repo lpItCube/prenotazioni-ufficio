@@ -3,7 +3,8 @@ type ButtonProps = {
     className:string,
     type:any,
     icon:any,
-    text:any
+    text:any,
+    disabled?:boolean
 }
 
 function Button({
@@ -11,13 +12,15 @@ function Button({
     className,
     type,
     icon,
-    text
+    text,
+    disabled
 } : ButtonProps ) {
   return (
     <button 
         className={className} 
         type={type}
         onClick={onClick}
+        disabled={disabled}
     >
         {text && 
             <p

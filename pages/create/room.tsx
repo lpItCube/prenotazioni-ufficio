@@ -4,6 +4,13 @@ import { useEffect, useState, useRef } from "react"
 import HandleRoom from "../../components/handleRoom"
 import prisma from "../../lib/prisma"
 import CreateAction from "../../components/Create/CreateAction"
+import Stepper from "../../components/Create/Stepper"
+import { motion, AnimatePresence } from 'framer-motion';
+import Button from "../../components/Ui/Button"
+import { Colors } from "../../components/Ui/Colors"
+import StepperNavigator from "../../components/Create/StepperNavigator"
+import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
+
 
 type Domain = {
   id: string,
@@ -33,18 +40,20 @@ function Room() {
   const [domains, setDomains] = useState<Domain[]>([])
   const [offices, setOffices] = useState<Office[]>([])
   const [rooms, setRooms] = useState<Room[]>([])
-  const [selectedDomain, setSelectedDomain] = useState<OptionItem>({ value: '', label: 'Seleziona un dominio' });
-  const [selectedOffice, setSelectedOffice] = useState<OptionItem>({ value: '', label: 'Seleziona un ufficio' });
-  const [selectedRoom, setSelectedRoom] = useState<OptionItem>({ value: '', label: 'Seleziona un ufficio' });
-  const [stepperState, setStepperState] = useState<number>()
-  const [stepperLabel, setStepperLabel] = useState<string>('')
+  const [selectedDomain, setSelectedDomain] = useState<OptionItem>(DEFAULT_DOMAIN_VALUE);
+  const [selectedOffice, setSelectedOffice] = useState<OptionItem>(DEFAULT_OFFICE_VALUE);
+  const [selectedRoom, setSelectedRoom] = useState<OptionItem>(DEFAULT_ROOM_VALUE);
+  const [stepperState, setStepperState] = useState<number>(0)
   const [openDominio, setOpenDominio] = useState<boolean>(false)
   const [openOffice, setOpenOffice] = useState<boolean>(false)
   const [openStanza, setOpenStanza] = useState<boolean>(false)
+  const [createName, setCreateName] = useState<string>('')
+  const [direction, setDirection] = useState<number>(DirectionMode.POSITIVE)
 
-  const domainRef = useRef<any>(null)
   const officeRef = useRef<any>(null)
+  const domainRef = useRef<any>(null)
   const roomRef = useRef<any>(null)
+
 
   useEffect(() => {
     // UseRef per controllare se il click è interno
@@ -71,7 +80,11 @@ function Room() {
 
   useEffect(() => {
     const trueCount = [Boolean(selectedDomain.value), Boolean(selectedOffice.value), Boolean(selectedRoom.value)].reduce((count: any, bool: boolean) => count + bool, 0);
-    setStepperState(trueCount)
+    setTimeout(() => {
+      setStepperState(trueCount)
+      setCreateName('')
+      setDirection(DirectionMode.POSITIVE)
+    },100)
   }, [selectedDomain, selectedOffice, selectedRoom])
 
   useEffect(() => {
@@ -80,132 +93,161 @@ function Room() {
       if (res) setDomains(res)
     }
     getDomains()
-  }, [])
 
-  useEffect(() => {
     const domain = domains.find((domain) => domain.id === selectedDomain.value)
-    setSelectedOffice({ label: 'Seleziona un ufficio', value: '' })
-    setSelectedRoom({ label: 'Seleziona una stanza', value: '' })
     if (domain && domain.hasOwnProperty("office") && domain.office.length > 0) {
       setOffices(domain.office)
-      // if (domain.office[0]) setSelectedOffice(domain.office[0].id)
-      // console.log(selectedOffice)
     } else {
       setOffices([])
     }
-  }, [selectedDomain])
 
-  useEffect(() => {
-    setSelectedRoom({ label: 'Seleziona una stanza', value: '' })
     const office = offices.find((office) => office.id === selectedOffice.value)
     if (office && office.hasOwnProperty("room") && office.room.length > 0) {
       setRooms(office.room)
-      // if (office.room[0]) setSelectedRoom(office.room[0].id)
+    } else {
+      setRooms([])
     }
+
+    console.log('SELECTED', selectedOffice)
+  }, [selectedDomain, selectedOffice, selectedRoom])
+
+
+  useEffect(() => {
+    setSelectedOffice({ label: 'Seleziona', value: '' })
+    setSelectedRoom({ label: 'Seleziona', value: '' })
+  }, [selectedDomain])
+
+
+  useEffect(() => {
+    setSelectedRoom({ label: 'Seleziona', value: '' })
   }, [selectedOffice])
 
-  const handleAddDomain = async () => {
-    const value = (document.getElementById("inputDomain") as HTMLInputElement).value
-    const res = await axios.post("/api/domain", { name: value })
-    setDomains([...domains, res.data])
+
+  const handleCreation = async (type: number) => {
+    if (type === StepperState.DOMAIN) {
+      console.log('CREATE', createName)
+      const res = await axios.post("/api/domain", { name: createName })
+      setDomains([...domains, res.data])
+      setSelectedDomain({ value: res.data.id, label: res.data.name })
+    } else if (type === StepperState.OFFICE) {
+      console.log('CREATE', createName, selectedDomain.value)
+      const res = await axios.post("/api/office", { name: createName, domainId: selectedDomain.value })
+      setOffices([...offices, res.data])
+      setSelectedOffice({ value: res.data.id, label: res.data.name })
+    } else if (type === StepperState.ROOM) {
+      console.log('CREATE', createName, selectedOffice.value)
+      const res = await axios.post("/api/room", { name: createName, officeId: selectedOffice.value })
+      setRooms([...rooms, res.data])
+      setSelectedRoom({ value: res.data.id, label: res.data.name })
+    }
+    setCreateName('')
   }
 
-  const handleAddOffice = async () => {
-    const value = (document.getElementById("inputOffice") as HTMLInputElement).value
-    const res = await axios.post("/api/office", { name: value, domainId: selectedDomain.value })
-    setOffices([...offices, res.data])
-  }
-
-  const handleAddRoom = async () => {
-    const value = (document.getElementById("inputRoom") as HTMLInputElement).value
-    const res = await axios.post("/api/room", { name: value, officeId: selectedOffice.value })
-    console.log('RESPONSE',res)
-    setRooms([...rooms, res.data])
-  }
 
   const handleSelectDomain = () => {
-    // setSelectedDomain(e.target.value)
     setOpenDominio(prev => !prev)
   }
 
   const handleSelectOffice = () => {
-    // setSelectedOffice(e.target.value)
     setOpenOffice(prev => !prev)
   }
 
   const handleSelectRoom = () => {
-    // setSelectedRoom(e.target.value)
     setOpenStanza(prev => !prev)
   }
 
-  useEffect(() => {
-    if(stepperState === 0) {
-      setStepperLabel('un dominio')
-    } else if(stepperState === 1) {
-      setStepperLabel('un ufficio')
-    } else if(stepperState === 2) {
-      setStepperLabel('una stanza')
-    }
-  }, [stepperState])
 
   return (
     <div
       className="room-create__container"
     >
-      <h1>
-        Crea o seleziona {stepperLabel}
-      </h1>
-      <div className="room-create__body">
-        <CreateAction
-          refState={domainRef}
-          label="Dominio"
-          defaultSelect="Seleziona un dominio"
-          selectObj={selectedDomain}
-          handleSelect={handleSelectDomain}
-          openOption={openDominio}
-          setSelect={setSelectedDomain}
-          optionList={domains}
-        />
-        <input id="inputDomain" type="text"></input>
-        <button onClick={() => { handleAddDomain() }}>Add</button>
+      <div className={`room-create__body creation-stepper__container ${stepperState > StepperState.ROOM ? 'creation-stepper__static' : 'creation-stepper__active'}`}>
+        <div className="creation-stepper__navigation">
 
-        {domains.length > 0 && selectedDomain.value &&
-        <>
-          <CreateAction
-            refState={officeRef}
-            label="Ufficio"
-            defaultSelect="Seleziona un ufficio"
-            selectObj={selectedOffice}
-            handleSelect={handleSelectOffice}
-            openOption={openOffice}
-            setSelect={setSelectedOffice}
-            optionList={offices}
-          />
-            <input id="inputOffice" type="text"></input>
-            <button onClick={() => {handleAddOffice()}}>Add</button>
-        </>
-        }
-
-        { offices.length > 0 && selectedOffice.value && 
-          <>
+          <div
+            className={`creation-stepper__element ${stepperState === StepperState.DOMAIN ? '' : 'disabled'}`}
+          >
             <CreateAction
-              refState={roomRef}
-              label="Stanza"
-              defaultSelect="Seleziona una stanza"
-              selectObj={selectedRoom}
-              handleSelect={handleSelectRoom}
-              openOption={openStanza}
-              setSelect={setSelectedRoom}
-              optionList={rooms}
+              label="Dominio"
+              defaultSelect="Seleziona"
+              refState={domainRef}
+              selectObj={selectedDomain}
+              openOption={openDominio}
+              optionList={domains}
+              isActive={stepperState === StepperState.DOMAIN}
+              currentStepper={StepperState.DOMAIN}
+              stepperState={stepperState}
+              createName={createName}
+              direction={direction}
+              setDirection={setDirection}
+              setCreateName={setCreateName}
+              handleCreation={handleCreation}
+              handleSelect={handleSelectDomain}
+              setSelect={setSelectedDomain}
+              setStepperState={setStepperState}
+              setSelectedDomain={setSelectedDomain}
+              setSelectedOffice={setSelectedOffice}
+              setSelectedRoom={setSelectedRoom}
             />
-              <input id="inputRoom" type="text"></input>
-              <button onClick={() => {handleAddRoom()}}>Add</button>
-          </>
-        }
-        {selectedRoom.value && <HandleRoom roomId={selectedRoom.value} create={true} />}
+          </div>
+
+          <div
+            className={`creation-stepper__element ${domains.length > 0 && selectedDomain.value && stepperState === StepperState.OFFICE ? '' : 'disabled'}`}
+          >
+            <CreateAction
+              label="Ufficio"
+              defaultSelect="Seleziona"
+              refState={officeRef}
+              selectObj={selectedOffice}
+              openOption={openOffice}
+              optionList={offices}
+              isActive={domains.length > 0 && Boolean(selectedDomain.value) && stepperState === StepperState.OFFICE}
+              currentStepper={StepperState.OFFICE}
+              stepperState={stepperState}
+              createName={createName}
+              direction={direction}
+              setDirection={setDirection}
+              setCreateName={setCreateName}
+              handleCreation={handleCreation}
+              handleSelect={handleSelectOffice}
+              setSelect={setSelectedOffice}
+              setStepperState={setStepperState}
+              setSelectedDomain={setSelectedDomain}
+              setSelectedOffice={setSelectedOffice}
+              setSelectedRoom={setSelectedRoom}
+            />
+          </div>
+
+          <div
+            className={`creation-stepper__element ${offices.length > 0 && selectedOffice.value && stepperState === StepperState.ROOM ? '' : 'disabled'}`}
+          >
+            <CreateAction
+              label="Stanza"
+              defaultSelect="Seleziona"
+              refState={roomRef}
+              selectObj={selectedRoom}
+              openOption={openStanza}
+              optionList={rooms}
+              isActive={offices.length > 0 && Boolean(selectedOffice.value) && stepperState === StepperState.ROOM}
+              currentStepper={StepperState.ROOM}
+              stepperState={stepperState}
+              createName={createName}
+              direction={direction}
+              setDirection={setDirection}
+              setCreateName={setCreateName}
+              handleCreation={handleCreation}
+              handleSelect={handleSelectRoom}
+              setSelect={setSelectedRoom}
+              setStepperState={setStepperState}
+              setSelectedDomain={setSelectedDomain}
+              setSelectedOffice={setSelectedOffice}
+              setSelectedRoom={setSelectedRoom}
+            />
+          </div>
+        </div>
+
       </div>
-
-
+      {selectedRoom.value && <HandleRoom roomId={selectedRoom.value} create={true} />}
     </div>
   )
 }
