@@ -10,6 +10,7 @@
     &__active {
         height: 100%;
         min-height: 100vh;
+        overflow: hidden;
     }
 
     &__static {
@@ -19,6 +20,7 @@
     &__navigation {
         display: flex;
         flex-wrap: wrap;
+        overflow: hidden;
     }
 
     &__item {
@@ -100,7 +102,29 @@
             }
         }
     }
+    &__element {
+        width: $col4;
+        padding: 0 8px;
+    }
+    &__box {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        &--title {
+            width: calc(100% - 32px);
+        }
+        &--remove {
+            cursor: pointer;
+            &:hover {
+                background-color: $statusPending;
+                border-radius: 100%;
+                fill:white
+            }
+        }
+        .svg {
 
+        }
+    }
     // &__element {
     //     width: $col4;
     //     .select {

@@ -10,6 +10,8 @@ import TabBar from '../Ui/TabBar';
 import { ITabButton } from '../../types';
 import Input from '../Ui/Input';
 import { IoAddCircleOutline } from "react-icons/io5";
+import { CiCircleRemove } from "react-icons/ci";
+
 
 type OptionItem = {
   value: string,
@@ -72,14 +74,18 @@ function CreateAction(props: CreateActionProps) {
   } = props
 
   const [method, setMethod] = useState<number>(FormMethod.SELEZIONA)
+  const [isDisabledSelect, setIsDisabledSelect] = useState<boolean>(false)
 
   useEffect(() => {
+    console.log('OPT',optionList)
     if(optionList.length > 0) {
+      setIsDisabledSelect(false)
       setMethod(FormMethod.SELEZIONA)
     } else {
+      setIsDisabledSelect(true)
       setMethod(FormMethod.AGGIUNGI)
     }
-  }, [optionList, currentStepper])
+  }, [optionList])
 
   const containerVariants = {
     initial: {
@@ -97,6 +103,29 @@ function CreateAction(props: CreateActionProps) {
     exit: {
       opacity: 0,
       x: direction === DirectionMode.POSITIVE ? '-100%' : '100%',
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut',
+      },
+    },
+  };
+
+  const labelVariants = {
+    initial: {
+      opacity: 0,
+      y: direction === DirectionMode.POSITIVE ? -8 : 8,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut',
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: direction === DirectionMode.POSITIVE ? 8 : -8,
       transition: {
         duration: 0.3,
         ease: 'easeInOut',
@@ -129,7 +158,7 @@ function CreateAction(props: CreateActionProps) {
   }
 
   const tabButton: ITabButton[] = [
-    { text: 'Seleziona', value: FormMethod.SELEZIONA, disabled:optionList.length === 0 }, 
+    { text: 'Seleziona', value: FormMethod.SELEZIONA, disabled:isDisabledSelect }, 
     { text: 'Aggiungi', value: FormMethod.AGGIUNGI, disabled:false }
   ]
 
@@ -234,15 +263,29 @@ function CreateAction(props: CreateActionProps) {
         : selectObj.label !== defaultSelect && stepperState >= currentStepper
           ? (
             <motion.div
-              variants={containerVariants}
+              variants={labelVariants}
               initial="initial"
               animate="animate"
               exit="exit"
+              className='creation-stepper__box'
             >
-              <p>{selectObj.label}</p>
-              <Button
+              <div className='creation-stepper__box--title'>
+                <p
+                  className="select__label label"
+                >
+                  {label}
+                </p>
+                <p>
+                  {selectObj.label}
+                </p>
+              </div>
+              <CiCircleRemove 
+                className="creation-stepper__box--remove" 
+                size={24} 
+                color={Colors.pending} 
                 onClick={() => {
                   setDirection(DirectionMode.NEGATIVE)
+                  setMethod(FormMethod.SELEZIONA)
                   setTimeout(() => {
                     setStepperState(currentStepper)
                     if (currentStepper === StepperState.DOMAIN) {
@@ -255,10 +298,6 @@ function CreateAction(props: CreateActionProps) {
                     }
                   },100)
                 }}
-                className={`cta cta--primary`}
-                type='button'
-                icon={<TbEdit size={18} color={Colors.white} />}
-                text={'Modifica'}
               />
             </motion.div>
           )

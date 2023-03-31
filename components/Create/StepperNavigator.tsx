@@ -1,4 +1,4 @@
-import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE } from "../../_shared"
+import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, StepperState } from "../../_shared"
 import { TbEdit } from "react-icons/tb";
 import { Colors } from "../Ui/Colors";
 import NavigationStepperElement from "./NavigationStepperElement";
@@ -40,10 +40,10 @@ function StepperNavigator(props: StepperNavigatorProps) {
         <div
             className="creation-stepper__navigation"
         >
-            {selectedDomain.value !== '' && stepperState > 0 && (
+            {selectedDomain.value !== '' && stepperState > StepperState.DOMAIN && (
                     <NavigationStepperElement
                         onclick={() => {
-                            setStepperState(0)
+                            setStepperState(StepperState.DOMAIN)
                             setSelectedDomain(DEFAULT_DOMAIN_VALUE)
                         }}
                         label={selectedDomain.label}
@@ -51,10 +51,10 @@ function StepperNavigator(props: StepperNavigatorProps) {
                     />
                 )
             }
-            {selectedOffice.value !== '' && stepperState > 1 && (
+            {selectedOffice.value !== '' && stepperState > StepperState.OFFICE && (
                     <NavigationStepperElement
                         onclick={() => {
-                            setStepperState(1)
+                            setStepperState(StepperState.OFFICE)
                             setSelectedOffice(DEFAULT_OFFICE_VALUE)
                         }}
                         label={selectedOffice.label}
@@ -62,10 +62,10 @@ function StepperNavigator(props: StepperNavigatorProps) {
                     />
                 )
             }
-            {selectedRoom.value !== '' && stepperState > 2 && (
+            {selectedRoom.value !== '' && stepperState > StepperState.ROOM && (
                     <NavigationStepperElement
                         onclick={() => {
-                            setStepperState(2)
+                            setStepperState(StepperState.ROOM)
                             setSelectedRoom(DEFAULT_ROOM_VALUE)
                         }}
                         label={selectedRoom.label}

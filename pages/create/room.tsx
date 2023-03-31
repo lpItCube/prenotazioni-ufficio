@@ -1,14 +1,9 @@
 import axios from "axios"
 import { GetStaticProps } from "next"
 import { useEffect, useState, useRef } from "react"
-import HandleRoom from "../../components/handleRoom"
+import HandleRoom from "../../components/Create/HandleRoom"
 import prisma from "../../lib/prisma"
 import CreateAction from "../../components/Create/CreateAction"
-import Stepper from "../../components/Create/Stepper"
-import { motion, AnimatePresence } from 'framer-motion';
-import Button from "../../components/Ui/Button"
-import { Colors } from "../../components/Ui/Colors"
-import StepperNavigator from "../../components/Create/StepperNavigator"
 import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
 
 
@@ -74,17 +69,15 @@ function Room() {
     return () => {
       window.removeEventListener('click', handleClickOutside, true);
     };
-
-
   }, [])
 
   useEffect(() => {
     const trueCount = [Boolean(selectedDomain.value), Boolean(selectedOffice.value), Boolean(selectedRoom.value)].reduce((count: any, bool: boolean) => count + bool, 0);
     setTimeout(() => {
       setStepperState(trueCount)
-      setCreateName('')
+      // setCreateName('')
       setDirection(DirectionMode.POSITIVE)
-    },100)
+    }, 100)
   }, [selectedDomain, selectedOffice, selectedRoom])
 
   useEffect(() => {
@@ -94,6 +87,10 @@ function Room() {
     }
     getDomains()
 
+  }, [selectedDomain, selectedOffice, selectedRoom])
+
+
+  useEffect(() => {
     const domain = domains.find((domain) => domain.id === selectedDomain.value)
     if (domain && domain.hasOwnProperty("office") && domain.office.length > 0) {
       setOffices(domain.office)
@@ -107,9 +104,7 @@ function Room() {
     } else {
       setRooms([])
     }
-
-    console.log('SELECTED', selectedOffice)
-  }, [selectedDomain, selectedOffice, selectedRoom])
+  }, [domains])
 
 
   useEffect(() => {
@@ -125,20 +120,17 @@ function Room() {
 
   const handleCreation = async (type: number) => {
     if (type === StepperState.DOMAIN) {
-      console.log('CREATE', createName)
       const res = await axios.post("/api/domain", { name: createName })
-      setDomains([...domains, res.data])
       setSelectedDomain({ value: res.data.id, label: res.data.name })
+      setDomains([...domains, res.data])
     } else if (type === StepperState.OFFICE) {
-      console.log('CREATE', createName, selectedDomain.value)
       const res = await axios.post("/api/office", { name: createName, domainId: selectedDomain.value })
-      setOffices([...offices, res.data])
       setSelectedOffice({ value: res.data.id, label: res.data.name })
+      setOffices([...offices, res.data])
     } else if (type === StepperState.ROOM) {
-      console.log('CREATE', createName, selectedOffice.value)
       const res = await axios.post("/api/room", { name: createName, officeId: selectedOffice.value })
-      setRooms([...rooms, res.data])
       setSelectedRoom({ value: res.data.id, label: res.data.name })
+      setRooms([...rooms, res.data])
     }
     setCreateName('')
   }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import HandleRoom from "./handleRoom"
+import HandleRoom from "./Create/HandleRoom"
 
 type Domain = {
   id: string

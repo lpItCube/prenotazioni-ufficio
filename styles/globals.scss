@@ -41,6 +41,7 @@ a {
  &-wrapper {
   width: $col12;
   position: relative;
+  overflow: hidden;
   @media screen and (min-width:$md) {
     width: calc(100% - 240px);
     left:240px;
