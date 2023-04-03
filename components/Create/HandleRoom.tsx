@@ -56,6 +56,8 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
         <>
             {create ? (
                 <div className="room-creation">
+                    <div className="room-creation__options">
+
                     Numbers
                     
                             <input 
@@ -71,6 +73,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                                 onChange={(e) => setYCells(parseInt(e.currentTarget.value))}
                             />
                             {/* <button onClick={handleXY}>Submit Input</button> */}
+                    </div>
                       
                     <div className="room-grid">
                         {/*PASSARE QUI X E Y*/}
@@ -90,7 +93,6 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                             </>
                             : xCells > 0 && yCells > 0 && 
                             <>
-                            This
                                 <GridCreate 
                                     fromTo={fromTo} 
                                     setSeatName={setSeatName} 

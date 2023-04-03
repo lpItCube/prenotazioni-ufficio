@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   //     res.status(404)
   //   }
   // }
-  
+  console.log('REQ MET',req.body)
   if (req.method === "POST") {
     const body: Seat[] = req.body.seats
     try {
