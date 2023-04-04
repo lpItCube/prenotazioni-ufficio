@@ -409,17 +409,17 @@
         }
         &--vertical {
             width: 25px;
-            border-left: 3px solid $statusNotAvailable;
+            height: 2px;
             background-color: $statusNotAvailable;
         }
         &--horizontal {
-            border-top: 3px solid $statusNotAvailable;
+            width: 3px;
             height: 25px;
             background-color: $statusNotAvailable;
         }
         &--hLineLeft,
         &--hLineRight {
-            border-left: 3px solid $statusNotAvailable;
+            width: 3px;
             height: 49px;
             background-color: $statusNotAvailable;
         }
@@ -429,7 +429,7 @@
         &--vLineTop,
         &--vLineBottom {
             width: 49px;
-            border-top: 3px solid $statusNotAvailable;
+            height: 2px;
             background-color: $statusNotAvailable;
             margin-bottom: auto;
         }
