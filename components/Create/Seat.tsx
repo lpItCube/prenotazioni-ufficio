@@ -7,7 +7,7 @@ import { getActualRoom } from "../../features/roomSlice";
 import { getModalStatus, setModalType, toggleModal } from "../../features/modalSlice";
 
 function Seat({ create, setSeatName, setAction, cell }: any) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const canvasRef = useRef<any>(null);
     const [seatProps, setSeatProps] = useState<SeatProps>({ color: "grey", canvasClass: "" })
     const reserves = useSelector(getReserves)
     const roomId = useSelector(getActualRoom)
@@ -55,7 +55,7 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
         //   return
         // }
         if (yourReserve) {
-            setSeatProps({ color: "yellow", canvasClass: "clickable del" })
+            setSeatProps({ color: "yellow", canvasClass: "your clickable del" })
             return
         }
         if (yourReserveInRoom && !isAdmin) {
@@ -64,40 +64,52 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
         }
 
         const free = !seatReserve
-        const color = free ? "green" : "red"
+        const color = free ? "" : " buisy"
         const canvasClass = free ? "clickable" : isAdmin ? "clickable del" : ""
-        setSeatProps({ color: color, canvasClass: canvasClass })
+        setSeatProps({ color: color, canvasClass: canvasClass + color })
 
     }, [reserves])
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        drawCanvas(canvas)
-    }, [seatProps])
+    // useEffect(() => {
+    //     const canvas = canvasRef.current;
+    //     if (!canvas) return;
+    //     drawCanvas(canvas)
+    // }, [seatProps])
 
-    function drawCanvas(canvas: any) {
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.beginPath();
-        var xPos = (canvas.width / 2) - (20 / 2);
-        var yPos = (canvas.height / 2) - (20 / 2);
-        ctx.roundRect(xPos, yPos, 20, 20, 5);
-        ctx.fillStyle = seatProps.color
-        ctx.fill();
-        ctx.stroke();
-    }
+    // function drawCanvas(canvas: any) {
+    //     const ctx = canvas.getContext("2d");
+    //     if (!ctx) return;
+    //     ctx.beginPath();
+    //     var xPos = (canvas.width / 2) - (20 / 2);
+    //     var yPos = (canvas.height / 2) - (20 / 2);
+    //     ctx.roundRect(xPos, yPos, 20, 20, 5);
+    //     ctx.fillStyle = seatProps.color
+    //     ctx.fill();
+    //     ctx.stroke();
+    // }
 
     return (
-        <canvas
-            onClick={
-                seatProps.canvasClass === "clickable" ?
-                    () => { setSeatName(cell.seatName); handleAddSingleSeat(); } :
-                    seatProps.canvasClass === "clickable del" ?
-                        () => { setSeatName(cell.seatName); handleDeleteSingleSeat() } : () => { }}
-            className={seatProps.canvasClass}
-            style={{ position: "relative", zIndex: "1" }}
-            ref={canvasRef} width={40} height={40} />
+        <div className="creation-options__seat-container">
+            {/* <canvas
+                onClick={
+                    seatProps.canvasClass === "clickable" ?
+                        () => { setSeatName(cell.seatName); handleAddSingleSeat(); } :
+                        seatProps.canvasClass === "clickable del" ?
+                            () => { setSeatName(cell.seatName); handleDeleteSingleSeat() } : () => { }}
+                className={seatProps.canvasClass}
+                style={{ position: "relative", zIndex: "1" }}
+                ref={canvasRef} width={40} height={40} /> */}
+            <div
+                className={`creation-options__seat ${seatProps.canvasClass}`}
+                onClick={ seatProps.canvasClass === "clickable" ?
+                            () => { setSeatName(cell.seatName); handleAddSingleSeat(); } :
+                            seatProps.canvasClass.includes("clickable del") ?
+                            () => { setSeatName(cell.seatName); handleDeleteSingleSeat() } : () => { }
+                }
+                ref={canvasRef}
+            >
+            </div>
+        </div>
     )
 }
 

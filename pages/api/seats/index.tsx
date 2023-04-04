@@ -21,8 +21,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   //     res.status(404)
   //   }
   // }
-  console.log('REQ MET',req.body)
+  // console.log('REQ MET',req.body)
   if (req.method === "POST") {
+    console.log('POST',[...req.body.seats])
     const body: Seat[] = req.body.seats
     try {
       const seats = await prisma.seat.createMany({

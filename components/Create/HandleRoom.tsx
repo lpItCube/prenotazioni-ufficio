@@ -1,22 +1,71 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useDispatch } from "react-redux"
 import { setActualRoom } from "../../features/roomSlice"
 import { setReserves } from "../../features/reserveSlice"
 import { useSession } from "next-auth/react"
 import axios from "axios"
-import { Room, XYSizes, Reserve } from "../../types"
+import { Room, XYSizes, Reserve, GridPoint, CurrentCell } from "../../types"
 import Modal from "../modal"
 import GridCreate from "./GridCreate"
 import Grid from "./Grid"
+import { AnimatePresence, motion } from "framer-motion";
+import OptionsBar from "./OptionsBar"
 
 
 function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
+
+    const variants = {
+        initial: {
+            opacity: 0,
+            y: 8
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.3,
+                ease: 'easeInOut',
+            }
+        },
+        hidden: {
+            opacity: 0,
+            y: 8,
+            transition: {
+                duration: 0.3,
+                ease: 'easeInOut',
+            }
+        }
+    };
+
+    const optionRef = useRef<any>(null)
     const [room, setRoom] = useState<Room | undefined>(undefined)
     const [xCells, setXCells] = useState<number>(0)
     const [yCells, setYCells] = useState<number>(0)
-    const [xYSizes, setxYSizes] = useState<XYSizes | undefined>(undefined)
+    const [grid, setGrid] = useState<GridPoint[][]>([])
     const [seatName, setSeatName] = useState("none")
+    const [seats, setSeats] = useState<any[]>([])
+    const [selectedCell, setSelectedCell] = useState<GridPoint | null>(null)
+    const [showOptions, setShowOptions] = useState<boolean>(false)
+    const [currentCell, setCurrentCell] = useState<CurrentCell>({ x: -1, y: -1, element: null })
+    const [updateGrid, setUpdateGrid] = useState<any>([])
     const dispatch = useDispatch()
+
+    console.log('OTIONéé', optionRef)
+    useEffect(() => {
+        // UseRef per controllare se il click è interno
+        const handleClickOutside = (event: any) => {
+            if (optionRef.current && optionRef.current.contains(event.target)) {
+                setShowOptions(true)
+            } else {
+                setShowOptions(false)
+            }
+        };
+        window.addEventListener('click', handleClickOutside, true);
+        return () => {
+            window.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [])
+
 
     useEffect(() => {
         dispatch(setActualRoom(roomId))
@@ -24,8 +73,9 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
             const res = await axios.get(`/api/room/${roomId}`)
             if (res)
                 setRoom(res.data)
-                setXCells(res.data.xSize)
-                setYCells(res.data.ySize)
+                console.log('LOADNEWRO',res.data)
+            setXCells(res.data.xSize)
+            setYCells(res.data.ySize)
         }
         getRoom()
         const setReservess = async () => {
@@ -46,65 +96,118 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     if (session.data! !== undefined)
         username = session.data!.user!.name
 
-    // const handleXY = () => {
-    //     if(xCells > 0 && yCells > 0) {
-    //         setxYSizes({ x: xCells, y: yCells })
-    //     }
-    // }
+
+    const handleSave = async () => {
+        const newRoom = {
+            ...room,
+            xSize:xCells,
+            ySize:yCells,
+            gridPoints: grid?.flat()
+        }
+        console.log('NEWRO', newRoom)
+
+        await axios.put("/api/room/", { ...newRoom, id: roomId })
+        try {
+            await axios.delete(`/api/seats/${roomId}`)
+            if (seats.length > 0) {
+                await axios.post("/api/seats/", { seats })
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleOptionChange = (element: any) => {
+        console.log('NOW', element)
+        if (!selectedCell) return;
+
+        const newGrid: GridPoint[][] = grid?.length ? grid.map((row) =>
+            row.map((cell) => {
+                if (cell.x === selectedCell.x && cell.y === selectedCell.y) {
+                    var seatName: string | null = null
+                    if (element === "chair") {
+                        seatName = `${room?.name}-${cell.x}-${cell.y}`
+                        const newSeat = { name: seatName, type: "", roomId: roomId }
+                        if (seats && !seats.find((seat: any) => seat.name === seatName))
+                            setSeats([...seats, newSeat])
+                    } else {
+                        const seatToDelete = `${room?.name}-${cell.x}-${cell.y}`
+                        if (seats.find((seat: any) => seat.name === seatToDelete)) {
+                            setSeats(seats.filter((seat: any) => seat.name !== seatToDelete))
+                        }
+                    }
+                    return { ...cell, info: element, seatName: seatName }
+                }
+                return cell;
+            })
+        ) : [];
+        setGrid(newGrid);
+        setUpdateGrid(newGrid.flat())
+    };
+
 
     return (
         <>
             {create ? (
                 <div className="room-creation">
                     <div className="room-creation__options">
-
-                    Numbers
-                    
-                            <input 
-                                type="number"
-                                min={0}
-                                value={xCells}
-                                onChange={(e) => setXCells(parseInt(e.currentTarget.value))}
-                            />
-                            <input 
-                                type="number"
-                                min={0}
-                                value={yCells}
-                                onChange={(e) => setYCells(parseInt(e.currentTarget.value))}
-                            />
-                            {/* <button onClick={handleXY}>Submit Input</button> */}
+                        <input
+                            type="number"
+                            min={0}
+                            value={xCells}
+                            onChange={(e) => setXCells(parseInt(e.currentTarget.value))}
+                        />
+                        <input
+                            type="number"
+                            min={0}
+                            value={yCells}
+                            onChange={(e) => setYCells(parseInt(e.currentTarget.value))}
+                        />
+                        {/* <button onClick={handleXY}>Submit Input</button> */}
                     </div>
-                      
                     <div className="room-grid">
-                        {/*PASSARE QUI X E Y*/}
-                        {(room && room.xSize && room.ySize) 
-                            ? <>
-                                The other
-                                <GridCreate 
-                                    fromTo={fromTo} 
-                                    setSeatName={setSeatName} 
-                                    setAction={setAction} 
-                                    roomId={roomId} 
-                                    setRoom={setRoom} 
-                                    room={room}
-                                    xSize={xCells}
-                                    ySize={yCells}
-                                />
-                            </>
-                            : xCells > 0 && yCells > 0 && 
-                            <>
-                                <GridCreate 
-                                    fromTo={fromTo} 
-                                    setSeatName={setSeatName} 
-                                    setAction={setAction} 
-                                    roomId={roomId} 
-                                    setRoom={setRoom} 
-                                    room={{ xSize: xCells, ySize: yCells, gridPoints: [], name: room!.name }}
-                                    xSize={xCells}
-                                    ySize={yCells}
-                                />
-                            </>
-                        }
+                        <button onClick={handleSave}>Save</button>
+                        {selectedCell && (
+                            <AnimatePresence>
+                                {showOptions && (
+                                    <motion.aside
+                                        variants={variants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="hidden"
+                                        key="aside"
+                                        className="creation-options__aside"
+                                        ref={optionRef}
+                                    >
+                                        <OptionsBar
+                                            currentCell={currentCell}
+                                            handleOptionChange={handleOptionChange}
+                                        />
+                                    </motion.aside>
+                                )}
+                            </AnimatePresence>
+                        )}
+                        <GridCreate
+                            fromTo={fromTo}
+                            setSeatName={setSeatName}
+                            setAction={setAction}
+                            roomId={roomId}
+                            setRoom={setRoom}
+                            room={room}
+                            xSize={xCells}
+                            ySize={yCells}
+                            grid={grid}
+                            setGrid={setGrid}
+                            seats={seats}
+                            setSeats={setSeats}
+                            setSelectedCell={setSelectedCell}
+                            setShowOptions={setShowOptions}
+                            optionRef={optionRef}
+                            currentCell={currentCell}
+                            setCurrentCell={setCurrentCell}
+                            updateGrid={updateGrid}
+                            setUpdateGrid={setUpdateGrid}
+                        />
                     </div>
                 </div>
             ) : (

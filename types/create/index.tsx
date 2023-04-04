@@ -54,3 +54,9 @@ export interface Cells {
     method:string,
     value:number
 }
+
+export interface CurrentCell {
+    x:number,
+    y:number,
+    element:null|string
+}

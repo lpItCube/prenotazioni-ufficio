@@ -2,53 +2,33 @@ import Seat from "./Seat";
 
 const CellContent = ({ create, setSeatName, setAction, cell }: any) => {
     // const reserves = useSelector(getReserves)
-    if (cell.info === "hChair" || cell.info === "vChair") {
+    if (cell.info === "hChair" || cell.info === "vChair" || cell.info === "chair") {
         return (
             // reserves && 
             <>
                 <Seat create={create} setSeatName={setSeatName} setAction={setAction} cell={cell} />
             </>
         )
-        // return (
-        //     <div style={{ position: "relative", textAlign: "center" }}>
-        //         <hr style={{ position: "absolute", top: "22px", left: "0", width: "100%" }} />
-        //         {
-        //             // reserves && 
-        //             <Seat create={create} setSeatName={setSeatName} setAction={setAction} cell={cell} />
-        //         }
-        //     </div>
-        // )
     }
-    // if (cell.info === "vChair") {
-    //     return (
-    //         <div style={{ position: "relative", textAlign: "center" }}>
-    //             <div style={{ position: "relative", alignItems: "center", justifyContent: "center", height: "100%" }}>
-    //                 <div style={{ position: "absolute", left: "24px", height: "100%", borderLeft: "1px solid grey" }}></div>
-    //                 {
-    //                     // reserves &&
-    //                     <Seat create={create} setSeatName={setSeatName} setAction={setAction} cell={cell} />
-    //                 }
-    //             </div>
-    //         </div>
-    //     );
-    // }
-    if (cell.info === "vLine") {
+
+    if (cell.info === "hLineLeft" || cell.info === "hLineRight") {
         return (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                <div style={{ height: "100%", borderLeft: "1px solid grey" }}></div>
+            <div
+                className="box-line__vertical"
+            >
+                <div className={`creation-options__table--${cell.info}`}></div>
             </div>
         );
     }
-    if (cell.info === "hLine") {
+    if (cell.info === "vLineTop" || cell.info === "vLineBottom") {
         return (
-            <hr style={{ width: "100%" }} />
+            <div className={`creation-options__table--${cell.info}`}></div>
         )
     }
-    if (["quarter-circle-top-left", "quarter-circle-top-right", "quarter-circle-bottom-left",
-        "quarter-circle-bottom-right"].includes(cell.info)) {
+    if (["tl", "tr", "bl","br"].includes(cell.info)) {
         return (
-            <div className={"box-" + cell.info} style={{ display: "flex", height: "100%" }}>
-                <div className={cell.info}></div>
+            <div className={"box-" + cell.info}>
+                <div className={`creation-options__table--angle-${cell.info}`}></div>
             </div>
         )
     }
