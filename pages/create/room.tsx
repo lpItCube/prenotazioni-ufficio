@@ -1,5 +1,6 @@
 import axios from "axios"
 import { GetStaticProps } from "next"
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import HandleRoom from "../../components/handleRoom"
 import prisma from "../../lib/prisma"
@@ -23,6 +24,12 @@ type Room = {
   officeId: string
 }
 
+enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN",
+  SUPERADMIN = "SUPERADMIN"
+}
+
 function Room() {
   const [domains, setDomains] = useState<Domain[]>([])
   const [offices, setOffices] = useState<Office[]>([])
@@ -31,10 +38,23 @@ function Room() {
   const [selectedOffice, setSelectedOffice] = useState<string|undefined>(undefined);
   const [selectedRoom, setSelectedRoom] = useState<string|undefined>(undefined);
 
+  const session = useSession()
+  let username: string|null|undefined = null
+  let role: string|null|undefined = null
+
+  if (session.data! !== undefined) {
+    username = session.data!.user!.name
+    role = session.data!.user!.role
+  }
+
   useEffect(() => {
     const getDomains = async() => {
       const res = (await axios.get("/api/domain")).data
       if(res) setDomains(res)
+      if(role === "ADMIN") {
+        setSelectedDomain(session.data!.user?.domainId)
+        console.log("hai")
+      }
     }
     getDomains()
   }, [])
@@ -92,15 +112,18 @@ function Room() {
 
   return (
     <div>
-      <select value={selectedDomain} onChange={handleSelectDomain}>
-        <option value="">-- Select a domain --</option>
-        {domains.map((domain, key) =>
-          <option value={domain.id} key={key}>{domain.name}</option>
-        )}
-      </select>
-      <input id="inputDomain" type="text"></input>
-      <button onClick={() => {handleAddDomain()}}>Add</button>
-
+      { role === "SUPERADMIN" &&
+        <>
+          <select value={selectedDomain} onChange={handleSelectDomain}>
+            <option value="">-- Select a domain --</option>
+            {domains.map((domain, key) =>
+              <option value={domain.id} key={key}>{domain.name}</option>
+            )}
+          </select>
+          <input id="inputDomain" type="text"></input>
+          <button onClick={() => {handleAddDomain()}}>Add</button>
+        </>
+      }
       { domains.length > 0 && selectedDomain && 
         <div>
           <select value={selectedOffice} onChange={handleSelectOffice}>

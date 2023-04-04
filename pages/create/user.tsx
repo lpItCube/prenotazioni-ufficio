@@ -54,7 +54,8 @@ function User() {
   const handleAddUser = async() => {
     const username = (document.getElementById("username") as HTMLInputElement).value
     const password = (document.getElementById("password") as HTMLInputElement).value
-    const userToAdd = { username: username, password: password, role: Role.ADMIN, domainId: selectedDomain}
+    const role = selectedRole === "ADMIN" ? Role.ADMIN : Role.USER
+    const userToAdd = { username: username, password: password, role: role, domainId: selectedDomain}
     await axios.post("/api/users", userToAdd)
   }
 
@@ -89,14 +90,16 @@ function User() {
           { users && users.length > 0 && 
             <table>
               <thead>
-                <th>Username</th>
-                <th>Role</th>
+                <tr>
+                  <th>Username</th>
+                  <th>Role</th>
+                </tr>
               </thead>
               <tbody>
               {
-                users.map((u: User) => {
+                users.map((u: User, i: number) => {
                   return (
-                  <tr>
+                  <tr key={i}>
                     <td>{u.username}</td>
                     <td>{u.role}</td>
                   </tr>

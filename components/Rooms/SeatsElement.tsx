@@ -40,7 +40,7 @@ function SeatsElement({
     const dispatch = useDispatch()
     const modalStatus:boolean = useSelector(getModalStatus)
     const { userData } = useAuthHook()
-    const isAdmin = userData.role === 'ADMIN'
+    const isAdmin = userData.role !== 'USER'
 
     const status = seatsStatus[index]
     // let elClass 

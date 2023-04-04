@@ -48,7 +48,7 @@ function BookAll({
 
     useEffect(() => {
 
-        if (roomIsBookable && userRole === 'ADMIN') {
+        if (roomIsBookable && userRole !== 'USER') {
             setAlreadyBooked(false)
             if(isYourRoom === notBookAll && needApproval) {
                 setApprovalButton(true)
@@ -109,7 +109,7 @@ function BookAll({
                                 if (isYourRoom) {
                                     setAction('DELETE');
                                 }
-                            } else if(userRole === 'ADMIN') {
+                            } else if(userRole !== 'USER') {
                                 dispatch(toggleModal(true));
                                 if(approvalButton && !manageButton) {
                                     dispatch(setModalType('approve-modal'))

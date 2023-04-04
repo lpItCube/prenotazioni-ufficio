@@ -88,7 +88,7 @@ function Navigation({
                         text="Prenotazioni"
                         isActive={path.includes('prenotazioni')}
                     />
-                    {userRole === 'ADMIN' && path.includes('prenotazioni') &&
+                    {userRole !== 'USER' && path.includes('prenotazioni') &&
                         <ul
                             className="navigation__children"
                         >

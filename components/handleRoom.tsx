@@ -68,7 +68,6 @@ function HandleRoom({fromTo, action, setAction, roomId, create}: any) {
       const filteredRes = reserves.filter((r: Reserve) => 
         !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
       ))
-      console.log("cringe: ", filteredRes)
       dispatch(setReserves({ reserveData: filteredRes }))
     }
     if (!create)
@@ -141,7 +140,7 @@ function Grid({ fromTo, setSeatName, setAction, room} : any) {
     //prenota tutti posti se sei admin
     dispatch(toggleModal(!modalStatus))
     dispatch(setModalType('seats-modal'))
-    if (role === "ADMIN") {
+    if (role !== "USER") {
       setAction("ADDALL")
     } else {
       setAction("REQUESTALL")
@@ -355,18 +354,18 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
       return
     }
     const roomIsReserved: Reserve = reserves.find((r: Reserve) => r.seat.type === "whole" && r.seat.roomId === roomId && r.status === "accepted")
-    const isAdmin = role === "ADMIN"
+    const isAdmin = role !== "USER"
     const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
     const seatReserve = reserves.find((r: Reserve) => r.seat.name === cell.seatName)
     const yourReserve = seatReserve?.user.username === username
 
-    // if (roomIsReserved) {
-    //   if (roomIsReserved.user.username === username)
-    //     setSeatProps({color: "yellow", canvasClass: ""})
-    //   else 
-    //     setSeatProps({color: "blue", canvasClass: ""})
-    //   return
-    // }
+    if (roomIsReserved) {
+      if (roomIsReserved.user.username === username)
+        setSeatProps({color: "yellow", canvasClass: ""})
+      else 
+        setSeatProps({color: "blue", canvasClass: ""})
+      return
+    }
     if (yourReserve) {
       setSeatProps({color: "yellow", canvasClass: "clickable del"})
       return

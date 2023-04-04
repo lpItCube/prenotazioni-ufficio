@@ -1,10 +1,12 @@
 
+import { current } from "@reduxjs/toolkit";
 import { getToken } from "next-auth/jwt";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest, _next: NextFetchEvent) {
-  const { pathname } = request.nextUrl;
-  const protectedPaths = ["/secure", "/api/users", "/prenotazioni/pending", "/create/user", "/create/room"];
-  const loggedPaths = ["/prenota", "/prenotazioni", "/secure", "/api/users"]
+  const { pathname } = request.nextUrl
+  const superadminPaths = ["/create/user", "/api/users"]
+  const adminPaths = ["/secure", "/prenotazioni/pending", "/create/room"]
+  const loggedPaths = [...adminPaths, ...superadminPaths, "/prenota", "/prenotazioni"]
   // console.log(await getToken({ req: request }))
 
   // Prendere una rotta all volta, altrimenti il sistema fa il redirect alla login
@@ -14,10 +16,14 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
     pathname.includes(path)
   );
 
-  const adminPath = protectedPaths.some((path) =>
+  const adminPath = adminPaths.some((path) =>
     pathname.includes(path)
-  );
+  )
 
+  const superadminPath = superadminPaths.some((path) => 
+    pathname.includes(path)
+  )
+    
   if (currentPath.length > 0) {
     const token = await getToken({ req: request });
     if (!token && loggedInPath) {
@@ -31,7 +37,13 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
       }
     }
     else if (token && adminPath) {
-      if (token.role !== "ADMIN") {
+      if (token.role !== "ADMIN" && token.role !== "SUPERADMIN") {
+        const url = new URL(`/403`, request.url);
+        return NextResponse.rewrite(url);
+      }
+    } 
+    else if (token && superadminPath) {
+      if (token.role !== "SUPERADMIN") {
         const url = new URL(`/403`, request.url);
         return NextResponse.rewrite(url);
       }

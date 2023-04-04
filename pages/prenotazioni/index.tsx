@@ -137,7 +137,7 @@ function Prenotazioni() {
               <TableCol
                 className="prenotazioni__cta"
               >
-                {(userRole === 'ADMIN' || userRole === 'USER' && r.user.id === userId) &&
+                {(userRole !== 'USER' || userRole === 'USER' && r.user.id === userId) &&
                 <>
                   {hitDeleteButton.loading && hitDeleteButton.id === r.id
                     ? <Spinner/>

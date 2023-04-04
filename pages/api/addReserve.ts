@@ -3,7 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { useSession } from "next-auth/react";
 import prisma from "../../lib/prisma";
 
-const ADMIN = "admin"
+enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN",
+  SUPERADMIN = "SUPERADMIN"
+}
 
 type Data = {
   seatId: string,
@@ -49,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const yourReserved = reservations.find((reserve: any) => reserve.user.id === data.userId)
   const roomReserved = reservations.find((reserve: any) => reserve.seat.type === "meet-whole")
 
-  if(yourReserved && seat?.type !== "whole" && yourReserved.user.username !== ADMIN) 
+  if(yourReserved && seat?.type !== "whole" && yourReserved.user.role === Role.USER) 
     res.status(403).json("Per questa data hai già prenotato un posto")
   else if (roomReserved && seat?.type === "whole")
     res.status(403).json("Non puoi prenotare la stanza già occupata")
