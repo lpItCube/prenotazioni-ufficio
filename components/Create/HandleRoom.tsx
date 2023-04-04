@@ -4,12 +4,13 @@ import { setActualRoom } from "../../features/roomSlice"
 import { setReserves } from "../../features/reserveSlice"
 import { useSession } from "next-auth/react"
 import axios from "axios"
-import { Room, XYSizes, Reserve, GridPoint, CurrentCell } from "../../types"
+import { Room, Reserve, GridPoint, CurrentCell } from "../../types"
 import Modal from "../modal"
 import GridCreate from "./GridCreate"
 import Grid from "./Grid"
 import { AnimatePresence, motion } from "framer-motion";
 import OptionsBar from "./OptionsBar"
+import GridOptions from "./GridOptions"
 
 
 function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
@@ -50,7 +51,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     const [updateGrid, setUpdateGrid] = useState<any>([])
     const dispatch = useDispatch()
 
-    console.log('OTIONéé', optionRef)
+
     useEffect(() => {
         // UseRef per controllare se il click è interno
         const handleClickOutside = (event: any) => {
@@ -73,7 +74,6 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
             const res = await axios.get(`/api/room/${roomId}`)
             if (res)
                 setRoom(res.data)
-                console.log('LOADNEWRO',res.data)
             setXCells(res.data.xSize)
             setYCells(res.data.ySize)
         }
@@ -104,7 +104,6 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
             ySize:yCells,
             gridPoints: grid?.flat()
         }
-        console.log('NEWRO', newRoom)
 
         await axios.put("/api/room/", { ...newRoom, id: roomId })
         try {
@@ -118,7 +117,6 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     }
 
     const handleOptionChange = (element: any) => {
-        console.log('NOW', element)
         if (!selectedCell) return;
 
         const newGrid: GridPoint[][] = grid?.length ? grid.map((row) =>
@@ -149,24 +147,16 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     return (
         <>
             {create ? (
+                <>
+                <GridOptions
+                    xCells={xCells}
+                    setXCells={setXCells}
+                    yCells={yCells}
+                    setYCells={setYCells}
+                    handleSave={handleSave}
+                />
                 <div className="room-creation">
-                    <div className="room-creation__options">
-                        <input
-                            type="number"
-                            min={0}
-                            value={xCells}
-                            onChange={(e) => setXCells(parseInt(e.currentTarget.value))}
-                        />
-                        <input
-                            type="number"
-                            min={0}
-                            value={yCells}
-                            onChange={(e) => setYCells(parseInt(e.currentTarget.value))}
-                        />
-                        {/* <button onClick={handleXY}>Submit Input</button> */}
-                    </div>
                     <div className="room-grid">
-                        <button onClick={handleSave}>Save</button>
                         {selectedCell && (
                             <AnimatePresence>
                                 {showOptions && (
@@ -179,10 +169,12 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                                         className="creation-options__aside"
                                         ref={optionRef}
                                     >
-                                        <OptionsBar
-                                            currentCell={currentCell}
-                                            handleOptionChange={handleOptionChange}
-                                        />
+                                        <div className="creation-options__box">
+                                            <OptionsBar
+                                                currentCell={currentCell}
+                                                handleOptionChange={handleOptionChange}
+                                            />
+                                        </div>
                                     </motion.aside>
                                 )}
                             </AnimatePresence>
@@ -210,6 +202,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                         />
                     </div>
                 </div>
+                </>
             ) : (
                 <>
                     <div className="room-creation">

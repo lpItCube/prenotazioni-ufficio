@@ -1,10 +1,7 @@
-import { useState, useEffect, useRef } from "react"
-import { GridPoint, Seat, Room, CurrentCell } from "../../types";
+import { useEffect, useRef } from "react"
+import { GridPoint, Room, CurrentCell } from "../../types";
 import CellContent from "./CellContent";
-import axios from "axios";
 import _ from "lodash"
-import OptionsBar from "./OptionsBar";
-import { AnimatePresence, motion } from "framer-motion";
 
 interface GridCreateProps {
   fromTo: any,
@@ -101,7 +98,6 @@ function GridCreate(props: GridCreateProps) {
         newGrid.push(row);
       }
     }
-    console.log('SET GRID',newGrid)
     setGrid(newGrid);
 
   }, [xSize, ySize, updateGrid]);

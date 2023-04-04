@@ -167,16 +167,38 @@
         align-items: center;
         justify-content: center;
         position: relative;
+        background-color: $createRoomBg;
         &__options {
-            position: absolute;
+            position: relative;
             z-index: 1;
             top: 0;
+            width: $col12;
+            display: flex;
+            flex-wrap: wrap;
+            padding:4px 24px 16px;
+            background-color: $green100;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        &__grid-controller {
+            display: flex;
+            flex-wrap: wrap;
+            .input-number {
+                &__wrapper {
+                    margin-right: 32px;
+                }
+            }
         }
     }
 
     &-grid {
-        margin-top: 64px;
-        position: relative
+        // margin-top: 64px;
+        position: absolute;
+        height: 100%;
+        width: $col12;
+        overflow: auto;
+        // background-color: yellow;
+        display: flex;
     }
 }
 
@@ -186,8 +208,10 @@
         // height: 0;
         // padding-bottom: 50%;
         margin: auto;
+        padding: 32px;
+        max-width: calc(100% - 64px);
+        /* min-height: 100%; */
         margin-left: auto;
-        margin-right: 0;
     }
 
     &__body {
@@ -266,13 +290,24 @@
 
 .creation-options {
     &__aside {
-        position: absolute;
+        position: sticky;
         z-index: 100;
+        top: 16px;
+        bottom:16px;
+        left: 16px;
+        height: calc(100% - 32px);
+        overflow: auto;
+        width: auto;
+        display: table;
+        padding: 16px 0;
+    }
+    &__box {
         background: white;
+        position: relative;
         padding: 4px;
-        box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
         border-radius: 4px;
-        left: 4px;
+        box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
+        display: table;
     }
     &__wrapper {
         display: flex;
@@ -295,6 +330,10 @@
             &:hover {
                 background-color: $warning500;
             }
+        }
+        &.disabled {
+            background-color: $light500;
+            pointer-events: none;
         }
         &.selected,
         &:hover {
@@ -392,9 +431,11 @@
             width: 49px;
             height: 3px;
             background-color: $statusNotAvailable;
+            margin-bottom: auto;
         }
         &--vLineBottom {
             margin-top: auto;
+            margin-bottom: 0;
         }
         
     }

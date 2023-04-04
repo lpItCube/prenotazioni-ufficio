@@ -12,6 +12,9 @@
         &:hover {
             background-color: $green700;
         }
+        &.round {
+            padding: 8px 8px;
+        }
     }
     &--primary-delete {
         background-color: $warning300;

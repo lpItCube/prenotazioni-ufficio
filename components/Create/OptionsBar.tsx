@@ -93,19 +93,17 @@ function OptionsBar(props: OptionsBarProps) {
                         </button>
                 )
             })}
-            {(currentSelected !== '') && 
-                <button
-                    className={`creation-options__element clear`}
-                    onClick={() => {
-                        handleOptionChange('')
-                        setCurrentSelected('')
-                    }}
-                    >
-                        <div className=''>
-                            <RiDeleteBin3Line color={Colors.white} size={24} />
-                        </div>
-                </button>
-            }
+
+            <button
+                className={`creation-options__element clear${currentSelected === '' ? " disabled" : ""}`}
+                onClick={() => {
+                    handleOptionChange('')
+                    setCurrentSelected('')
+                }}
+                >
+                    <RiDeleteBin3Line color={Colors.white} size={24} />
+            </button>
+
         </div>
     )
 }

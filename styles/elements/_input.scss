@@ -12,3 +12,23 @@
         }
     }
 }
+
+input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.input-number {
+    &__container {
+        display: flex;
+        input {
+            border: none;
+            width: auto;
+            display: flex;
+            max-width: 48px;
+            text-align: center;
+            @include pxToRem(16);
+            border-radius: 16px;
+            background-color: transparent;
+        }
+    }
+}
