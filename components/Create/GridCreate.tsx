@@ -16,11 +16,11 @@ interface GridCreateProps {
   setGrid: (newGrid:GridPoint[][]) => void,
   seats?:any,
   setSeats: (seats:any[]) => void,
-  setSelectedCell: (point:GridPoint) => void,
+  setSelectedCell: (point:any) => void,
   setShowOptions: (bool:boolean) => void,
   optionRef?:any,
   currentCell:CurrentCell,
-  setCurrentCell:(currentCell:CurrentCell) => void,
+  setCurrentCell:(currentCell:any) => void,
   updateGrid: any,
   setUpdateGrid:(upd:any) => void
 }
@@ -102,6 +102,60 @@ function GridCreate(props: GridCreateProps) {
 
   }, [xSize, ySize, updateGrid]);
 
+  useEffect(() => {
+    function handleKeyUp(event:any) {
+      if(currentCell.x !== -1 && currentCell.y !== -1) {
+        if (event.keyCode === 37) {
+          setCurrentCell((prev:any) => ({
+            ...prev,
+            x:prev.x !== 0 ? prev.x-1 : 0
+          }))
+          setSelectedCell((prev:any) => ({
+            ...prev,
+            x:prev.x !== 0 ? prev.x-1 : 0
+          }))
+        }
+        if (event.keyCode === 38) {
+          setCurrentCell((prev:any) => ({
+            ...prev,
+            y:prev.y !== 0 ? prev.y-1 : 0
+          }))
+          setSelectedCell((prev:any) => ({
+            ...prev,
+            y:prev.y !== 0 ? prev.y-1 : 0
+          }))
+        }
+        if (event.keyCode === 39) {
+          setCurrentCell((prev:any) => ({
+            ...prev,
+            x:prev.x !== xSize-1 ? prev.x+1 : xSize-1
+          }))
+          setSelectedCell((prev:any) => ({
+            ...prev,
+            x:prev.x !== xSize-1 ? prev.x+1 : xSize-1
+          }))
+        }
+        if (event.keyCode === 40) {
+          setCurrentCell((prev:any) => ({
+            ...prev,
+            y:prev.y !== ySize-1 ? prev.y+1 : ySize-1
+          }))
+          setSelectedCell((prev:any) => ({
+            ...prev,
+            y:prev.y !== ySize-1 ? prev.y+1 : ySize-1
+          }))
+        }
+      }
+    }
+
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keyup', handleKeyUp);
+    }
+  }, [currentCell]);
+
+console.log(xSize)
 
   const handleCellClick = (event: any, point: GridPoint) => {
     setCurrentCell({x:point.x,y:point.y,element:point.info})
