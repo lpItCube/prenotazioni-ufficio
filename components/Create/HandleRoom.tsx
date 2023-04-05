@@ -74,8 +74,8 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
             const res = await axios.get(`/api/room/${roomId}`)
             if (res)
                 setRoom(res.data)
-            setXCells(res.data.xSize)
-            setYCells(res.data.ySize)
+            setXCells(res.data?.xSize)
+            setYCells(res.data?.ySize)
         }
         getRoom()
         const setReservess = async () => {
