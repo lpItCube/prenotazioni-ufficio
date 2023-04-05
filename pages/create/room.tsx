@@ -2,7 +2,7 @@ import axios from "axios"
 import { GetStaticProps } from "next"
 import { useSession } from "next-auth/react"
 import { useEffect, useState, useRef } from "react"
-import HandleRoom from "../../components/handleRoom"
+import HandleRoom from "../../components/Create/HandleRoom"
 import prisma from "../../lib/prisma"
 import CreateAction from "../../components/Create/CreateAction"
 import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
@@ -106,14 +106,23 @@ function Room() {
     }, 100)
   }, [selectedDomain, selectedOffice, selectedRoom])
 
+  // useEffect(() => {
+  //   const getDomains = async () => {
+  //     const res = (await axios.get("/api/domain")).data
+  //     if (res) setDomains(res)
+  //     setSelectedDomain(session.data!.user?.domainId)
+  //     if(role === "ADMIN") {
+  //       console.log("hai")
+  //     }
+  //   }
+  //   getDomains()
+
+  // }, [selectedDomain, selectedOffice, selectedRoom])
+
   useEffect(() => {
     const getDomains = async () => {
       const res = (await axios.get("/api/domain")).data
       if (res) setDomains(res)
-      setSelectedDomain(session.data!.user?.domainId)
-      if(role === "ADMIN") {
-        console.log("hai")
-      }
     }
     getDomains()
 
