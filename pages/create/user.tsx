@@ -56,7 +56,13 @@ function User() {
     const password = (document.getElementById("password") as HTMLInputElement).value
     const role = selectedRole === "ADMIN" ? Role.ADMIN : Role.USER
     const userToAdd = { username: username, password: password, role: role, domainId: selectedDomain}
-    await axios.post("/api/users", userToAdd)
+    const res = await axios.post("/api/users", userToAdd)
+    setUsers([...users, res.data])
+  }
+
+  const saveChanges = async(id: string) => {
+    const roleToUpdate = (document.getElementById(id) as HTMLInputElement).value
+    await axios.put(`/api/users/${id}`, {user: roleToUpdate})
   }
 
   return (
@@ -93,6 +99,7 @@ function User() {
                 <tr>
                   <th>Username</th>
                   <th>Role</th>
+                  <th>Azione</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,7 +108,14 @@ function User() {
                   return (
                   <tr key={i}>
                     <td>{u.username}</td>
-                    <td>{u.role}</td>
+                    {/* <td>{u.role}</td> */}
+                    <td>
+                    <select id={u.id}>
+                      {u.role === "USER" ? <option selected value="USER">USER</option> : <option value="USER">USER</option>} 
+                      {u.role === "ADMIN" ? <option selected value="ADMIN">ADMIN</option> : <option value="ADMIN">ADMIN</option>}
+                    </select>
+                    </td>
+                    <td><button onClick={() => saveChanges(u.id)}>Salva</button></td>
                   </tr>
                   )
                 })
