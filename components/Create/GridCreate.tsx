@@ -17,10 +17,9 @@ interface GridCreateProps {
   seats?:any,
   setSeats: (seats:any[]) => void,
   setSelectedCell: (point:any) => void,
+  selectedCell:GridPoint | null,
   setShowOptions: (bool:boolean) => void,
   optionRef?:any,
-  currentCell:CurrentCell,
-  setCurrentCell:(currentCell:any) => void,
   updateGrid: any,
   setUpdateGrid:(upd:any) => void
 }
@@ -43,10 +42,9 @@ function GridCreate(props: GridCreateProps) {
     setGrid, 
     setSeats,
     setSelectedCell,
+    selectedCell,
     setShowOptions,
     optionRef,
-    setCurrentCell,
-    currentCell,
     updateGrid,
     setUpdateGrid
   } = props
@@ -59,7 +57,7 @@ function GridCreate(props: GridCreateProps) {
     const handleClickOutside = (event: any) => {
 
       if (cellRef.current && !cellRef.current.contains(event.target) && optionRef.current && !optionRef.current.contains(event.target) /*&& optionRef.current && !optionRef.current.contains(event.target)*/) {
-        setCurrentCell({x:-1,y:-1,element:null})
+        setSelectedCell({x:-1,y:-1,info:null})
       }
 
     };
@@ -103,46 +101,42 @@ function GridCreate(props: GridCreateProps) {
   }, [xSize, ySize, updateGrid]);
 
   useEffect(() => {
+    function returnElement(findX:number, findY:number):any {
+      const element:any = grid?.flat().find((el:any) => el.x === findX && el.y === findY);
+      return element
+    }
     function handleKeyUp(event:any) {
-      if(currentCell.x !== -1 && currentCell.y !== -1) {
+      if(selectedCell && selectedCell.x !== -1 && selectedCell.y !== -1) {
         if (event.keyCode === 37) {
-          setCurrentCell((prev:any) => ({
-            ...prev,
-            x:prev.x !== 0 ? prev.x-1 : 0
-          }))
           setSelectedCell((prev:any) => ({
             ...prev,
-            x:prev.x !== 0 ? prev.x-1 : 0
+            x:prev.x !== 0 ? prev.x-1 : 0,
+            info:returnElement(prev.x !== 0 ? prev.x-1 : 0,prev.y).info,
+            seatName:returnElement(prev.x !== 0 ? prev.x-1 : 0,prev.y).seatName,
           }))
         }
         if (event.keyCode === 38) {
-          setCurrentCell((prev:any) => ({
-            ...prev,
-            y:prev.y !== 0 ? prev.y-1 : 0
-          }))
           setSelectedCell((prev:any) => ({
             ...prev,
-            y:prev.y !== 0 ? prev.y-1 : 0
+            y:prev.y !== 0 ? prev.y-1 : 0,
+            info:returnElement(prev.x,prev.y !== 0 ? prev.y-1 : 0).info,
+            seatName:returnElement(prev.x,prev.y !== 0 ? prev.y-1 : 0).seatName,
           }))
         }
         if (event.keyCode === 39) {
-          setCurrentCell((prev:any) => ({
-            ...prev,
-            x:prev.x !== xSize-1 ? prev.x+1 : xSize-1
-          }))
           setSelectedCell((prev:any) => ({
             ...prev,
-            x:prev.x !== xSize-1 ? prev.x+1 : xSize-1
+            x:prev.x !== xSize-1 ? prev.x+1 : xSize-1,
+            info:returnElement(prev.x !== xSize-1 ? prev.x+1 : xSize-1,prev.y).info,
+            seatName:returnElement(prev.x !== xSize-1 ? prev.x+1 : xSize-1,prev.y).seatName,
           }))
         }
         if (event.keyCode === 40) {
-          setCurrentCell((prev:any) => ({
-            ...prev,
-            y:prev.y !== ySize-1 ? prev.y+1 : ySize-1
-          }))
           setSelectedCell((prev:any) => ({
             ...prev,
-            y:prev.y !== ySize-1 ? prev.y+1 : ySize-1
+            y:prev.y !== ySize-1 ? prev.y+1 : ySize-1,
+            info:returnElement(prev.x,prev.y !== ySize-1 ? prev.y+1 : ySize-1).info,
+            seatName:returnElement(prev.x,prev.y !== ySize-1 ? prev.y+1 : ySize-1).seatName,
           }))
         }
       }
@@ -153,19 +147,22 @@ function GridCreate(props: GridCreateProps) {
     return () => {
       window.removeEventListener('keyup', handleKeyUp);
     }
-  }, [currentCell]);
+  }, [selectedCell]);
 
-console.log(xSize)
 
   const handleCellClick = (event: any, point: GridPoint) => {
-    setCurrentCell({x:point.x,y:point.y,element:point.info})
-    setSelectedCell(point)
+
+    setSelectedCell({x:point.x,y:point.y,info:point.info,seatName:point.seatName})
+    // setSelectedCell(point)
     setShowOptions(true)
     if(grid?.length) {
       setUpdateGrid(grid.flat())
     }
   };
 
+
+
+  
 
   return (
     <>
@@ -176,7 +173,7 @@ console.log(xSize)
               {row.map((cell, columnIndex) => (
                 <div
                   ref={cellRef}
-                  className={`creation-table__col${cell.x === currentCell.x && cell.y === currentCell.y ? ' selected' : ''}`}
+                  className={`creation-table__col${cell.x === selectedCell?.x && cell.y === selectedCell?.y ? ' selected' : ''}`}
                   key={columnIndex}
                   onClick={(e) => handleCellClick(e, cell)}
                 >

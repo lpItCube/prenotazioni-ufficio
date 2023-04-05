@@ -7,7 +7,8 @@ export interface ITabButton {
 export interface GridPoint {
     x: number,
     y: number,
-    info: string
+    info: string,
+    seatName?: string | null
 }
 
 export interface XYSizes {

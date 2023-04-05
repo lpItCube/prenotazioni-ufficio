@@ -171,7 +171,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                                     >
                                         <div className="creation-options__box">
                                             <OptionsBar
-                                                currentCell={currentCell}
+                                                selectedCell={selectedCell}
                                                 handleOptionChange={handleOptionChange}
                                             />
                                         </div>
@@ -193,10 +193,9 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                             seats={seats}
                             setSeats={setSeats}
                             setSelectedCell={setSelectedCell}
+                            selectedCell={selectedCell}
                             setShowOptions={setShowOptions}
                             optionRef={optionRef}
-                            currentCell={currentCell}
-                            setCurrentCell={setCurrentCell}
                             updateGrid={updateGrid}
                             setUpdateGrid={setUpdateGrid}
                         />

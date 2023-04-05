@@ -4,7 +4,7 @@ import { RiDeleteBin3Line } from "react-icons/ri"
 import { Colors } from "../Ui/Colors"
 
 interface OptionsBarProps {
-    currentCell: CurrentCell,
+    selectedCell: any,
     handleOptionChange: (e: any) => void
 }
 
@@ -64,15 +64,15 @@ const staticCreationElement = [
 
 function OptionsBar(props: OptionsBarProps) {
     const {
-        currentCell,
+        selectedCell,
         handleOptionChange
     } = props
 
-    const [currentSelected, setCurrentSelected] = useState(currentCell.element)
+    const [currentSelected, setCurrentSelected] = useState(selectedCell.info)
 
     useEffect(() => {
-        setCurrentSelected(currentCell.element)
-    }, [currentCell])
+        setCurrentSelected(selectedCell.info)
+    }, [selectedCell])
     
     return (
         <div
