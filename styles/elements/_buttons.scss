@@ -67,6 +67,9 @@
             color: $warning700;
         }
     }
+    &.square {
+        border-radius: 0;
+    }
     &__icon {
         justify-content: space-between;
         align-items: center;

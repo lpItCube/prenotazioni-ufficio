@@ -10,7 +10,7 @@ import TabBar from '../Ui/TabBar';
 import { ITabButton } from '../../types';
 import Input from '../Ui/Input';
 import { IoAddCircleOutline } from "react-icons/io5";
-import { CiCircleRemove } from "react-icons/ci";
+import { RiDeleteBin3Line } from "react-icons/ri"
 
 
 type OptionItem = {
@@ -269,20 +269,10 @@ function CreateAction(props: CreateActionProps) {
               exit="exit"
               className='creation-stepper__box'
             >
-              <div className='creation-stepper__box--title'>
-                <p
-                  className="select__label label"
-                >
-                  {label}
-                </p>
-                <p>
-                  {selectObj.label}
-                </p>
-              </div>
-              <CiCircleRemove 
+              <RiDeleteBin3Line 
                 className="creation-stepper__box--remove" 
-                size={24} 
-                color={Colors.pending} 
+                size={32} 
+                color={Colors.white} 
                 onClick={() => {
                   setDirection(DirectionMode.NEGATIVE)
                   setMethod(FormMethod.SELEZIONA)
@@ -299,6 +289,16 @@ function CreateAction(props: CreateActionProps) {
                   },100)
                 }}
               />
+              <div className='creation-stepper__box--title'>
+                <p
+                  className="select__label label"
+                >
+                  {label}
+                </p>
+                <p>
+                  {selectObj.label}
+                </p>
+              </div>
             </motion.div>
           )
           : (
