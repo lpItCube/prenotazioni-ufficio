@@ -162,7 +162,7 @@ function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, acti
           </div>
         </div>
       </div>
-      {selectedRoom &&
+      {selectedRoom && stepperState > StepperState.ROOM &&
         // <button onClick={bookRoom}> Prenota Stanza </button>
         <Button
             onClick={bookRoom}
