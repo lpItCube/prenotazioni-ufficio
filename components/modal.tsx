@@ -130,6 +130,7 @@ function Modal({
 
   async function handleSeat() {
     setHitModalButton({loading:true, id:null})
+    console.log("seatName ", seatName)
 
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     let bookStatus = 'accepted'
@@ -139,7 +140,7 @@ function Modal({
         
         // Quando prenoti tutta la stanza
 
-        bookStatus = userRole === 'ADMIN' ? 'accepted' : 'pending'
+        bookStatus = userRole !== 'USER' ? 'accepted' : 'pending'
         // Se altri utenti hanno prenotato in quell'orario allora elimina le loro prenotazioni
         const otherReserveInPeriod = reserveData.filter((reserve: any) => reserve.seat.type !== 'meet-whole' && reserve.seat.type !== 'it')
         if (otherReserveInPeriod) {
@@ -244,7 +245,7 @@ function Modal({
         </ModalComponent>
       }
 
-      {userRole === 'ADMIN' && (action === APPROVE || action === MANAGE) &&
+      {userRole !== 'USER' && (action === APPROVE || action === MANAGE) &&
         <ModalComponent
           modalTitle={`${action === APPROVE ? 'Approva' : 'Gestisci'} prenotazione`}
           subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}

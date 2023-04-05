@@ -1,7 +1,8 @@
 import axios from "axios"
 import { GetStaticProps } from "next"
+import { useSession } from "next-auth/react"
 import { useEffect, useState, useRef } from "react"
-import HandleRoom from "../../components/Create/HandleRoom"
+import HandleRoom from "../../components/handleRoom"
 import prisma from "../../lib/prisma"
 import CreateAction from "../../components/Create/CreateAction"
 import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
@@ -31,11 +32,17 @@ type OptionItem = {
   label: string
 }
 
+enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN",
+  SUPERADMIN = "SUPERADMIN"
+}
+
 function Room() {
   const [domains, setDomains] = useState<Domain[]>([])
   const [offices, setOffices] = useState<Office[]>([])
   const [rooms, setRooms] = useState<Room[]>([])
-  const [selectedDomain, setSelectedDomain] = useState<OptionItem>(DEFAULT_DOMAIN_VALUE);
+  const [selectedDomain, setSelectedDomain] = useState<OptionItem | any>(DEFAULT_DOMAIN_VALUE);
   const [selectedOffice, setSelectedOffice] = useState<OptionItem>(DEFAULT_OFFICE_VALUE);
   const [selectedRoom, setSelectedRoom] = useState<OptionItem>(DEFAULT_ROOM_VALUE);
   const [stepperState, setStepperState] = useState<number>(0)
@@ -49,6 +56,15 @@ function Room() {
   const domainRef = useRef<any>(null)
   const roomRef = useRef<any>(null)
 
+
+  const session = useSession()
+  let username: string|null|undefined = null
+  let role: string|null|undefined = null
+
+  if (session.data! !== undefined) {
+    username = session.data!.user!.name
+    role = session.data!.user!.role
+  }
 
   useEffect(() => {
     // UseRef per controllare se il click è interno
@@ -69,6 +85,16 @@ function Room() {
     return () => {
       window.removeEventListener('click', handleClickOutside, true);
     };
+    
+    // const getDomains = async() => {
+    //   const res = (await axios.get("/api/domain")).data
+    //   if(res) setDomains(res)
+    //   if(role === "ADMIN") {
+    //     setSelectedDomain(session.data!.user?.domainId)
+    //     console.log("hai")
+    //   }
+    // }
+    // getDomains()
   }, [])
 
   useEffect(() => {
@@ -84,6 +110,10 @@ function Room() {
     const getDomains = async () => {
       const res = (await axios.get("/api/domain")).data
       if (res) setDomains(res)
+      if(role === "ADMIN") {
+        setSelectedDomain(session.data!.user?.domainId)
+        console.log("hai")
+      }
     }
     getDomains()
 
@@ -155,7 +185,7 @@ function Room() {
     >
       <div className={`room-create__body creation-stepper__container ${stepperState > StepperState.ROOM ? 'creation-stepper__static' : 'creation-stepper__active'}`}>
         <div className="creation-stepper__navigation">
-
+          {/*Se il ruolo è superadmin allora può settare il dominio altrimenti no*/}
           <div
             className={`creation-stepper__element ${stepperState === StepperState.DOMAIN ? '' : 'disabled'}`}
           >

@@ -71,7 +71,7 @@ function Calendar({
   }
 
   // const userRole = useSelector(getUserRole)
-  const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole === 'ADMIN'
+  const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole !== 'USER'
   const notBookAll = userRole === 'USER' && reserveData.length > 0
 
   return (

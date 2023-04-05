@@ -68,7 +68,7 @@ function Room({
 
     const { userData } = useAuthHook()
     const userId = userData.id
-    const isAdmin = userData.role === 'ADMIN'
+    const isAdmin = userData.role !== 'USER'
     const reserves = useSelector(getReserves)
     const [seatsStatus, setSeatsStatus] = useState({})
     

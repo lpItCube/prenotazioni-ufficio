@@ -25,7 +25,7 @@ function InfoTable({
 
     const { userData } = useAuthHook()
 
-    const isAdmin = userData.role === 'ADMIN'
+    const isAdmin = userData.role !== 'USER'
     const userId = userData.id
     const isYourRoom = useSelector(getIsYourRoom)
     const reservesData = useSelector(getReserves)

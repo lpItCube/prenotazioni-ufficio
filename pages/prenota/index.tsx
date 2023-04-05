@@ -46,6 +46,7 @@ function Prenota({ initialData, domain }: any) {
     const fromDate = createNewDate("09")
     const toDate = createNewDate("10")
     setFromTo({ from: fromDate, to: toDate })
+    console.log("InitialData -> ", initialData)
     dispatch(setReserves({ reserveData: initialData }))
   }, [])
 
@@ -115,6 +116,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user: true
     }
   })
+  console.log("first appearance -> ", initialData)
   const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))
 
   return {
