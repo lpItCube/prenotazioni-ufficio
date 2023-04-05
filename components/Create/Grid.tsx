@@ -1,16 +1,10 @@
 import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react";
-import { useDispatch, useSelector } from "react-redux";
 import { GridPoint } from "../../types";
-import { getModalStatus, setModalType, toggleModal } from "../../features/modalSlice";
 import CellContent from "./CellContent";
 
 function Grid({ fromTo, setSeatName, setAction, room }: any) {
     const { xSize, ySize, gridPoints } = room;
     const [grid, setGrid] = useState<GridPoint[][]>([])
-    const session = useSession()
-    const dispatch = useDispatch()
-    const modalStatus: boolean = useSelector(getModalStatus)
 
     useEffect(() => {
         const newGrid: GridPoint[][] = [];
@@ -25,35 +19,25 @@ function Grid({ fromTo, setSeatName, setAction, room }: any) {
         setGrid(newGrid);
     }, [xSize, ySize, gridPoints]);
 
-    const bookRoom = () => {
-        const role = session.data!.user!.role
-        //prenota tutti posti se sei admin
-        dispatch(toggleModal(!modalStatus))
-        dispatch(setModalType('seats-modal'))
-        if (role === "ADMIN") {
-            setAction("ADDALL")
-        } else {
-            setAction("REQUESTALL")
-        }
-        //se non sei admin mandi una richiesta
-    }
-
+  
     return (
         <>
-            <button onClick={bookRoom}> Prenota Stanza </button>
-            <table style={{ width: "auto" }}>
-                <tbody>
-                    {grid.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {row.map((cell, columnIndex) => (
-                                <td key={columnIndex} style={{ height: "50px", width: "50px" }}>
-                                    <CellContent fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className="creation-table__wrapper">
+            <div className="creation-table__body" id="isometric-container" style={{ width: xSize * 50 + 'px' }}>
+            {grid?.map((row, rowIndex) => (
+            <div className="creation-table__row" key={rowIndex}>
+              {row.map((cell, columnIndex) => (
+                <div
+                  className={`creation-table__col`}
+                  key={columnIndex}
+                >
+                  <CellContent fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} cell={cell} />
+                </div>
+              ))}
+            </div>
+          ))}
+            </div>
+        </div>
         </>
     )
 }

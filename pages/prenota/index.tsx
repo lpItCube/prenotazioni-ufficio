@@ -67,7 +67,9 @@ function Prenota({ initialData, domain }: any) {
   }, [status])
 
   return (
-    <>
+    <div
+      className="room-create__container"
+    >
       <Calendar
         setFromTo={setFromTo}
         setSeatName={setSeatName}
@@ -85,7 +87,7 @@ function Prenota({ initialData, domain }: any) {
         : <div className="spinner__center"><Spinner /></div>
       }
 
-    </>
+    </div>
 
   )
 

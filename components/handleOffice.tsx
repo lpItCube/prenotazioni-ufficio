@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react"
 import HandleRoom from "./Create/HandleRoom"
+import { useSession } from "next-auth/react"
+import { useDispatch, useSelector } from "react-redux"
+import { getModalStatus, setModalType, toggleModal } from "../features/modalSlice"
 
 type Domain = {
   id: string
@@ -16,18 +19,21 @@ type Office = {
 }
 
 type Room = {
-  id: string 
+  id: string
   name: string
   gridPoints: []
   officeId: string
-  xSize: number 
+  xSize: number
   ySize: number
 }
 
-function HandleOffice({fromTo, action, setAction, domain} : {fromTo: any, action: any, setAction: any, domain: Domain}) {
-  const [selectedOffice, setSelectedOffice] = useState<undefined|Office>(undefined)
-  const [selectedRoom, setSelectedRoom] = useState<undefined|Room>(undefined)
-  
+function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, action: any, setAction: any, domain: Domain }) {
+  const session = useSession()
+  const dispatch = useDispatch()
+  const modalStatus: boolean = useSelector(getModalStatus)
+  const [selectedOffice, setSelectedOffice] = useState<undefined | Office>(undefined)
+  const [selectedRoom, setSelectedRoom] = useState<undefined | Room>(undefined)
+
   const handleSelectOffice = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const officeId = e.target.value
     const office = domain.office.find((office: Office) => office.id === officeId)
@@ -40,32 +46,49 @@ function HandleOffice({fromTo, action, setAction, domain} : {fromTo: any, action
     setSelectedRoom(room)
   }
 
+  const bookRoom = () => {
+    const role = session.data!.user!.role
+    //prenota tutti posti se sei admin
+    dispatch(toggleModal(!modalStatus))
+    dispatch(setModalType('seats-modal'))
+    if (role === "ADMIN") {
+      setAction("ADDALL")
+    } else {
+      setAction("REQUESTALL")
+    }
+    //se non sei admin mandi una richiesta
+  }
+
+  console.log(selectedRoom)
   return (
-    <div>
+    <>
       <div>
         <label>Select an office aaa</label>
         <select onChange={handleSelectOffice}>
           <option value="">-- Select an option --</option>
-          {domain?.office!.map((office: any, key: number) => 
+          {domain?.office!.map((office: any, key: number) =>
             <option key={key} value={office.id}>{office.name}</option>
           )}
         </select>
       </div>
-      { selectedOffice &&
+      {selectedOffice &&
         <div>
           <label>Select a room</label>
           <select onChange={handleSelectRoom}>
             <option value="">-- Select an option --</option>
-            {selectedOffice.room.map((room: any, key: number) => 
+            {selectedOffice.room.map((room: any, key: number) =>
               <option key={key} value={room.id}>{room.name}</option>
             )}
           </select>
         </div>
       }
-      { selectedRoom &&
+      {selectedRoom &&
+        <button onClick={bookRoom}> Prenota Stanza </button>
+      }
+      {selectedRoom &&
         <HandleRoom fromTo={fromTo} action={action} setAction={setAction} roomId={selectedRoom.id} create={false} />
       }
-    </div>
+    </>
   )
 }
 
