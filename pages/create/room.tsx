@@ -110,8 +110,8 @@ function Room() {
     const getDomains = async () => {
       const res = (await axios.get("/api/domain")).data
       if (res) setDomains(res)
+      setSelectedDomain(session.data!.user?.domainId)
       if(role === "ADMIN") {
-        setSelectedDomain(session.data!.user?.domainId)
         console.log("hai")
       }
     }
