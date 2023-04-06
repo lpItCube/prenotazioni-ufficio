@@ -42,7 +42,7 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
             return
         }
         const roomIsReserved: Reserve = reserves.find((r: Reserve) => r.seat.type === "whole" && r.seat.roomId === roomId && r.status === "accepted")
-        const isAdmin = role === "ADMIN"
+        const isAdmin = role !== "USER"
         const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
         const seatReserve = reserves.find((r: Reserve) => r.seat.name === cell.seatName)
         const yourReserve = seatReserve?.user.username === username

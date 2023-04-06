@@ -101,7 +101,7 @@ function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, acti
     //prenota tutti posti se sei admin
     dispatch(toggleModal(!modalStatus))
     dispatch(setModalType('seats-modal'))
-    if (role === "ADMIN") {
+    if (role !== "USER") {
       setAction("ADDALL")
     } else {
       setAction("REQUESTALL")
