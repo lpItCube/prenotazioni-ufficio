@@ -9,6 +9,9 @@ import Select from "./Ui/Select"
 import Option from "./Ui/Option"
 import BookStepper from "./Book/BookStepper"
 import Button from "./Ui/Button"
+import BookAll from "./Rooms/BookAll"
+import { getReserves } from "../features/reserveSlice"
+import { useAuthHook } from "../hooks/useAuthHook"
 
 type Domain = {
   id: string
@@ -33,7 +36,7 @@ type Room = {
   ySize: number
 }
 
-function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, action: any, setAction: any, domain: Domain }) {
+function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { fromTo: any, action: any, setAction: any, domain: Domain, setSeatName:any }) {
   const session = useSession()
   const dispatch = useDispatch()
   const modalStatus: boolean = useSelector(getModalStatus)
@@ -45,6 +48,12 @@ function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, acti
   const [openOffice, setOpenOffice] = useState<boolean>(false)
   const [openRoom, setOpenRoom] = useState<boolean>(false)
   const [direction, setDirection] = useState<number>(DirectionMode.POSITIVE)
+
+  const reserveData = useSelector(getReserves)
+  const { userData } = useAuthHook()
+  const userRole = userData.role
+  const needApproval = reserveData.filter((res:any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole !== 'USER'
+  const notBookAll = userRole === 'USER' && reserveData.length > 0
 
   
   useEffect(() => {
@@ -101,7 +110,7 @@ function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, acti
     //prenota tutti posti se sei admin
     dispatch(toggleModal(!modalStatus))
     dispatch(setModalType('seats-modal'))
-    if (role === "ADMIN") {
+    if (role !== "USER") {
       setAction("ADDALL")
     } else {
       setAction("REQUESTALL")
@@ -164,6 +173,7 @@ function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, acti
       </div>
       {selectedRoom && stepperState > StepperState.ROOM &&
         // <button onClick={bookRoom}> Prenota Stanza </button>
+        <>
         <Button
             onClick={bookRoom}
             className='cta cta--primary square'
@@ -171,6 +181,7 @@ function HandleOffice({ fromTo, action, setAction, domain }: { fromTo: any, acti
             icon={''}
             text='Prenota stanza'
         />
+        </>
       }
       {selectedRoom &&
         <HandleRoom fromTo={fromTo} action={action} setAction={setAction} roomId={selectedRoom.id} create={false} />

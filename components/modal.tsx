@@ -79,6 +79,7 @@ function Modal({
   }
 
   async function reloadData() {
+    console.log('RELOAD RESEVERS')
     const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
     const reloadData = reserves.filter((r: any) => 
       !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)

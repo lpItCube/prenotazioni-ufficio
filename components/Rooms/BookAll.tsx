@@ -5,7 +5,7 @@ import Button from "../Ui/Button";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
-import { getIsBookable, getIsYourRoom } from "../../features/roomSlice";
+import { getActualRoom, getActualRoomName, getIsBookable, getIsYourRoom } from "../../features/roomSlice";
 import { toggleModal, setModalType } from "../../features/modalSlice";
 import { getReserves } from "../../features/reserveSlice"
 
@@ -34,17 +34,18 @@ function BookAll({
     const userRole = userData.role
     const reserveData = useSelector(getReserves)
 
-    const roomIsBookable = useSelector(getIsBookable)
+    const roomIsBookable = true
     const isYourRoom = useSelector(getIsYourRoom)
     const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res:any) => res.seat.type === 'meet-whole')
 
 
-
+    console.log('ROOM IS BOOKABLE',roomIsBookable)
 
     const [buttonIsVisible, setButtonIsVisible] = useState(false)
     const [alreadyBooked, setAlreadyBooked] = useState(false)
     const [approvalButton, setApprovalButton] = useState(false)
     const [manageButton, setManageButton] = useState(false)
+    const actualRoomName = useSelector(getActualRoomName)
 
     useEffect(() => {
 
@@ -91,7 +92,7 @@ function BookAll({
                 {alreadyBooked && !isYourRoom && reservedIndDay.length > 0 && 'PRENOTATA DISABLED'}
                 {manageButton && 'MANAGE'} */}
                 {roomIsBookable && 
-                
+            
                 <Button
                     type="button"
                     icon=""
@@ -99,7 +100,7 @@ function BookAll({
                     className={`cta cta--primary ${alreadyBooked && !isYourRoom ? 'disabled' :isYourRoom ? "available" : "available"}`}
                     onClick={
                         () => {
-                            setSeatName("meet-room");
+                            setSeatName(`${actualRoomName}-whole`);
                             if(userRole === 'USER' && !alreadyBooked) {
                                 dispatch(toggleModal(true));
                                 dispatch(setModalType('seats-modal'))

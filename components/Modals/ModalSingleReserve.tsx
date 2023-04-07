@@ -8,9 +8,11 @@ import { getStringHours } from "../../utils/datePharser"
 import { useSelector } from "react-redux"
 import { getReserves } from "../../features/reserveSlice"
 import Spinner from "../Ui/Spinner"
+import { getActualRoomName } from "../../features/roomSlice"
 
 const ADD = "ADD"
 const ADDALL = "ADDALL"
+const REQUESTALL = "REQUESTALL"
 
 type ModalSingleReserveProps = {
     action: any,
@@ -34,12 +36,25 @@ function ModalSingleReserve({
 }: ModalSingleReserveProps) {
 
     const reserveData = useSelector(getReserves)
+    const actualRoomName = useSelector(getActualRoomName)
 
+    console.log('METHOD',action)
     return (
       <>
       <p className="modal__text txt-h6">
-          {action === ADD && "Vuoi procedere con la prenotazione del posto "}
-          <b>{seatName}</b>?</p>
+
+          {action === ADD && 
+            <>
+            Vuoi procedere con la prenotazione del posto
+            <b>{' '+seatName}</b>
+            </>
+          }
+          {action === ADDALL || action === REQUESTALL &&
+            <>
+            Vuoi prenotare l'intera stanza <b>{' '+actualRoomName}</b>
+            </>
+          }
+          ?</p>
           {reserveData 
           && seatName === 'meet-room' 
           && otherReserveInPeriod 
@@ -74,10 +89,10 @@ function ModalSingleReserve({
       {!hitModalButton.loading 
         ? <Button
             onClick={() => handleSeat()}
-            className={`cta ${action === ADD || action === ADDALL ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
+            className={`cta ${action === ADD || action === ADDALL || action === REQUESTALL ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
             type='button'
             icon={false}
-            text={action === ADD || action === ADDALL ? 'Conferma' : 'Cancella'}/>
+            text={action === ADD || action === ADDALL || action === REQUESTALL ? 'Conferma' : 'Cancella'}/>
         : <Spinner/>
       }
       </>

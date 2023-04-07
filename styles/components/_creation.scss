@@ -379,8 +379,19 @@
         &.your {
             background-color: $statusYours;
         }
+        &.not-available {
+            background-color: transparent;
+            border: solid 2px $green500;
+        }
         &.buisy {
             background-color: $statusBuisy;
+            &.not-available {
+                background-color: transparent;
+                border: solid 2px $statusBuisy;
+            }
+        }
+        &.pending {
+            background-color: $statusPending;
         }
     }
     &__table {

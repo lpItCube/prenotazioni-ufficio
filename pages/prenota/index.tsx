@@ -77,7 +77,7 @@ function Prenota({ initialData, domain }: any) {
         setAction={setAction}
       />
       {status === 'authenticated' ?
-        <HandleOffice fromTo={fromTo} action={action} setAction={setAction} domain={domain} />
+        <HandleOffice setSeatName={setSeatName} fromTo={fromTo} action={action} setAction={setAction} domain={domain} />
         // <FirstOffice
         //   fromTo={fromTo}
         //   seatName={seatName}

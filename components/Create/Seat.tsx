@@ -8,7 +8,7 @@ import { getModalStatus, setModalType, toggleModal } from "../../features/modalS
 
 function Seat({ create, setSeatName, setAction, cell }: any) {
     const canvasRef = useRef<any>(null);
-    const [seatProps, setSeatProps] = useState<SeatProps>({ color: "grey", canvasClass: "" })
+    const [seatProps, setSeatProps] = useState<SeatProps>({ canvasClass: "" })
     const reserves = useSelector(getReserves)
     const roomId = useSelector(getActualRoom)
 
@@ -38,14 +38,15 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
 
     useEffect(() => {
         if (create) {
-            setSeatProps({ color: "orange", canvasClass: "" })
+            setSeatProps({ canvasClass: "yours" })
             return
         }
         const roomIsReserved: Reserve = reserves.find((r: Reserve) => r.seat.type === "whole" && r.seat.roomId === roomId && r.status === "accepted")
-        const isAdmin = role === "ADMIN"
+        const isAdmin = role !== "USER"
         const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
         const seatReserve = reserves.find((r: Reserve) => r.seat.name === cell.seatName)
         const yourReserve = seatReserve?.user.username === username
+        const wholeRoom = reserves.find((r: Reserve) => r.seat.type === "whole")
 
         // if (roomIsReserved) {
         //   if (roomIsReserved.user.username === username)
@@ -54,21 +55,45 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
         //     setSeatProps({color: "blue", canvasClass: ""})
         //   return
         // }
-        if (yourReserve) {
-            setSeatProps({ color: "yellow", canvasClass: "your clickable del" })
-            return
-        }
-        if (yourReserveInRoom && !isAdmin) {
-            setSeatProps({ color: "grey", canvasClass: "" })
-            return
+
+        if(wholeRoom) {
+
+            const isYour = reserves.some((r: Reserve) => r.user.username === username)
+            const isPending = reserves.some((r: Reserve) => r.status === "pending")
+            console.log('RESEVERS',reserves)
+            console.log('RESEVERS',isPending)
+            if(isYour) {
+                setSeatProps({ canvasClass: "your" })
+                if(isPending) {
+                    setSeatProps({ canvasClass: "pending" })
+                }
+            } else {
+                setSeatProps({ canvasClass: "not-available" })
+            }
+        } else {
+
+            if (yourReserve) {
+                setSeatProps({ canvasClass: "your clickable del" })
+                return
+            }
+            if (yourReserveInRoom && !isAdmin && !wholeRoom) {
+                setSeatProps(prev => ({ canvasClass: `${prev.canvasClass} not-available` }))
+                return
+            }
+    
+            const free = !seatReserve
+            const color = free ? "" : " buisy"
+            const canvasClass = free ? "clickable" : isAdmin ? "clickable del" : ""
+            setSeatProps({ canvasClass: canvasClass + color })
         }
 
-        const free = !seatReserve
-        const color = free ? "" : " buisy"
-        const canvasClass = free ? "clickable" : isAdmin ? "clickable del" : ""
-        setSeatProps({ color: color, canvasClass: canvasClass + color })
+        if(isAdmin) {
+            setSeatProps(prev => ({ canvasClass: `${prev.canvasClass} clickable del` }))
+        }
 
-    }, [reserves])
+
+    }, [reserves, roomId])
+    
 
     // useEffect(() => {
     //     const canvas = canvasRef.current;

@@ -47,7 +47,6 @@ export interface Seat {
 }
 
 export interface SeatProps {
-    color: string,
     canvasClass: string
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { useDispatch } from "react-redux"
-import { setActualRoom } from "../../features/roomSlice"
+import { setActualRoom, setActualRoomName } from "../../features/roomSlice"
 import { setReserves } from "../../features/reserveSlice"
 import { useSession } from "next-auth/react"
 import axios from "axios"
@@ -72,10 +72,12 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
         dispatch(setActualRoom(roomId))
         const getRoom = async () => {
             const res = await axios.get(`/api/room/${roomId}`)
-            if (res)
+            if (res) {
                 setRoom(res.data)
-            setXCells(res.data?.xSize)
-            setYCells(res.data?.ySize)
+                dispatch(setActualRoomName(res?.data?.name))
+                setXCells(res.data?.xSize)
+                setYCells(res.data?.ySize)
+            }
         }
         getRoom()
         const setReservess = async () => {

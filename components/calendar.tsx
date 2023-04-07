@@ -79,13 +79,13 @@ function Calendar({
     {/* {notBookAll && <p>Non puoi prenotare tutto</p>} */}
       <div className="date-tool__container">
 
-        <BookAll
+        {/* <BookAll
           needApproval={needApproval}
           notBookAll={notBookAll}
           containerClass={'date-tool__book-all'}
           setSeatName={setSeatName}
           setAction={setAction}
-        />
+        /> */}
         <div className="date-tool__settings">
           <DatePicker
             date={selectedDate}
