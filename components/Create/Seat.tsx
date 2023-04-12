@@ -48,6 +48,7 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
         const yourReserve = seatReserve?.user.username === username
         const wholeRoom = reserves.find((r: Reserve) => r.seat.type === "whole")
 
+        
         // if (roomIsReserved) {
         //   if (roomIsReserved.user.username === username)
         //     setSeatProps({color: "yellow", canvasClass: ""})
@@ -57,39 +58,44 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
         // }
 
         if(wholeRoom) {
-
-            const isYour = reserves.some((r: Reserve) => r.user.username === username)
+            const isYour = reserves.some((r: Reserve) => r.user.username === username && r.seat.name.includes('whole'))
             const isPending = reserves.some((r: Reserve) => r.status === "pending")
             console.log('RESEVERS',reserves)
-            console.log('RESEVERS',isPending)
+            console.log('RESERVACT WHOLE',reserves,isYour)
+            console.log('RESEVERS',isYour)
             if(isYour) {
                 setSeatProps({ canvasClass: "your" })
                 if(isPending) {
-                    setSeatProps({ canvasClass: "pending" })
+                    setSeatProps({ canvasClass: "pending clickable del" })
                 }
             } else {
-                setSeatProps({ canvasClass: "not-available" })
+                if(!isAdmin) {
+                    setSeatProps({ canvasClass: "not-available" })
+                }
+                else {
+                    if(isPending) {
+                        setSeatProps({ canvasClass: `pending clickable del` })
+                    } else {
+                        setSeatProps({ canvasClass: `clickable del buisy` })
+                    }
+                }
             }
         } else {
 
-            if (yourReserve) {
-                setSeatProps({ canvasClass: "your clickable del" })
-                return
-            }
-            if (yourReserveInRoom && !isAdmin && !wholeRoom) {
-                setSeatProps(prev => ({ canvasClass: `${prev.canvasClass} not-available` }))
-                return
-            }
-    
             const free = !seatReserve
             const color = free ? "" : " buisy"
             const canvasClass = free ? "clickable" : isAdmin ? "clickable del" : ""
             setSeatProps({ canvasClass: canvasClass + color })
+
+            if (yourReserveInRoom && !isAdmin && !yourReserve) {
+                setSeatProps(prev => ({ canvasClass: `${prev.canvasClass} not-available` }))
+            } 
+            if (yourReserve) {
+                setSeatProps({ canvasClass: "your clickable del" })
+            } 
         }
 
-        if(isAdmin) {
-            setSeatProps(prev => ({ canvasClass: `${prev.canvasClass} clickable del` }))
-        }
+      
 
 
     }, [reserves, roomId])

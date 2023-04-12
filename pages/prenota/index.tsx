@@ -19,107 +19,107 @@ import HandleOffice from "../../components/handleOffice";
 
 
 type DateRange = {
-  from: string | null,
-  to: string | null
+	from: string | null,
+	to: string | null
 }
 
 function createNewDate(hour: string) {
-  const currYear = new Date().getFullYear()
-  const currMonth = ("0" + (new Date().getMonth() + 1)).slice(-2)
-  const day = ("0" + new Date().getDate()).slice(-2)
-  const textDate = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
-  return textDate
+	const currYear = new Date().getFullYear()
+	const currMonth = ("0" + (new Date().getMonth() + 1)).slice(-2)
+	const day = ("0" + new Date().getDate()).slice(-2)
+	const textDate = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
+	return textDate
 }
 
 function Prenota({ initialData, domain }: any) {
 
-  const dispatch = useDispatch()
-  const session = useSession()
-  const { status } = useSession()
+	const dispatch = useDispatch()
+	const session = useSession()
+	const { status } = useSession()
 
-  const [fromTo, setFromTo] = useState<DateRange>({ from: null, to: null })
-  const [seatName, setSeatName] = useState("none")
-  const [action, setAction] = useState("")
-
-
-  useEffect(() => {
-    const fromDate = createNewDate("09")
-    const toDate = createNewDate("10")
-    setFromTo({ from: fromDate, to: toDate })
-    console.log("InitialData -> ", initialData)
-    dispatch(setReserves({ reserveData: initialData }))
-  }, [])
+	const [fromTo, setFromTo] = useState<DateRange>({ from: null, to: null })
+	const [seatName, setSeatName] = useState("none")
+	const [action, setAction] = useState("")
 
 
-  useEffect(() => {
-    // const reloadDataSession = async () => {
-    //   if (fromTo.from && fromTo.to) {
-    //     const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
-    //     dispatch(setReserves({ reserveData: reloadData }))
-    //   }
-    // }
+	useEffect(() => {
+		const fromDate = createNewDate("09")
+		const toDate = createNewDate("10")
+		setFromTo({ from: fromDate, to: toDate })
+		console.log("InitialData -> ", initialData)
+		dispatch(setReserves({ reserveData: initialData }))
+	}, [])
 
-    // reloadDataSession()
-  }, [session, fromTo])
 
-  useEffect(() => {
-    const event = new Event("visibilitychange");
-    document.dispatchEvent(event);
-  }, [status])
+	useEffect(() => {
+		// const reloadDataSession = async () => {
+		//   if (fromTo.from && fromTo.to) {
+		//     const reloadData = await (await axios.get(`/api/reserve?from=${fromTo.from}&to=${fromTo.to}`)).data
+		//     dispatch(setReserves({ reserveData: reloadData }))
+		//   }
+		// }
 
-  return (
-    <div
-      className="room-create__container"
-    >
-      <Calendar
-        setFromTo={setFromTo}
-        setSeatName={setSeatName}
-        setAction={setAction}
-      />
-      {status === 'authenticated' ?
-        <HandleOffice setSeatName={setSeatName} fromTo={fromTo} action={action} setAction={setAction} domain={domain} />
-        // <FirstOffice
-        //   fromTo={fromTo}
-        //   seatName={seatName}
-        //   setSeatName={setSeatName}
-        //   action={action}
-        //   setAction={setAction}
-        // />
-        : <div className="spinner__center"><Spinner /></div>
-      }
+		// reloadDataSession()
+	}, [session, fromTo])
 
-    </div>
+	useEffect(() => {
+		const event = new Event("visibilitychange");
+		document.dispatchEvent(event);
+	}, [status])
 
-  )
+	return (
+		<div
+			className="room-create__container"
+		>
+			<Calendar
+				setFromTo={setFromTo}
+				setSeatName={setSeatName}
+				setAction={setAction}
+			/>
+			{status === 'authenticated' ?
+				<HandleOffice setSeatName={setSeatName} fromTo={fromTo} action={action} setAction={setAction} domain={domain} />
+				// <FirstOffice
+				//   fromTo={fromTo}
+				//   seatName={seatName}
+				//   setSeatName={setSeatName}
+				//   action={action}
+				//   setAction={setAction}
+				// />
+				: <div className="spinner__center"><Spinner /></div>
+			}
+
+		</div>
+
+	)
 
 }
 
 export default Prenota
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  
-  const session = await getSession(context)
-  if (session === null || session.user === null) return { props: {initialData: null} }
-  console.log(session.user!)
-  const domain = await prisma.domain.findUnique({ 
-    where: {id: session.user?.domainId!},
-    include: { office: { include: { room: true } } }
-  })
 
-  console.log("DOMAIN -> ", domain)
+	const session = await getSession(context)
+	if (session === null || session.user === null) return { props: { initialData: null } }
+	console.log(session.user!)
+	const domain = await prisma.domain.findUnique({
+		where: { id: session.user?.domainId! },
+		include: { office: { include: { room: true } } }
+	})
 
-  const fromDate = createNewDate("09")
-  const toDate = createNewDate("10")
-  const initialData = await prisma.reserve.findMany({
-    include: {
-      seat: true,
-      user: true
-    }
-  })
-  console.log("first appearance -> ", initialData)
-  const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))
+	console.log("DOMAIN -> ", domain)
 
-  return {
-    props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), domain: domain }
-  }
+	const fromDate = createNewDate("09")
+	const toDate = createNewDate("10")
+	const initialData = await prisma.reserve.findMany({
+		include: {
+			seat: true,
+			user: true
+		}
+	})
+	console.log("first appearance -> ", initialData)
+	const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))
+
+	return {
+		props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), domain: domain }
+	}
 }
