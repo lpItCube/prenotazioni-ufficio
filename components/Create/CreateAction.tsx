@@ -77,7 +77,6 @@ function CreateAction(props: CreateActionProps) {
   const [isDisabledSelect, setIsDisabledSelect] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log('OPT',optionList)
     if(optionList.length > 0) {
       setIsDisabledSelect(false)
       setMethod(FormMethod.SELEZIONA)

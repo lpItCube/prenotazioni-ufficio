@@ -87,12 +87,8 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 		}, 100)
 	}, [selectedOffice, selectedRoom])
 
-	useEffect(() => {
-		console.log('YOUR', reserveData)
-	}, [reserveData])
 
 	const handleSelectOffice = () => {
-		console.log(openOffice)
 		setOpenOffice(prev => !prev)
 	}
 
@@ -102,9 +98,7 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 
 	const handleOptionOffice = (officeId: string) => {
 		// const officeId = e.target.value
-		console.log(officeId)
 		const office = domain.office.find((office: Office) => office.id === officeId)
-		console.log(office)
 		setSelectedOffice(office)
 	}
 
@@ -132,7 +126,7 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 	}
 
 
-	console.log(domain)
+	// console.log(domain)
 	return (
 		<>
 			<div className={`room-create__body creation-stepper__container ${stepperState > StepperState.ROOM ? 'creation-stepper__static' : 'creation-stepper__active'}`}>

@@ -79,11 +79,9 @@ function Modal({
   }
 
   async function reloadData() {
-    console.log('RELOAD RESEVERS')
+    // console.log('SET RES 2')
     const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
-    const reloadData = reserves.filter((r: any) => 
-      !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
-    ))
+    const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
     dispatch(setReserves({reserveData:reloadData}))
   }
 
@@ -109,8 +107,6 @@ function Modal({
     const room = await (await axios.get(`/api/room/${roomId}`)).data
     const wholeRoom = room.seat.find((s: any) => s.type === "whole")
 
-    console.log("handleRoom")
-
     await reserveData.forEach(async (reserve: any) => {
       await axios.delete("/api/reserve/" + reserve.id)
       //TODO notifica per ogni utente la cui prenotazione è stata cancellata
@@ -131,7 +127,6 @@ function Modal({
 
   async function handleSeat() {
     setHitModalButton({loading:true, id:null})
-    console.log("seatName ", seatName)
 
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     let bookStatus = 'accepted'

@@ -16,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           room: true
         }
       })
-      console.log("OFFICES: ", offices)
       res.status(200).json(offices)
     } catch(e) {
       console.log(e)

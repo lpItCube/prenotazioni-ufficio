@@ -39,8 +39,6 @@ function BookAll({
     const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res:any) => res.seat.type === 'meet-whole')
 
 
-    console.log('ROOM IS BOOKABLE',roomIsBookable)
-
     const [buttonIsVisible, setButtonIsVisible] = useState(false)
     const [alreadyBooked, setAlreadyBooked] = useState(false)
     const [approvalButton, setApprovalButton] = useState(false)

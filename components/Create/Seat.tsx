@@ -60,9 +60,6 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
         if(wholeRoom) {
             const isYour = reserves.some((r: Reserve) => r.user.username === username && r.seat.name.includes('whole'))
             const isPending = reserves.some((r: Reserve) => r.status === "pending")
-            console.log('RESEVERS',reserves)
-            console.log('RESERVACT WHOLE',reserves,isYour)
-            console.log('RESEVERS',isYour)
             if(isYour) {
                 setSeatProps({ canvasClass: "your" })
                 if(isPending) {

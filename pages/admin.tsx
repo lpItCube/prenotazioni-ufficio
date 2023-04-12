@@ -82,7 +82,6 @@ function Admin() {
   }
 
   const handleSelectRoom = async(e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value)
     setSelectedRoom(e.target.value)
   }
 

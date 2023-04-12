@@ -38,7 +38,7 @@ function ModalSingleReserve({
 	const reserveData = useSelector(getReserves)
 	const actualRoomName = useSelector(getActualRoomName)
 
-	console.log('METHOD', action)
+
 	return (
 		<>
 			<p className="modal__text txt-h6">
