@@ -195,7 +195,7 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 						type='submit'
 						icon={''}
 						text={`${role === 'USER' && reserveData.length > 0 && !isYourRoom
-							? 'Stanza prenotata'
+							? 'Stanza non disponibile'
 							: role !== 'USER' && reserveData.length > 0 && !isYourRoom
 								? 'Gestisci prenotazione'
 								: isYourRoom
