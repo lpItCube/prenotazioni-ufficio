@@ -80,7 +80,7 @@ function Modal({
   }
 
   async function reloadData() {
-    console.log('SET RES 2',fromTo)
+    console.log('SET RES 2', fromTo)
 
     const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
     // const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
@@ -90,11 +90,11 @@ function Modal({
     ))
 
     const selectDate = getOnlyDate(fromTo.from)
-    const allDayReserve = reserves.filter((r:any) => (
+    const allDayReserve = reserves.filter((r: any) => (
       selectDate === getOnlyDate(r.from) && r.user.id === userId
     ))
-    
-    dispatch(setDayReserves({ dayReserveData:allDayReserve }))
+
+    dispatch(setDayReserves({ dayReserveData: allDayReserve }))
     dispatch(setReserves({ reserveData: reloadData }))
   }
 
@@ -207,6 +207,13 @@ function Modal({
       const reloadData = reserves.filter((r: any) =>
         !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
         ))
+
+      const selectDate = getOnlyDate(fromTo.from)
+      const allDayReserve = reserves.filter((r: any) => (
+        selectDate === getOnlyDate(r.from) && r.user.id === userId
+      ))
+
+      dispatch(setDayReserves({ dayReserveData: allDayReserve }))
       dispatch(setReserves({ reserveData: reloadData }))
       setHitModalButton({ loading: false, id: null })
       if (userReserve.length === 1) {
