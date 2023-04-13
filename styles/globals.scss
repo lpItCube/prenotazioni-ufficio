@@ -67,7 +67,7 @@ a {
 }
 .box-quarter-circle-top-right {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .quarter-circle-bottom-left{
    width: 25px;
@@ -79,7 +79,7 @@ a {
 }
 .box-quarter-circle-bottom-left {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 }
 .quarter-circle-bottom-right{
    width: 25px;
@@ -91,8 +91,8 @@ a {
 }
 .box-quarter-circle-bottom-right {
   display: flex;
-  justify-content: end;
-  align-items: end;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 canvas.clickable {

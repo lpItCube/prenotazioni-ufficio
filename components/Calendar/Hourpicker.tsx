@@ -227,6 +227,9 @@ function Hourpicker({
 
     useEffect(() => {
         handleChangeHour(String(startHour).padStart(2, '0'), String(endHour).padStart(2, '0'))
+        handleStartHour(startHour)
+     
+        console.log(startHour,endHour)
     }, [startHour, endHour])
 
 
@@ -270,7 +273,7 @@ function Hourpicker({
         const startHour = parseInt(currentStart)
         // setStartHour(startHour)
         dispatch(setStartHour(startHour))
-        console.log('SET HANDLE',startHour)
+        console.log('SET HANDLE',endTime)
         createOptions(startHour + 1, 19, 'end')
         setOptionEndHours(endTime)
 
