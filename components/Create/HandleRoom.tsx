@@ -58,7 +58,6 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     const userId = session.data!.user!.id
     const yourReserve: Reserve[] = reserveData.filter((res: any) => res.user.id === userId)
 
-
     useEffect(() => {
         // UseRef per controllare se il click è interno
         const handleClickOutside = (event: any) => {

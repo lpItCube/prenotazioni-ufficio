@@ -212,6 +212,7 @@ function Hourpicker({
         }
     }
 
+    console.log(startTime, endTime)
 
     useEffect(() => {
         createOptions(9, 18, 'start')
@@ -309,10 +310,10 @@ function Hourpicker({
                     openOption={startOpen}
                 >
                     
-                    {optionStartHours.map((hour: any) => {
+                    {optionStartHours.map((hour: any, index:number) => {
                         return (
                             <Option
-                                key={hour.value}
+                                key={index}
                                 onClick={() => handleStartHour(hour.value)}
                                 label={hour.time}
                                 className={`${String(startHour).padStart(2, '0')}:00` === hour.time ? ' current' : ''}
@@ -331,10 +332,10 @@ function Hourpicker({
                     onClick={() => handleOpenEndOption}
                     openOption={endOpen}
                 >
-                    {optionEndHours.map((hour: any) => {
+                    {optionEndHours.map((hour: any, index:number) => {
                         return (
                             <Option
-                                key={hour.value}
+                                key={index}
                                 onClick={() => handleEndHour(hour.value)}
                                 label={hour.time}
                                 className={`${String(endHour).padStart(2, '0')}:00` === hour.time ? ' current' : ''}
