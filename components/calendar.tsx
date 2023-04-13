@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react"
 
 // Redux
 import { useSelector, useDispatch } from "react-redux"
-import { getReserves, setReserves } from "../features/reserveSlice"
+import { getReserves } from "../features/reserveSlice"
 
 // Hooks
 import { useAuthHook } from "../hooks/useAuthHook";
@@ -67,7 +67,6 @@ function Calendar({
     //   const filteredRes = res.filter((r: any) => 
     //     !(new Date(r.from) > new Date(fromDate as string) || new Date(r.to) < new Date(toDate as string)
     //   ))
-    // dispatch(setReserves({reserveData:filteredRes}))
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
   }
@@ -77,7 +76,6 @@ function Calendar({
     const toDate = createNewDate(selDate, fromToHours.to)
     // const res = await (await axios.get(`/api/reserve?from=${fromDate}&to=${toDate}`)).data
     setFromTo({ from: fromDate, to: toDate })
-    // dispatch(setReserves({reserveData:res}))
   }
 
   useEffect(() => {

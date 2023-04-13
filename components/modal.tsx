@@ -4,14 +4,14 @@ import axios from "axios"
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleModal } from "../features/modalSlice"
-import { getReserves, setReserves } from "../features/reserveSlice"
+import { getReserves, setDayReserves, setReserves } from "../features/reserveSlice"
 import { getActualRoom } from "../features/roomSlice"
 
 // Hooks 
 import { useAuthHook } from "../hooks/useAuthHook"
 
 // Utils
-import { getStringHours } from "../utils/datePharser"
+import { getOnlyDate, getStringHours } from "../utils/datePharser"
 
 // Components
 import Button from "./Ui/Button"
@@ -43,9 +43,10 @@ function Modal({
   const reserveData = useSelector(getReserves)
   const roomId = useSelector(getActualRoom)
   const { userData } = useAuthHook()
-  const userIdHooks: string = userData.id
+  const userId: string = userData.id
   const userRole = userData.role
   const [hitModalButton, setHitModalButton] = useState({ loading: false, id: null })
+
 
   const toApprove = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'pending')
   const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'accepted')
@@ -54,7 +55,7 @@ function Modal({
 
   useEffect(() => {
     if (userRole === 'USER') {
-      setUserReserve(reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.user.id === userIdHooks))
+      setUserReserve(reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.user.id === userId))
     } else {
       setUserReserve(reserveData)
     }
@@ -79,13 +80,21 @@ function Modal({
   }
 
   async function reloadData() {
-    console.log('SET RES 2')
+    console.log('SET RES 2',fromTo)
+
     const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
     // const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
     const reloadData = reserves.filter((r: any) => (
       new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to) ||
       new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to)
     ))
+
+    const selectDate = getOnlyDate(fromTo.from)
+    const allDayReserve = reserves.filter((r:any) => (
+      selectDate === getOnlyDate(r.from) && r.user.id === userId
+    ))
+    
+    dispatch(setDayReserves({ dayReserveData:allDayReserve }))
     dispatch(setReserves({ reserveData: reloadData }))
   }
 
@@ -95,7 +104,7 @@ function Modal({
     const wholeRoom = room.seat.find((s: any) => s.type === "whole")
     await axios.post("/api/addReserve", {
       seatId: wholeRoom.id,
-      userId: userIdHooks,
+      userId: userId,
       reservedDays: [],
       from: new Date(fromTo.from),
       to: new Date(fromTo.to),
@@ -118,7 +127,7 @@ function Modal({
 
     await axios.post("/api/addReserve", {
       seatId: wholeRoom.id,
-      userId: userIdHooks,
+      userId: userId,
       reservedDays: [],
       from: new Date(fromTo.from),
       to: new Date(fromTo.to),
@@ -152,7 +161,7 @@ function Modal({
 
       await axios.post("/api/addReserve", {
         seatId: seatId,
-        userId: userIdHooks,
+        userId: userId,
         reservedDays: [],
         from: new Date(fromTo.from),
         to: new Date(fromTo.to),

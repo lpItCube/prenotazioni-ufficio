@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setActualRoom, setActualRoomName } from "../../features/roomSlice"
-import { getReserves, setReserves } from "../../features/reserveSlice"
+import { getDayReserves, getReserves, setDayReserves, setReserves } from "../../features/reserveSlice"
 import { useSession } from "next-auth/react"
 import axios from "axios"
 import { Room, Reserve, GridPoint, CurrentCell } from "../../types"
@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import OptionsBar from "./OptionsBar"
 import GridOptions from "./GridOptions"
 import YourReserve from "../Rooms/YourReserve"
+import { getOnlyDate } from "../../utils/datePharser"
 
 
 function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
@@ -43,6 +44,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     const dispatch = useDispatch()
     const reserveData = useSelector(getReserves)
     const session = useSession()
+    const reserveAllDay = useSelector(getDayReserves)
     const [room, setRoom] = useState<Room | undefined>(undefined)
     const [xCells, setXCells] = useState<number>(0)
     const [yCells, setYCells] = useState<number>(0)
@@ -54,7 +56,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     const [currentCell, setCurrentCell] = useState<CurrentCell>({ x: -1, y: -1, element: null })
     const [updateGrid, setUpdateGrid] = useState<any>([])
     const userId = session.data!.user!.id
-    const yourReserve:Reserve[] = reserveData.filter((res:any) => res.user.id === userId)
+    const yourReserve: Reserve[] = reserveData.filter((res: any) => res.user.id === userId)
 
 
     useEffect(() => {
@@ -93,22 +95,21 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
             const filteredRes = reserves.filter((r: any) => (
                 new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to) ||
                 new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to)
-                ))
+            ))
 
-            // reserves.filter((r: any) => {
-            //     console.log('SET RES',new Date(r.from) ,'===', new Date(fromTo.from)),
-            //     console.log('SET RES',new Date(fromTo.from) >= new Date(r.from)),
-            //     console.log('SET RES',new Date(r.to) >= new Date(fromTo.to as string))
-            //     // (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) )
-            // })
-            // console.log("cringe: ", filteredRes)
+            const selectDate = getOnlyDate(fromTo.from)
+            const allDayReserve = reserves.filter((r: any) => (
+                selectDate === getOnlyDate(r.from) && r.user.id === userId
+            ))
+
+            dispatch(setDayReserves({ dayReserveData: allDayReserve }))
             dispatch(setReserves({ reserveData: filteredRes }))
         }
         if (!create)
             setReservess()
     }, [roomId, fromTo])
 
-    
+
     let username: string | null | undefined = null
 
     if (session.data! !== undefined)
@@ -118,8 +119,8 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     const handleSave = async () => {
         const newRoom = {
             ...room,
-            xSize:xCells,
-            ySize:yCells,
+            xSize: xCells,
+            ySize: yCells,
             gridPoints: grid?.flat()
         }
 
@@ -166,59 +167,59 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
         <>
             {create ? (
                 <>
-                <GridOptions
-                    xCells={xCells}
-                    setXCells={setXCells}
-                    yCells={yCells}
-                    setYCells={setYCells}
-                    handleSave={handleSave}
-                />
-                <div className="room-creation">
-                    <div className="room-grid">
-                        {selectedCell && (
-                            <AnimatePresence>
-                                {showOptions && (
-                                    <motion.aside
-                                        variants={variants}
-                                        initial="hidden"
-                                        animate="visible"
-                                        exit="hidden"
-                                        key="aside"
-                                        className="creation-options__aside"
-                                        ref={optionRef}
-                                    >
-                                        <div className="creation-options__box">
-                                            <OptionsBar
-                                                selectedCell={selectedCell}
-                                                handleOptionChange={handleOptionChange}
-                                            />
-                                        </div>
-                                    </motion.aside>
-                                )}
-                            </AnimatePresence>
-                        )}
-                        <GridCreate
-                            fromTo={fromTo}
-                            setSeatName={setSeatName}
-                            setAction={setAction}
-                            roomId={roomId}
-                            setRoom={setRoom}
-                            room={room}
-                            xSize={xCells}
-                            ySize={yCells}
-                            grid={grid}
-                            setGrid={setGrid}
-                            seats={seats}
-                            setSeats={setSeats}
-                            setSelectedCell={setSelectedCell}
-                            selectedCell={selectedCell}
-                            setShowOptions={setShowOptions}
-                            optionRef={optionRef}
-                            updateGrid={updateGrid}
-                            setUpdateGrid={setUpdateGrid}
-                        />
+                    <GridOptions
+                        xCells={xCells}
+                        setXCells={setXCells}
+                        yCells={yCells}
+                        setYCells={setYCells}
+                        handleSave={handleSave}
+                    />
+                    <div className="room-creation">
+                        <div className="room-grid">
+                            {selectedCell && (
+                                <AnimatePresence>
+                                    {showOptions && (
+                                        <motion.aside
+                                            variants={variants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="hidden"
+                                            key="aside"
+                                            className="creation-options__aside"
+                                            ref={optionRef}
+                                        >
+                                            <div className="creation-options__box">
+                                                <OptionsBar
+                                                    selectedCell={selectedCell}
+                                                    handleOptionChange={handleOptionChange}
+                                                />
+                                            </div>
+                                        </motion.aside>
+                                    )}
+                                </AnimatePresence>
+                            )}
+                            <GridCreate
+                                fromTo={fromTo}
+                                setSeatName={setSeatName}
+                                setAction={setAction}
+                                roomId={roomId}
+                                setRoom={setRoom}
+                                room={room}
+                                xSize={xCells}
+                                ySize={yCells}
+                                grid={grid}
+                                setGrid={setGrid}
+                                seats={seats}
+                                setSeats={setSeats}
+                                setSelectedCell={setSelectedCell}
+                                selectedCell={selectedCell}
+                                setShowOptions={setShowOptions}
+                                optionRef={optionRef}
+                                updateGrid={updateGrid}
+                                setUpdateGrid={setUpdateGrid}
+                            />
+                        </div>
                     </div>
-                </div>
                 </>
             ) : (
                 <>
@@ -229,7 +230,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                             }
                         </div>
                         <YourReserve
-                            reserves={yourReserve}
+                            reserves={reserveAllDay}
                         />
                     </div>
                     <Modal seatName={seatName} action={action} username={username} fromTo={fromTo} />

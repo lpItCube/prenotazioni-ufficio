@@ -29,3 +29,8 @@ export const getStringHours = (
         hours
     }
 }
+
+
+export const getOnlyDate = (date:any) => {
+    return date.substring(0,date.indexOf('T'));
+}
