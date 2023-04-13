@@ -45,8 +45,8 @@ function Modal({
   const { userData } = useAuthHook()
   const userIdHooks: string = userData.id
   const userRole = userData.role
-  const [hitModalButton, setHitModalButton] = useState({loading:false, id:null})
-  
+  const [hitModalButton, setHitModalButton] = useState({ loading: false, id: null })
+
   const toApprove = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'pending')
   const reservedIndDay = reserveData && reserveData.length > 0 && reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'accepted')
 
@@ -65,10 +65,10 @@ function Modal({
     // }
   }, [reserveData])
 
-  
+
 
   const handleCloseModal = () => {
-    setHitModalButton({loading:false, id:null})
+    setHitModalButton({ loading: false, id: null })
     dispatch(toggleModal(false))
   }
 
@@ -79,14 +79,18 @@ function Modal({
   }
 
   async function reloadData() {
-    // console.log('SET RES 2')
+    console.log('SET RES 2')
     const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
-    const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
-    dispatch(setReserves({reserveData:reloadData}))
+    // const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
+    const reloadData = reserves.filter((r: any) => (
+      new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to) ||
+      new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to)
+    ))
+    dispatch(setReserves({ reserveData: reloadData }))
   }
 
   async function requestRoom() {
-    setHitModalButton({loading:true, id:null})
+    setHitModalButton({ loading: true, id: null })
     const room = await (await axios.get(`/api/room/${roomId}`)).data
     const wholeRoom = room.seat.find((s: any) => s.type === "whole")
     await axios.post("/api/addReserve", {
@@ -102,7 +106,7 @@ function Modal({
   }
 
   async function handleRoom() {
-    setHitModalButton({loading:true, id:null})
+    setHitModalButton({ loading: true, id: null })
     const bookStatus = userRole === 'ADMIN' ? 'accepted' : 'pending'
     const room = await (await axios.get(`/api/room/${roomId}`)).data
     const wholeRoom = room.seat.find((s: any) => s.type === "whole")
@@ -120,20 +124,20 @@ function Modal({
       to: new Date(fromTo.to),
       status: 'accepted'
     })
-    
+
     await reloadData()
     handleCloseModal()
   }
 
   async function handleSeat() {
-    setHitModalButton({loading:true, id:null})
+    setHitModalButton({ loading: true, id: null })
 
     const seatId = await (await axios.get(`/api/seats/${seatName}`)).data.id
     let bookStatus = 'accepted'
-    
+
     if (action === ADD) {
       if (seatName === 'meet-room') {
-        
+
         // Quando prenoti tutta la stanza
 
         bookStatus = userRole !== 'USER' ? 'accepted' : 'pending'
@@ -145,7 +149,7 @@ function Modal({
           })
         }
       }
-      
+
       await axios.post("/api/addReserve", {
         seatId: seatId,
         userId: userIdHooks,
@@ -164,7 +168,7 @@ function Modal({
       } else {
         reserveToDelete = singleReserve
       }
-      
+
       await axios.delete("/api/reserve/" + reserveToDelete.id);
       setHandleDelete(true)
     }
@@ -182,7 +186,7 @@ function Modal({
 
 
   async function handleApprovation(status: any, id: any) {
-    setHitModalButton({loading:true, id:id})
+    setHitModalButton({ loading: true, id: id })
     if (status === 'approved') {
       await axios.patch("/api/reserve/approveReserve", {
         id
@@ -191,11 +195,11 @@ function Modal({
     } else {
       const deleteSeat = await axios.delete("/api/reserve/" + id);
       const reserves = await (await axios.get(`/api/roomReserves/${roomId}`)).data
-      const reloadData = reserves.filter((r: any) => 
+      const reloadData = reserves.filter((r: any) =>
         !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)
-      ))
-      dispatch(setReserves({reserveData:reloadData}))
-      setHitModalButton({loading:false, id:null})
+        ))
+      dispatch(setReserves({ reserveData: reloadData }))
+      setHitModalButton({ loading: false, id: null })
       if (userReserve.length === 1) {
         handleCloseModal()
       }
@@ -211,16 +215,16 @@ function Modal({
       {action === ADD || action === ADDALL || action === REQUESTALL
         ?
         <ModalComponent
-            modalTitle={`Aggiungi prenotazione`}
-            subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
-            refType={'seats-modal'}
+          modalTitle={`Aggiungi prenotazione`}
+          subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from).hours} - ${getStringHours(fromTo.to).hours}` : ''}
+          refType={'seats-modal'}
         >
           <ModalSingleReserve
             action={action}
             seatName={seatName}
             otherReserveInPeriod={otherReserveInPeriod}
             userReserve={userReserve}
-            handleSeat={ action === ADD ? handleSeat : action === ADDALL ? handleRoom : requestRoom }
+            handleSeat={action === ADD ? handleSeat : action === ADDALL ? handleRoom : requestRoom}
             hitModalButton={hitModalButton}
           />
         </ModalComponent>

@@ -64,10 +64,14 @@ function HandleRoom({fromTo, action, setAction, roomId, create}: any) {
     }
     getRoom()
     const setReservess = async() => {
-      // console.log('SET RES 1')
+      console.log('SET RES 1')
       const reserves = await (await axios.get(`/api/reserve`)).data
       // const filteredRes = reserves.filter((r: Reserve) => !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)))
-      const filteredRes = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
+      // const filteredRes = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
+      const filteredRes = reserves.filter((r: any) => (
+        new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to) ||
+        new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to)
+      ))
       dispatch(setReserves({ reserveData: filteredRes }))
     }
     if (!create)

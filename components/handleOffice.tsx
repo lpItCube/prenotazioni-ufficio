@@ -14,6 +14,7 @@ import { getReserves } from "../features/reserveSlice"
 import { useAuthHook } from "../hooks/useAuthHook"
 import { getIsYourRoom } from "../features/roomSlice"
 import { Reserve } from "../types"
+import YourReserve from "./Rooms/YourReserve"
 
 type Domain = {
 	id: string
@@ -58,6 +59,8 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 	const notBookAll = userRole === 'USER' && reserveData.length > 0
 	const isYourRoom = useSelector(getIsYourRoom)
 	const role = session.data!.user!.role
+	const userId = session.data!.user!.id
+	const yourReserve:Reserve[] = reserveData.filter((res:any) => res.user.id === userId)
 
 
 
@@ -179,7 +182,6 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 				</div>
 			</div>
 			{selectedRoom && stepperState > StepperState.ROOM &&
-				// <button onClick={bookRoom}> Prenota Stanza </button>
 				<>
 					<Button
 						onClick={bookRoom}

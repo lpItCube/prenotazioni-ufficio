@@ -5,6 +5,7 @@ import roomReducer from '../features/roomSlice'
 import authReducer from '../features/authSlice'
 import notificationReducer from '../features/notificationSlice'
 import reserveReducer from '../features/reserveSlice'
+import timePickerReducer from '../features/timePickerSlice'
 
 export const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
         room: roomReducer,
         auth: authReducer,
         notification: notificationReducer,
-        reserves:reserveReducer
+        reserves:reserveReducer,
+        timePicker:timePickerReducer
     }
 })
 

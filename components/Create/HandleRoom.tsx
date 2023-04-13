@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setActualRoom, setActualRoomName } from "../../features/roomSlice"
-import { setReserves } from "../../features/reserveSlice"
+import { getReserves, setReserves } from "../../features/reserveSlice"
 import { useSession } from "next-auth/react"
 import axios from "axios"
 import { Room, Reserve, GridPoint, CurrentCell } from "../../types"
@@ -11,6 +11,7 @@ import Grid from "./Grid"
 import { AnimatePresence, motion } from "framer-motion";
 import OptionsBar from "./OptionsBar"
 import GridOptions from "./GridOptions"
+import YourReserve from "../Rooms/YourReserve"
 
 
 function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
@@ -39,6 +40,9 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     };
 
     const optionRef = useRef<any>(null)
+    const dispatch = useDispatch()
+    const reserveData = useSelector(getReserves)
+    const session = useSession()
     const [room, setRoom] = useState<Room | undefined>(undefined)
     const [xCells, setXCells] = useState<number>(0)
     const [yCells, setYCells] = useState<number>(0)
@@ -49,7 +53,8 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
     const [showOptions, setShowOptions] = useState<boolean>(false)
     const [currentCell, setCurrentCell] = useState<CurrentCell>({ x: -1, y: -1, element: null })
     const [updateGrid, setUpdateGrid] = useState<any>([])
-    const dispatch = useDispatch()
+    const userId = session.data!.user!.id
+    const yourReserve:Reserve[] = reserveData.filter((res:any) => res.user.id === userId)
 
 
     useEffect(() => {
@@ -81,10 +86,21 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
         }
         getRoom()
         const setReservess = async () => {
-            // console.log('SET RES 3')
+            console.log('SET RES 3')
             const reserves = await (await axios.get(`/api/reserve`)).data
             // const filteredRes = reserves.filter((r: Reserve) => !(new Date(r.from) > new Date(fromTo.to as string) || new Date(r.to) < new Date(fromTo.from as string)))
-            const filteredRes = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
+            // const filteredRes = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
+            const filteredRes = reserves.filter((r: any) => (
+                new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to) ||
+                new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to)
+                ))
+
+            // reserves.filter((r: any) => {
+            //     console.log('SET RES',new Date(r.from) ,'===', new Date(fromTo.from)),
+            //     console.log('SET RES',new Date(fromTo.from) >= new Date(r.from)),
+            //     console.log('SET RES',new Date(r.to) >= new Date(fromTo.to as string))
+            //     // (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) )
+            // })
             // console.log("cringe: ", filteredRes)
             dispatch(setReserves({ reserveData: filteredRes }))
         }
@@ -92,7 +108,7 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
             setReservess()
     }, [roomId, fromTo])
 
-    const session = useSession()
+    
     let username: string | null | undefined = null
 
     if (session.data! !== undefined)
@@ -212,6 +228,9 @@ function HandleRoom({ fromTo, action, setAction, roomId, create }: any) {
                                 <Grid fromTo={fromTo} setSeatName={setSeatName} setAction={setAction} roomId={roomId} setRoom={setRoom} room={room} />
                             }
                         </div>
+                        <YourReserve
+                            reserves={yourReserve}
+                        />
                     </div>
                     <Modal seatName={seatName} action={action} username={username} fromTo={fromTo} />
                 </>
