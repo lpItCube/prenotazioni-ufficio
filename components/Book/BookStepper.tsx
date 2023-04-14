@@ -1,9 +1,10 @@
-import { DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
+import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
 import Select from "../Ui/Select"
 import Option from "../Ui/Option"
 import { AnimatePresence, motion } from "framer-motion"
 import { RiDeleteBin3Line } from "react-icons/ri"
 import { Colors } from "../Ui/Colors"
+import { useAuthHook } from "../../hooks/useAuthHook"
 
 interface BookStepperProps {
     defaultSelect: string,
@@ -20,6 +21,7 @@ interface BookStepperProps {
     setDirection: (dir: number) => void,
     direction: number,
     setStepperState: (step: number) => void,
+    setSelectedDomain: (domain: any) => void,
     setSelectedOffice: (office: any) => void,
     setSelectedRoom: (room: any) => void
 }
@@ -40,9 +42,13 @@ function BookStepper(props: BookStepperProps) {
         setDirection,
         direction,
         setStepperState,
+        setSelectedDomain,
         setSelectedOffice,
         setSelectedRoom
     } = props
+
+    const { userData } = useAuthHook()
+    const userRole = userData.role
 
     const containerVariants = {
         initial: {
@@ -146,23 +152,29 @@ function BookStepper(props: BookStepperProps) {
                                 exit="exit"
                                 className='creation-stepper__box'
                             >
-                                <RiDeleteBin3Line
-                                    className="creation-stepper__box--remove"
-                                    size={32}
-                                    color={Colors.white}
-                                    onClick={() => {
-                                        setDirection(DirectionMode.NEGATIVE)
-                                        setTimeout(() => {
-                                            setStepperState(currentStepper)
-                                            if (currentStepper === StepperState.OFFICE) {
-                                                setSelectedOffice(DEFAULT_OFFICE_VALUE)
-                                                setSelectedRoom(DEFAULT_ROOM_VALUE)
-                                            } else if (currentStepper === StepperState.ROOM) {
-                                                setSelectedRoom(DEFAULT_ROOM_VALUE)
-                                            }
-                                        }, 100)
-                                    }}
-                                />
+                                {userRole !== 'USER' && currentStepper !== StepperState.OFFICE && 
+                                    <RiDeleteBin3Line
+                                        className="creation-stepper__box--remove"
+                                        size={32}
+                                        color={Colors.white}
+                                        onClick={() => {
+                                            setDirection(DirectionMode.NEGATIVE)
+                                            setTimeout(() => {
+                                                setStepperState(currentStepper)
+                                                if(currentStepper === StepperState.DOMAIN) {
+                                                    setSelectedDomain(DEFAULT_DOMAIN_VALUE)
+                                                    setSelectedOffice(DEFAULT_OFFICE_VALUE)
+                                                    setSelectedRoom(DEFAULT_ROOM_VALUE)
+                                                } else if (currentStepper === StepperState.OFFICE) {
+                                                    setSelectedOffice(DEFAULT_OFFICE_VALUE)
+                                                    setSelectedRoom(DEFAULT_ROOM_VALUE)
+                                                } else if (currentStepper === StepperState.ROOM) {
+                                                    setSelectedRoom(DEFAULT_ROOM_VALUE)
+                                                }
+                                            }, 100)
+                                        }}
+                                    />
+                                }
                                 <div className='creation-stepper__box--title'>
                                     <p
                                         className="select__label label"

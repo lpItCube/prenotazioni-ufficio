@@ -39,15 +39,18 @@ type Room = {
 	ySize: number
 }
 
-function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { fromTo: any, action: any, setAction: any, domain: Domain, setSeatName: any }) {
+function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatName }: { fromTo: any, action: any, setAction: any, domain: any, domainList: any, setSeatName: any }) {
 	const session = useSession()
 	const dispatch = useDispatch()
 	const modalStatus: boolean = useSelector(getModalStatus)
+	const domainRef = useRef<any>(null)
 	const officeRef = useRef<any>(null)
 	const roomRef = useRef<any>(null)
+	const [selectedDomain, setSelectedDomain] = useState<any>(undefined)
 	const [selectedOffice, setSelectedOffice] = useState<undefined | Office>(undefined)
 	const [selectedRoom, setSelectedRoom] = useState<undefined | Room>(undefined)
-	const [stepperState, setStepperState] = useState<number>(StepperState.OFFICE)
+	const [stepperState, setStepperState] = useState<number>(StepperState.DOMAIN)
+	const [openDomain, setOpenDomain] = useState<boolean>(false)
 	const [openOffice, setOpenOffice] = useState<boolean>(false)
 	const [openRoom, setOpenRoom] = useState<boolean>(false)
 	const [direction, setDirection] = useState<number>(DirectionMode.POSITIVE)
@@ -60,14 +63,23 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 	const isYourRoom = useSelector(getIsYourRoom)
 	const role = session.data!.user!.role
 	const userId = session.data!.user!.id
-	const yourReserve:Reserve[] = reserveData.filter((res:any) => res.user.id === userId)
+	const yourReserve: Reserve[] = reserveData.filter((res: any) => res.user.id === userId)
 
+	useEffect(() => {
+		if (domainList.length === 0) {
+			setSelectedDomain(domain)
+		}
+	}, [])
 
+	console.log('DOMAIN', domain, domainList, selectedDomain, selectedOffice, selectedRoom, stepperState)
 
 	useEffect(() => {
 		// UseRef per controllare se il click è interno
 
 		const handleClickOutside = (event: any) => {
+			if (domainRef.current && !domainRef.current.contains(event.target)) {
+				setOpenDomain(false)
+			}
 			if (officeRef.current && !officeRef.current.contains(event.target)) {
 				setOpenOffice(false)
 			}
@@ -83,13 +95,17 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 
 
 	useEffect(() => {
-		const trueCount = [Boolean(selectedOffice?.name), Boolean(selectedRoom?.name)].reduce((count: any, bool: boolean) => count + bool, 1);
+		const trueCount = [Boolean(selectedDomain?.name), Boolean(selectedOffice?.name), Boolean(selectedRoom?.name)].reduce((count: any, bool: boolean) => count + bool, 0);
 		setTimeout(() => {
 			setStepperState(trueCount)
 			setDirection(DirectionMode.POSITIVE)
 		}, 100)
-	}, [selectedOffice, selectedRoom])
+	}, [selectedOffice, selectedRoom, selectedDomain])
 
+
+	const handleSelectDomain = () => {
+		setOpenDomain(prev => !prev)
+	}
 
 	const handleSelectOffice = () => {
 		setOpenOffice(prev => !prev)
@@ -99,9 +115,17 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 		setOpenRoom(prev => !prev)
 	}
 
+	const handleOptionDomain = (domainId: string) => {
+		// const officeId = e.target.value
+		const domain = domainList.find((domain: Domain) => domain.id === domainId)
+		console.log('CHANGE DOMAIN',domain)
+		setSelectedDomain(domain)
+	}
+
+
 	const handleOptionOffice = (officeId: string) => {
 		// const officeId = e.target.value
-		const office = domain.office.find((office: Office) => office.id === officeId)
+		const office = selectedDomain.office.find((office: Office) => office.id === officeId)
 		setSelectedOffice(office)
 	}
 
@@ -129,12 +153,35 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 	}
 
 
-	// console.log(domain)
+	console.log('DOMAIN', domain)
 	return (
 		<>
 			<div className={`room-create__body creation-stepper__container ${stepperState > StepperState.ROOM ? 'creation-stepper__static' : 'creation-stepper__active'}`}>
 				<div className="creation-stepper__navigation">
 
+					<div
+						className={`creation-stepper__element ${stepperState === StepperState.DOMAIN ? '' : 'disabled'}`}
+					>
+						<BookStepper
+							defaultSelect="Seleziona dominio"
+							currentStepper={StepperState.DOMAIN}
+							selectObj={selectedDomain}
+							handleSelect={handleSelectDomain}
+							openOption={openDomain}
+							refState={domainRef}
+							optionList={domainList}
+							setSelect={handleOptionDomain}
+							isActive={stepperState === StepperState.DOMAIN}
+							stepperState={stepperState}
+							label="Dominio"
+							setDirection={setDirection}
+							direction={direction}
+							setStepperState={setStepperState}
+							setSelectedDomain={setSelectedDomain}
+							setSelectedOffice={setSelectedOffice}
+							setSelectedRoom={setSelectedRoom}
+						/>
+					</div>
 					<div
 						className={`creation-stepper__element ${stepperState === StepperState.OFFICE ? '' : 'disabled'}`}
 					>
@@ -145,7 +192,7 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 							handleSelect={handleSelectOffice}
 							openOption={openOffice}
 							refState={officeRef}
-							optionList={domain ? domain.office : []}
+							optionList={selectedDomain ? selectedDomain.office : []}
 							setSelect={handleOptionOffice}
 							isActive={stepperState === StepperState.OFFICE}
 							stepperState={stepperState}
@@ -153,6 +200,7 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 							setDirection={setDirection}
 							direction={direction}
 							setStepperState={setStepperState}
+							setSelectedDomain={setSelectedDomain}
 							setSelectedOffice={setSelectedOffice}
 							setSelectedRoom={setSelectedRoom}
 						/>
@@ -175,6 +223,7 @@ function HandleOffice({ fromTo, action, setAction, domain, setSeatName }: { from
 							setDirection={setDirection}
 							direction={direction}
 							setStepperState={setStepperState}
+							setSelectedDomain={setSelectedDomain}
 							setSelectedOffice={setSelectedOffice}
 							setSelectedRoom={setSelectedRoom}
 						/>

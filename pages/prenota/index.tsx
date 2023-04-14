@@ -31,7 +31,7 @@ function createNewDate(hour: string) {
 	return textDate
 }
 
-function Prenota({ initialData, domain }: any) {
+function Prenota({ initialData, domain, domainList }: any) {
 
 	const dispatch = useDispatch()
 	const session = useSession()
@@ -77,7 +77,7 @@ function Prenota({ initialData, domain }: any) {
 				setAction={setAction}
 			/>
 			{status === 'authenticated' ?
-				<HandleOffice setSeatName={setSeatName} fromTo={fromTo} action={action} setAction={setAction} domain={domain} />
+				<HandleOffice setSeatName={setSeatName} fromTo={fromTo} action={action} setAction={setAction} domain={domain} domainList={domainList}/>
 				// <FirstOffice
 				//   fromTo={fromTo}
 				//   seatName={seatName}
@@ -101,10 +101,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	const session = await getSession(context)
 	if (session === null || session.user === null) return { props: { initialData: null } }
 	console.log(session.user!)
-	const domain = await prisma.domain.findUnique({
-		where: { id: session.user?.domainId! },
-		include: { office: { include: { room: true } } }
-	})
+	let domain: any = ''
+	let domainList: any = []
+	if(session.user?.role !== 'ADMIN') {
+		domain = await prisma.domain.findUnique({
+			where: { id: session.user?.domainId! },
+			include: { office: { include: { room: true } } }
+		})
+	} else {
+		domainList = await prisma.domain.findMany({
+			include: { office: { include: { room: true } } }
+		})
+	}
 
 	console.log("DOMAIN -> ", domain)
 
@@ -120,6 +128,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate as string) || r.to < new Date(fromDate as string)))
 
 	return {
-		props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), domain: domain }
+		props: { initialData: JSON.parse(JSON.stringify(filteredReserveDate)), domain: domain, domainList: domainList }
 	}
 }
