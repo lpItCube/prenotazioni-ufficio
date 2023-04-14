@@ -71,7 +71,6 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 		}
 	}, [])
 
-	console.log('DOMAIN', domain, domainList, selectedDomain, selectedOffice, selectedRoom, stepperState)
 
 	useEffect(() => {
 		// UseRef per controllare se il click è interno
@@ -118,7 +117,6 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 	const handleOptionDomain = (domainId: string) => {
 		// const officeId = e.target.value
 		const domain = domainList.find((domain: Domain) => domain.id === domainId)
-		console.log('CHANGE DOMAIN',domain)
 		setSelectedDomain(domain)
 	}
 
@@ -153,7 +151,6 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 	}
 
 
-	console.log('DOMAIN', domain)
 	return (
 		<>
 			<div className={`room-create__body creation-stepper__container ${stepperState > StepperState.ROOM ? 'creation-stepper__static' : 'creation-stepper__active'}`}>

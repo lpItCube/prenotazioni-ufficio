@@ -152,7 +152,8 @@ function BookStepper(props: BookStepperProps) {
                                 exit="exit"
                                 className='creation-stepper__box'
                             >
-                                {userRole !== 'USER' && currentStepper !== StepperState.OFFICE && 
+                                { ((userRole === 'USER' && currentStepper !== StepperState.DOMAIN) 
+                                    || (userRole === 'ADMIN')) &&
                                     <RiDeleteBin3Line
                                         className="creation-stepper__box--remove"
                                         size={32}
