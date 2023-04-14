@@ -99,7 +99,7 @@ function ReservesFilters({
                         />
                     </Select>
                 </div>
-                <div
+                {/* <div
                     ref={roomRef}
                     className='select__ref'
                 >
@@ -129,7 +129,7 @@ function ReservesFilters({
                             className={`${filterRoom.value === 'meet' ? ' current' : ''}`}
                         />
                     </Select>
-                </div>
+                </div> */}
                 <div
                     ref={dayRef}
                     className='select__ref'
