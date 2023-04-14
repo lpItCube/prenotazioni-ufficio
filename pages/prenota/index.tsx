@@ -12,7 +12,7 @@ import { setReserves } from "../../features/reserveSlice"
 
 // Components
 import Calendar from "../../components/calendar"
-import FirstOffice from "../../components/first-office"
+// import FirstOffice from "../../components/first-office"
 import Spinner from "../../components/Ui/Spinner"
 import { NextRequest } from "next/server";
 import HandleOffice from "../../components/handleOffice";
