@@ -40,7 +40,8 @@ export const getStaticProps: GetStaticProps = async () => {
   await prisma.user.createMany(
     {
       data: [
-        { username: "admin", password: "admin", role:'ADMIN', domainId: domain!.id },
+        { username: "admin", password: "admin", role:'SUPERADMIN', domainId: domain!.id },
+        { username: "admin2", password: "admin2", role:'ADMIN', domainId: domain!.id },
         { username: "user1", password: "user1", role:'USER', domainId: domain!.id },
         { username: "user2", password: "user2", role:'USER', domainId: domain!.id }  
       ]
