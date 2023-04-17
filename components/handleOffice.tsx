@@ -229,7 +229,7 @@ const HandleOffice: React.FC<HandleOfficeProps> = (props) : JSX.Element => {
 									: 'cta--primary'
 							}`}
 						type='submit'
-						icon={''}
+						icon={false}
 						text={`${userRole === USER && reserveData.length > 0 && !isYourRoom
 							? 'Stanza non disponibile'
 							: userRole !== USER && reserveData.length > 0 && !isYourRoom

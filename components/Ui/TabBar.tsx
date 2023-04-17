@@ -1,22 +1,24 @@
+// Types
 import { ITabButton } from "../../types"
 
 interface TabBarProps {
     tabButton: ITabButton[],
-    onClick: (value:number) => void,
+    onClick: (value: number) => void,
     currentTab: number
 }
 
-function TabBar(props: TabBarProps) {
-    
-    const { 
+const TabBar: React.FC<TabBarProps> = (props): JSX.Element => {
+
+    const {
         tabButton,
         onClick,
         currentTab
     } = props
+    
     return (
         <div className="tabBar__wrapper">
-            {tabButton.map((tab:ITabButton) => {
-                return(
+            {tabButton.map((tab: ITabButton) => {
+                return (
                     <button
                         key={tab.value}
                         className={`tabBar__button ${currentTab === tab.value ? 'selected' : 'static'}`}

@@ -30,7 +30,7 @@ import { useAuthHook } from "../../hooks/useAuthHook"
 import { OPTION_CHAIR } from "../../_shared"
 
 interface HandleRoomProps {
-    fromTo: FromToHour,
+    fromTo?: FromToHour,
     action: number,
     setAction: (action:number) => void,
     roomId: string,
@@ -114,18 +114,20 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
         getRoom()
         const setReservess = async () => {
             console.log('SET RES 3')
-            const reserves: Reserve[] = await (await axios.get(`/api/reserve`)).data
-            const filteredRes = reserves.filter((r: Reserve) => (
-                (fromTo.from && r.to && new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to)) ||
-                (fromTo.from && r.to && fromTo.to && new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to))
-            ))
-            const selectDate:string = fromTo.from ? getOnlyDate(fromTo.from) : ''
-            const allDayReserve = reserves.filter((r: Reserve) => (
-                selectDate === getOnlyDate(r.from) && r.user.id === userId
-            ))
+            if(fromTo) {
+                const reserves: Reserve[] = await (await axios.get(`/api/reserve`)).data
+                const filteredRes = reserves.filter((r: Reserve) => (
+                    (fromTo.from && r.to && new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to)) ||
+                    (fromTo.from && r.to && fromTo.to && new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to))
+                ))
+                const selectDate:string = fromTo.from ? getOnlyDate(fromTo.from) : ''
+                const allDayReserve = reserves.filter((r: Reserve) => (
+                    selectDate === getOnlyDate(r.from) && r.user.id === userId
+                ))
+                dispatch(setDayReserves({ dayReserveData: allDayReserve }))
+                dispatch(setReserves({ reserveData: filteredRes }))
+            }
 
-            dispatch(setDayReserves({ dayReserveData: allDayReserve }))
-            dispatch(setReserves({ reserveData: filteredRes }))
         }
         if (!create)
             setReservess()
@@ -251,11 +253,13 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
                             reserves={reserveAllDay}
                         />
                     </div>
-                    <Modal 
-                        seatName={seatName} 
-                        action={action} 
-                        fromTo={fromTo} 
-                    />
+                    {fromTo &&
+                        <Modal 
+                            seatName={seatName} 
+                            action={action} 
+                            fromTo={fromTo} 
+                        />
+                    }
                 </>
             )
             }

@@ -41,6 +41,11 @@ export interface StaticCreationOptions {
     childClass: string
 }
 
+export interface OptionItem {
+    value: string,
+    label: string
+}
+
 export interface HitModalButton {
     loading: boolean,
     id: string | null
