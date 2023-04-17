@@ -1,3 +1,9 @@
+// Costants
+import { APPROVE, DISAPPROVE } from "../../_shared"
+
+// Types
+import { HitModalButton, Reserve } from "../../types"
+
 // Utils
 import { getStringHours } from "../../utils/datePharser"
 
@@ -5,64 +11,54 @@ import { getStringHours } from "../../utils/datePharser"
 import Button from "../Ui/Button"
 import Spinner from "../Ui/Spinner"
 
-type ModalApprovationProps = {
-    reserve: any,
-    approvationAction: any,
-    buttonIconDelete: any,
-    buttonIconAccept:any,
+interface ModalApprovationProps {
+    reserve: Reserve[],
+    approvationAction: (approve:number, id:string) => void,
+    buttonIconDelete: JSX.Element | boolean,
+    buttonIconAccept: JSX.Element | boolean,
     pendingControl: boolean,
-    pendingReserve: any,
-    hitModalButton:{
-        loading:boolean,
-        id:any
-    }
+    pendingReserve: Reserve[],
+    hitModalButton: HitModalButton
 }
 
-function ModalApprovation({
-    reserve,
-    approvationAction,
-    buttonIconDelete,
-    buttonIconAccept,
-    pendingControl,
-    pendingReserve,
-    hitModalButton
-}: ModalApprovationProps) {
-  // console.log("modal reserve: ", reserve)
+const ModalApprovation: React.FC<ModalApprovationProps> = (props): JSX.Element => {
+
+    const { reserve, approvationAction, buttonIconDelete, buttonIconAccept, pendingControl, pendingReserve, hitModalButton } = props
+
     return (
         <>
             {pendingControl && pendingReserve.length > 0 &&
                 <div className="approve__container">
-                    {pendingReserve.map((res: any) => {
+                    {pendingReserve.map((res: Reserve) => {
                         const status = res.status === 'accepted' ? 'accepted' : 'pending'
                         return (
                             <div key={res.id} className={`approve__reserve ${status}`}>
                                 <div className="approve__row--info">
                                     <div className="approve__row--user">{res.user.username}</div>
-                                    <div className="approve__row">{res.seat.name}</div>
-                                    {res.from &&
-                                        <div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
+                                    <div className="approve__row">{res?.seat?.name}</div>
+                                    {res.from && res.to &&
+                                        <div className="approve__row">{getStringHours(res.from) as string} - {getStringHours(res.to) as string}</div>
                                     }
                                 </div>
                                 {hitModalButton.id === res.id && hitModalButton.loading
-                                    ?   <Spinner/>
-                                    :   <div className="approve__row--cta">
-                                            <Button
-                                                onClick={() => approvationAction('approved', res.id)}
-                                                className={`cta cta--secondary-ok cta--approve`}
-                                                type='button'
-                                                icon={buttonIconAccept}
-                                                text={''}
-                                            />
-                                            <Button
-                                                onClick={() => approvationAction('disapproved', res.id)}
-                                                className={`cta cta--secondary-delete`}
-                                                type='button'
-                                                icon={buttonIconDelete}
-                                                text={''}
-                                            />
-                                        </div>
+                                    ? <Spinner />
+                                    : <div className="approve__row--cta">
+                                        <Button
+                                            onClick={() => approvationAction(APPROVE, res.id)}
+                                            className={`cta cta--secondary-ok cta--approve`}
+                                            type='button'
+                                            icon={buttonIconAccept}
+                                            text={''}
+                                        />
+                                        <Button
+                                            onClick={() => approvationAction(DISAPPROVE, res.id)}
+                                            className={`cta cta--secondary-delete`}
+                                            type='button'
+                                            icon={buttonIconDelete}
+                                            text={''}
+                                        />
+                                    </div>
                                 }
-                                
                             </div>
                         )
                     })}
@@ -70,30 +66,29 @@ function ModalApprovation({
             }
             <div className="approve__container">
                 {
-                    reserve.length > 0 && reserve.map((res: any) => {
+                    reserve.length > 0 && reserve.map((res: Reserve) => {
                         const status = res.status === 'accepted' ? 'accepted' : 'pending'
                         return (
                             <div key={res.id} className={`approve__reserve ${status}`}>
                                 <div className="approve__row--info">
                                     <div className="approve__row--user">{res.user.username}</div>
-                                    <div className="approve__row">{res.seat.name}</div>
-                                    {res.from &&
-                                        <div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
+                                    <div className="approve__row">{res?.seat?.name}</div>
+                                    {res.from && res.to &&
+                                        <div className="approve__row">{getStringHours(res.from) as string} - {getStringHours(res.to) as string}</div>
                                     }
                                 </div>
                                 {hitModalButton.id === res.id && hitModalButton.loading
-                                    ?   <Spinner/>
-                                    :   <div className="approve__row--cta">
-                                            <Button
-                                                onClick={() => approvationAction('disapproved', res.id)}
-                                                className={`cta cta--secondary-delete`}
-                                                type='button'
-                                                icon={buttonIconDelete}
-                                                text={''}
-                                            />
-                                        </div>
+                                    ? <Spinner />
+                                    : <div className="approve__row--cta">
+                                        <Button
+                                            onClick={() => approvationAction(DISAPPROVE, res.id)}
+                                            className={`cta cta--secondary-delete`}
+                                            type='button'
+                                            icon={buttonIconDelete}
+                                            text={''}
+                                        />
+                                    </div>
                                 }
-                                
                             </div>
                         )
                     })

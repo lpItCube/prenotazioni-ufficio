@@ -1,13 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { FromToHour, Reserve } from '../types'
 
-const initialState = {
-    reserveData:[],
-    dayReserveData:[],
+interface InitialStateTypes {
+    reserveData: Reserve[] | [],
+    dayReserveData: [] | FromToHour[],
+    username: string
+}
+
+interface ReservesState {
+    reserves: {
+        reserveData: Reserve[] | [],
+        dayReserveData: Reserve[] | [],
+    },
+}
+
+const initialState: InitialStateTypes = {
+    reserveData: [],
+    dayReserveData: [],
     username: ""
 }
 
 const reserveSlice = createSlice({
-    name:'reserves',
+    name: 'reserves',
     initialState,
     reducers: {
         setReserves: (state, action) => {
@@ -19,7 +33,8 @@ const reserveSlice = createSlice({
     }
 })
 
+
 export default reserveSlice.reducer
 export const { setReserves, setDayReserves } = reserveSlice.actions
-export const getReserves = (state:any) => state.reserves.reserveData
-export const getDayReserves = (state:any) => state.reserves.dayReserveData
+export const getReserves = (state: ReservesState) => state.reserves.reserveData
+export const getDayReserves = (state: ReservesState) => state.reserves.dayReserveData

@@ -19,24 +19,27 @@ export const getStringDate = (
 }
 
 
-export const getStringHours = (
-    date
-: Date) => {
+export const getStringHours = (date: string | null): void | string => {
 
+    if(!date) return
     const hours =  String(new Date(date).getHours()).padStart(2, '0') + ':00' 
 
-    return {
-        hours
-    }
+    return hours
+
 }
 
 
-export const getOnlyDate = (date:any) => {
+export const getOnlyDate = (date:string): string => {
     return date.substring(0,date.indexOf('T'));
 }
 
-export const createNewDate = (hour: string) : string => {
-	const currYear: number = new Date().getFullYear()
+export const createNewDate = (hour: string, selectedDate?:Date) : string => {
+    let currYear: number
+    if(selectedDate) {
+        currYear = selectedDate.getFullYear()
+    } else {
+        currYear = new Date().getFullYear()
+    }
 	const currMonth: string = ("0" + (new Date().getMonth() + 1)).slice(-2)
 	const day: string = ("0" + new Date().getDate()).slice(-2)
 	const textDate: string = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";

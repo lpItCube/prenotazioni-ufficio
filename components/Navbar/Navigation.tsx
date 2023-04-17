@@ -20,6 +20,7 @@ import { getPendingNotification, setPendingNotification } from "../../features/n
 
 // Hooks
 import { useAuthHook } from '../../hooks/useAuthHook'
+import { AUTH_OK } from "../../_shared"
 
 function Navigation({
     hitNotification,
@@ -40,7 +41,7 @@ function Navigation({
             const response = await axios.get(`/api/reserve/pending`)
             dispatch(setPendingNotification({pending:response.data.length}))
         }
-        if (session.status === "authenticated")
+        if (session.status === AUTH_OK)
             getReserves()
     }, [session])
 

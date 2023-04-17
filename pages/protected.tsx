@@ -2,15 +2,16 @@ import { NextPage } from "next"
 import { useSession } from "next-auth/react"
 import { useEffect } from "react"
 import Router from "next/router"
+import { AUTH_KO, AUTH_OK } from "../_shared"
 
 const Protected: NextPage = (): JSX.Element => {
   const { status, data } = useSession()
 
   useEffect(() => {
-    if (status === "unauthenticated" ) Router.replace("/login")
+    if (status === AUTH_KO ) Router.replace("/login")
   }, [status])
 
-  if (status === "authenticated")
+  if (status === AUTH_OK)
     return (
       <div>
         This page is Protected for special people.

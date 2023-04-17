@@ -1,15 +1,25 @@
+// Costants
 import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
+
+// Components
 import Select from "../Ui/Select"
 import Option from "../Ui/Option"
-import { AnimatePresence, motion } from "framer-motion"
-import { RiDeleteBin3Line } from "react-icons/ri"
 import { Colors } from "../Ui/Colors"
+
+// Framer
+import { AnimatePresence, motion } from "framer-motion"
+
+// Icons
+import { RiDeleteBin3Line } from "react-icons/ri"
+
+// Hooks
 import { useAuthHook } from "../../hooks/useAuthHook"
+import { BookStepperObj } from "../../types"
 
 interface BookStepperProps {
     defaultSelect: string,
     currentStepper: number,
-    selectObj: any,
+    selectObj: BookStepperObj | null,
     handleSelect: () => any,
     openOption: boolean,
     refState: any,
@@ -26,7 +36,7 @@ interface BookStepperProps {
     setSelectedRoom: (room: any) => void
 }
 
-function BookStepper(props: BookStepperProps) {
+const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
     const {
         defaultSelect,
         currentStepper,
@@ -46,6 +56,7 @@ function BookStepper(props: BookStepperProps) {
         setSelectedOffice,
         setSelectedRoom
     } = props
+
 
     const { userData } = useAuthHook()
     const userRole = userData.role
@@ -183,7 +194,7 @@ function BookStepper(props: BookStepperProps) {
                                         {label}
                                     </p>
                                     <p>
-                                        {selectObj.name}
+                                        {selectObj?.name}
                                     </p>
                                 </div>
                             </motion.div>

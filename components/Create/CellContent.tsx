@@ -1,17 +1,31 @@
+// Costants
+import { OPTION_B_TABLE_LEFT, OPTION_B_TABLE_RIGHT, OPTION_CHAIR, OPTION_H_LINE_LEFT, OPTION_H_LINE_RIGHT, OPTION_T_TABLE_LEFT, OPTION_T_TABLE_RIGHT, OPTION_V_LINE_BOTTOM, OPTION_V_LINE_TOP } from "../../_shared";
+
+// Types
+import { GridPoint } from "../../types";
+
+// Components
 import Seat from "./Seat";
 
-const CellContent = ({ create, setSeatName, setAction, cell }: any) => {
-    // const reserves = useSelector(getReserves)
-    if (cell.info === "hChair" || cell.info === "vChair" || cell.info === "chair") {
+interface CellContentProps {
+    create: boolean,
+    setSeatName: (seatName: string) => void,
+    setAction: (action: number) => void,
+    cell: GridPoint
+}
+
+const CellContent: React.FC<CellContentProps> = (props): JSX.Element => {
+
+    const { create, setSeatName, setAction, cell } = props
+
+
+    if (cell.info === OPTION_CHAIR) {
         return (
-            // reserves && 
-            <>
-                <Seat create={create} setSeatName={setSeatName} setAction={setAction} cell={cell} />
-            </>
+            <Seat create={create} setSeatName={setSeatName} setAction={setAction} cell={cell} />
         )
     }
 
-    if (cell.info === "hLineLeft" || cell.info === "hLineRight") {
+    if (cell.info === OPTION_H_LINE_LEFT || cell.info === OPTION_H_LINE_RIGHT) {
         return (
             <div
                 className="box-line__vertical"
@@ -20,12 +34,12 @@ const CellContent = ({ create, setSeatName, setAction, cell }: any) => {
             </div>
         );
     }
-    if (cell.info === "vLineTop" || cell.info === "vLineBottom") {
+    if (cell.info === OPTION_V_LINE_TOP || cell.info === OPTION_V_LINE_BOTTOM) {
         return (
             <div className={`creation-options__table--${cell.info}`}></div>
         )
     }
-    if (["tl", "tr", "bl","br"].includes(cell.info)) {
+    if ([OPTION_T_TABLE_RIGHT, OPTION_T_TABLE_LEFT, OPTION_B_TABLE_LEFT, OPTION_B_TABLE_RIGHT].includes(cell.info as string)) {
         return (
             <div className={"box-" + cell.info}>
                 <div className={`creation-options__table--angle-${cell.info}`}></div>

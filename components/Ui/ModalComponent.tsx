@@ -5,28 +5,26 @@ import { toggleModal, getModalStatus, getModalType, setModalType } from "../../f
 // Components
 import { IoClose } from "react-icons/io5";
 import { Colors } from './Colors';
+import { PRISTINE } from '../../_shared';
 
 type ModalComponentProps = {
     modalTitle: string,
     subTitle: string,
-    refType: string,
+    refType: number,
     children:any
 }
 
-function ModalComponent({
-    modalTitle,
-    subTitle,
-    refType,
-    children
-}: ModalComponentProps) {
+const ModalComponent: React.FC<ModalComponentProps> = (props): JSX.Element => {
+
+    const { modalTitle, subTitle, refType, children } = props
 
     const dispatch = useDispatch()
-    const modalStatus: boolean = useSelector(getModalStatus)
-    const modalType: string = useSelector(getModalType)
+    const modalStatus = useSelector(getModalStatus)
+    const modalType = useSelector(getModalType)
 
     const handleCloseModal = () => {
         dispatch(toggleModal(false))
-        dispatch(setModalType(''))
+        dispatch(setModalType(PRISTINE))
     }
 
     return (

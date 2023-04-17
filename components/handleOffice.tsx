@@ -1,69 +1,59 @@
 import { useEffect, useState, useRef } from "react"
-import HandleRoom from "./Create/HandleRoom"
-import { useSession } from "next-auth/react"
+
+// Redux
 import { useDispatch, useSelector } from "react-redux"
+import { getReserves } from "../features/reserveSlice"
+import { getIsYourRoom } from "../features/roomSlice"
 import { getModalStatus, setModalType, toggleModal } from "../features/modalSlice"
-import { DirectionMode, StepperState } from "../_shared"
-import CreateAction from "./Create/CreateAction"
-import Select from "./Ui/Select"
-import Option from "./Ui/Option"
+
+// Costants
+import { ADDALL, DELETE, DirectionMode, REQUESTALL, SEATS_MODAL, StepperState, USER } from "../_shared"
+
+// Components
+import HandleRoom from "./Create/HandleRoom"
 import BookStepper from "./Book/BookStepper"
 import Button from "./Ui/Button"
-import BookAll from "./Rooms/BookAll"
-import { getReserves } from "../features/reserveSlice"
+
+// Hooks
 import { useAuthHook } from "../hooks/useAuthHook"
-import { getIsYourRoom } from "../features/roomSlice"
-import { Reserve } from "../types"
-import YourReserve from "./Rooms/YourReserve"
 
-type Domain = {
-	id: string
-	name: string
-	office: Office[]
+// Type
+import { Reserve, Domain, Office, Room, FromToHour } from "../types"
+
+interface HandleOfficeProps {
+	fromTo: FromToHour, 
+	action: number, 
+	setAction: (action:number) => void, 
+	domain: Domain | null, 
+	domainList: Domain[] | any, 
 }
 
-type Office = {
-	[x: string]: any
-	id: string
-	name: string
-	domainId: string
-	room: Room[]
-}
 
-type Room = {
-	id: string
-	name: string
-	gridPoints: []
-	officeId: string
-	xSize: number
-	ySize: number
-}
+const HandleOffice: React.FC<HandleOfficeProps> = (props) : JSX.Element => {
+	
+	const { fromTo, action, setAction, domain, domainList } = props
 
-function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatName }: { fromTo: any, action: any, setAction: any, domain: any, domainList: any, setSeatName: any }) {
-	const session = useSession()
+	const { userData } = useAuthHook()
+	const userRole = userData.role
+
 	const dispatch = useDispatch()
 	const modalStatus: boolean = useSelector(getModalStatus)
+	const reserveData: Reserve[] = useSelector(getReserves)
+	const isYourRoom: boolean = useSelector(getIsYourRoom)
+
 	const domainRef = useRef<any>(null)
 	const officeRef = useRef<any>(null)
 	const roomRef = useRef<any>(null)
-	const [selectedDomain, setSelectedDomain] = useState<any>(undefined)
-	const [selectedOffice, setSelectedOffice] = useState<undefined | Office>(undefined)
-	const [selectedRoom, setSelectedRoom] = useState<undefined | Room>(undefined)
+
+	const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null)
+	const [selectedOffice, setSelectedOffice] = useState<Office | null>(null)
+	const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
 	const [stepperState, setStepperState] = useState<number>(StepperState.DOMAIN)
 	const [openDomain, setOpenDomain] = useState<boolean>(false)
 	const [openOffice, setOpenOffice] = useState<boolean>(false)
 	const [openRoom, setOpenRoom] = useState<boolean>(false)
 	const [direction, setDirection] = useState<number>(DirectionMode.POSITIVE)
 
-	const reserveData = useSelector(getReserves)
-	const { userData } = useAuthHook()
-	const userRole = userData.role
-	const needApproval = reserveData.filter((res: any) => res.seat.type === 'meet-whole' && res.status === 'pending').length > 0 && userRole !== 'USER'
-	const notBookAll = userRole === 'USER' && reserveData.length > 0
-	const isYourRoom = useSelector(getIsYourRoom)
-	const role = session.data!.user!.role
-	const userId = session.data!.user!.id
-	const yourReserve: Reserve[] = reserveData.filter((res: any) => res.user.id === userId)
 
 	useEffect(() => {
 		if (domainList.length === 0) {
@@ -74,7 +64,6 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 
 	useEffect(() => {
 		// UseRef per controllare se il click è interno
-
 		const handleClickOutside = (event: any) => {
 			if (domainRef.current && !domainRef.current.contains(event.target)) {
 				setOpenDomain(false)
@@ -115,39 +104,38 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 	}
 
 	const handleOptionDomain = (domainId: string) => {
-		// const officeId = e.target.value
 		const domain = domainList.find((domain: Domain) => domain.id === domainId)
 		setSelectedDomain(domain)
 	}
 
 
 	const handleOptionOffice = (officeId: string) => {
-		// const officeId = e.target.value
-		const office = selectedDomain.office.find((office: Office) => office.id === officeId)
-		setSelectedOffice(office)
+		const office = selectedDomain?.office.find((office: Office) => office.id === officeId)
+		if(office) {
+			setSelectedOffice(office)
+		}
 	}
 
 	const handleOptionRoom = (roomId: string) => {
-		// const roomId = e.target.value
 		const room = selectedOffice!.room.find((room: Room) => room.id === roomId)
-		setSelectedRoom(room)
+		if(room) {
+			setSelectedRoom(room)
+		}
 	}
 
 
 	const bookRoom = () => {
-		//prenota tutti posti se sei admin
 		dispatch(toggleModal(!modalStatus))
-		dispatch(setModalType('seats-modal'))
-		if (isYourRoom || role !== 'USER' && reserveData.length > 0 && !isYourRoom) {
-			setAction('DELETE')
+		dispatch(setModalType(SEATS_MODAL))
+		if (isYourRoom || userRole !== USER && reserveData.length > 0 && !isYourRoom) {
+			setAction(DELETE)
 		} else {
-			if (role !== "USER") {
-				setAction("ADDALL")
+			if (userRole !== USER) {
+				setAction(ADDALL)
 			} else {
-				setAction("REQUESTALL")
+				setAction(REQUESTALL)
 			}
 		}
-		//se non sei admin mandi una richiesta
 	}
 
 
@@ -231,10 +219,10 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 				<>
 					<Button
 						onClick={bookRoom}
-						disabled={role === 'USER' && reserveData.length > 0 && !isYourRoom}
-						className={`cta square ${role === 'USER' && reserveData.length > 0 && !isYourRoom
+						disabled={userRole === USER && reserveData.length > 0 && !isYourRoom}
+						className={`cta square ${userRole === USER && reserveData.length > 0 && !isYourRoom
 							? 'disabled'
-							: role !== 'USER' && reserveData.length > 0 && !isYourRoom
+							: userRole !== USER && reserveData.length > 0 && !isYourRoom
 								? 'cta--primary-delete'
 								: isYourRoom
 									? 'cta--primary-delete'
@@ -242,9 +230,9 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 							}`}
 						type='submit'
 						icon={''}
-						text={`${role === 'USER' && reserveData.length > 0 && !isYourRoom
+						text={`${userRole === USER && reserveData.length > 0 && !isYourRoom
 							? 'Stanza non disponibile'
-							: role !== 'USER' && reserveData.length > 0 && !isYourRoom
+							: userRole !== USER && reserveData.length > 0 && !isYourRoom
 								? 'Gestisci prenotazione'
 								: isYourRoom
 									? 'Gestisci prenotazione'
@@ -254,7 +242,13 @@ function HandleOffice({ fromTo, action, setAction, domain, domainList, setSeatNa
 				</>
 			}
 			{selectedRoom &&
-				<HandleRoom fromTo={fromTo} action={action} setAction={setAction} roomId={selectedRoom.id} create={false} />
+				<HandleRoom 
+					fromTo={fromTo} 
+					action={action} 
+					setAction={setAction} 
+					roomId={selectedRoom.id} 
+					create={false} 
+				/>
 			}
 		</>
 	)

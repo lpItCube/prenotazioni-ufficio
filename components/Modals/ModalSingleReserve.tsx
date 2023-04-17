@@ -1,5 +1,6 @@
 // Components
 import Button from "../Ui/Button"
+import Spinner from "../Ui/Spinner"
 
 // Utils
 import { getStringHours } from "../../utils/datePharser"
@@ -7,33 +8,26 @@ import { getStringHours } from "../../utils/datePharser"
 // Redux
 import { useSelector } from "react-redux"
 import { getReserves } from "../../features/reserveSlice"
-import Spinner from "../Ui/Spinner"
 import { getActualRoomName } from "../../features/roomSlice"
 
-const ADD = "ADD"
-const ADDALL = "ADDALL"
-const REQUESTALL = "REQUESTALL"
+// Costants
+import { Actions, MEET, MEET_ROOM } from "../../_shared"
 
-type ModalSingleReserveProps = {
-	action: any,
-	seatName: any,
-	otherReserveInPeriod: any,
-	userReserve: any,
-	handleSeat: any,
-	hitModalButton: {
-		loading: boolean,
-		id: any
-	}
+// Types
+import { HitModalButton, Reserve } from "../../types"
+
+interface ModalSingleReserveProps {
+	action: number,
+	seatName: string,
+	otherReserveInPeriod: Reserve[],
+	userReserve: Reserve[],
+	handleSeat: () => void,
+	hitModalButton: HitModalButton
 }
 
-function ModalSingleReserve({
-	action,
-	seatName,
-	otherReserveInPeriod,
-	userReserve,
-	handleSeat,
-	hitModalButton
-}: ModalSingleReserveProps) {
+const ModalSingleReserve: React.FC<ModalSingleReserveProps> = (props): JSX.Element => {
+
+	const { action, seatName, otherReserveInPeriod, userReserve, handleSeat, hitModalButton } = props 
 
 	const reserveData = useSelector(getReserves)
 	const actualRoomName = useSelector(getActualRoomName)
@@ -42,20 +36,20 @@ function ModalSingleReserve({
 	return (
 		<>
 			<p className="modal__text txt-h6">
-				{action === ADD &&
+				{action === Actions.ADD &&
 					<>
 						Vuoi procedere con la prenotazione del posto
 						<b>{' ' + seatName}</b>
 					</>
 				}
-				{(action === ADDALL || action === REQUESTALL) &&
+				{(action === Actions.ADDALL || action === Actions.REQUESTALL) &&
 					<>
 						Vuoi prenotare l'intera stanza <b>{' ' + actualRoomName}</b>
 					</>
 				}
 				?</p>
 			{reserveData
-				&& seatName === 'meet-room'
+				&& seatName === MEET_ROOM
 				&& otherReserveInPeriod
 				&& otherReserveInPeriod.length > 0
 				&&
@@ -66,15 +60,15 @@ function ModalSingleReserve({
 					>Attenzione! Sono già presenti prenotazioni per questi orari, procedendo verranno cancellate.</p>
 					<div className="approve__container">
 						{
-							userReserve.length > 0 && userReserve.filter((res: any) => res.seat.type === 'meet').map((res: any) => {
+							userReserve.length > 0 && userReserve.filter((res: Reserve) => res?.seat?.type === MEET).map((res: Reserve) => {
 								const status = res.status === 'accepted' ? 'accepted' : 'pending'
 								return (
 									<div key={res.id} className={`approve__reserve ${status}`}>
 										<div className="approve__row--info">
 											<div className="approve__row--user">{res.user.username}</div>
-											<div className="approve__row">{res.seat.name}</div>
-											{res.from &&
-												<div className="approve__row">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
+											<div className="approve__row">{res?.seat?.name}</div>
+											{res.from && res.to &&
+												<div className="approve__row">{getStringHours(res.from) as string} - {getStringHours(res.to) as string}</div>
 											}
 										</div>
 									</div>
@@ -88,10 +82,10 @@ function ModalSingleReserve({
 			{!hitModalButton.loading
 				? <Button
 					onClick={() => handleSeat()}
-					className={`cta ${action === ADD || action === ADDALL || action === REQUESTALL ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
+					className={`cta ${action === Actions.ADD || action === Actions.ADDALL || action === Actions.REQUESTALL ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
 					type='button'
 					icon={false}
-					text={action === ADD || action === ADDALL || action === REQUESTALL ? 'Conferma' : 'Cancella'} />
+					text={action === Actions.ADD || action === Actions.ADDALL || action === Actions.REQUESTALL ? 'Conferma' : 'Cancella'} />
 				: <Spinner />
 			}
 		</>

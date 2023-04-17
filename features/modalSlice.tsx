@@ -1,6 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
+interface InitialStateTypes {
+    modalIsOpen: boolean,
+    modalType: string
+}
+
+interface ModalState {
+    modal: {
+        modalIsOpen: boolean,
+        modalType: number
+    }
+}
+
+const initialState: InitialStateTypes = {
     modalIsOpen: false,
     modalType:''
 }
@@ -20,5 +32,5 @@ const modalSlice = createSlice({
 
 export default modalSlice.reducer
 export const { toggleModal, setModalType } = modalSlice.actions
-export const getModalStatus = (state:any) => state.modal.modalIsOpen 
-export const getModalType = (state:any) => state.modal.modalType
+export const getModalStatus = (state:ModalState) => state.modal.modalIsOpen 
+export const getModalType = (state:ModalState) => state.modal.modalType

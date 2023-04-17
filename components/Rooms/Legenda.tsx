@@ -9,6 +9,7 @@ import ModalComponent from '../Ui/ModalComponent';
 // Redux
 import { useDispatch } from "react-redux"
 import { toggleModal, setModalType } from '../../features/modalSlice';
+import { LEGENDA_MODAL, ModalType } from '../../_shared';
 
 type LegendaProps = {
     name: string,
@@ -47,7 +48,7 @@ function Legenda() {
 
     const handleOpenLegenda = () => {
         dispatch(toggleModal(true))
-        dispatch(setModalType('legenda-modal'))
+        dispatch(setModalType(LEGENDA_MODAL))
     }
 
     return (
@@ -66,7 +67,7 @@ function Legenda() {
             <div className='legenda__element-wrapper'>
                 <ModalComponent
                     modalTitle='Legenda'
-                    refType='legenda-modal'
+                    refType={ModalType.LEGENDA}
                     subTitle=''
                 >
                     <div className='legenda__modal-container'>

@@ -11,6 +11,7 @@ import { getReserves } from "../../features/reserveSlice"
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
+import { ADD, APPROVE, APPROVE_MODAL, DELETE, MANAGE, SEATS_MODAL, USER } from "../../_shared";
 
 type BookAllProps = {
     needApproval:boolean,
@@ -99,31 +100,31 @@ function BookAll({
                     onClick={
                         () => {
                             setSeatName(`${actualRoomName}-whole`);
-                            if(userRole === 'USER' && !alreadyBooked) {
+                            if(userRole === USER && !alreadyBooked) {
                                 dispatch(toggleModal(true));
-                                dispatch(setModalType('seats-modal'))
+                                dispatch(setModalType(SEATS_MODAL))
                                 if (roomIsBookable) {
-                                    setAction('ADD');
+                                    setAction(ADD);
                                 }
                                 if (isYourRoom) {
-                                    setAction('DELETE');
+                                    setAction(DELETE);
                                 }
-                            } else if(userRole !== 'USER') {
+                            } else if(userRole !== USER) {
                                 dispatch(toggleModal(true));
                                 if(approvalButton && !manageButton) {
-                                    dispatch(setModalType('approve-modal'))
-                                    setAction('APPROVE')
+                                    dispatch(setModalType(APPROVE_MODAL))
+                                    setAction(APPROVE)
                                 } 
                                 else if (isYourRoom) {
-                                    dispatch(setModalType('seats-modal'))
-                                    setAction('DELETE');
+                                    dispatch(setModalType(SEATS_MODAL))
+                                    setAction(DELETE);
                                 }
                                 else if (manageButton) {
-                                    dispatch(setModalType('approve-modal'))
-                                    setAction('MANAGE')
+                                    dispatch(setModalType(APPROVE_MODAL))
+                                    setAction(MANAGE)
                                 } else if (roomIsBookable) {
-                                    dispatch(setModalType('seats-modal'))
-                                    setAction('ADD');
+                                    dispatch(setModalType(SEATS_MODAL))
+                                    setAction(ADD);
                                 } 
                             }
                             

@@ -10,6 +10,7 @@ import { toggleModal, getModalStatus, setModalType } from "../../features/modalS
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
+import { SEATS_MODAL } from "../../_shared"
 
 type SeatsElementProps = {
     index:any,
@@ -68,13 +69,13 @@ function SeatsElement({
 
     const handleAddSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
-        dispatch(setModalType('seats-modal'))
+        dispatch(setModalType(SEATS_MODAL))
         setAction(ADD);
     }
 
     const handleDeleteSingleSeat = () => {
         dispatch(toggleModal(!modalStatus));
-        dispatch(setModalType('seats-modal'))
+        dispatch(setModalType(SEATS_MODAL))
         setAction(DELETE);
     }
 

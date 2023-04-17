@@ -1,74 +1,78 @@
-import { CurrentCell } from "../../types"
 import { useEffect, useState } from "react"
+
+// Costants
+import { OPTION_B_TABLE_LEFT, OPTION_B_TABLE_RIGHT, OPTION_CHAIR, OPTION_H_LINE_LEFT, OPTION_H_LINE_RIGHT, OPTION_T_TABLE_LEFT, OPTION_T_TABLE_RIGHT, OPTION_V_LINE_BOTTOM, OPTION_V_LINE_TOP } from "../../_shared"
+
+// Types
+import { GridPoint, StaticCreationOptions } from "../../types"
+
+// Icons
 import { RiDeleteBin3Line } from "react-icons/ri"
+
+// Components
 import { Colors } from "../Ui/Colors"
 
-interface OptionsBarProps {
-    selectedCell: any,
-    handleOptionChange: (e: any) => void
-}
 
-const staticCreationElement = [
+const staticCreationElement: StaticCreationOptions[] = [
     {
         elClass:"creation-options__element",
-        value:"chair",
+        value:OPTION_CHAIR,
         childClass:"creation-options__seat"
     },
     {
         elClass:"creation-options__element--vLine",
-        value:"vLineTop",
+        value:OPTION_V_LINE_TOP,
         childClass:"creation-options__table--vertical"
     },
     {
         elClass:"creation-options__element--vLine bottom",
-        value:"vLineBottom",
+        value:OPTION_V_LINE_BOTTOM,
         childClass:"creation-options__table--vertical"
     },
     {
         elClass:"creation-options__element--hLine",
-        value:"hLineLeft",
+        value:OPTION_H_LINE_LEFT,
         childClass:"creation-options__table--horizontal"
     },
     {
         elClass:"creation-options__element--hLine right",
-        value:"hLineRight",
+        value:OPTION_H_LINE_RIGHT,
         childClass:"creation-options__table--horizontal"
     },
     {
         elClass:"creation-options__element",
-        value:"tr",
+        value:OPTION_T_TABLE_RIGHT,
         childClass:"creation-options__table--angle-tr"
     },
     {
         elClass:"creation-options__element",
-        value:"tl",
+        value:OPTION_T_TABLE_LEFT,
         childClass:"creation-options__table--angle-tl"
     },
     {
         elClass:"creation-options__element",
-        value:"br",
+        value:OPTION_B_TABLE_RIGHT,
         childClass:"creation-options__table--angle-br"
     },
     {
         elClass:"creation-options__element",
-        value:"bl",
+        value:OPTION_B_TABLE_LEFT,
         childClass:"creation-options__table--angle-bl"
     },
-    // {
-    //     elClass:"creation-options__element clear",
-    //     value:"clear",
-    //     childClass:"",
-    //     icon:<RiDeleteBin3Line color={Colors.white} size={24} />
-    // },
 ]
 
-function OptionsBar(props: OptionsBarProps) {
+interface OptionsBarProps {
+    selectedCell: GridPoint,
+    handleOptionChange: (e: string) => void
+}
+
+const OptionsBar: React.FC<OptionsBarProps> = ( props ) :JSX.Element => {
     const {
         selectedCell,
         handleOptionChange
     } = props
 
-    const [currentSelected, setCurrentSelected] = useState(selectedCell.info)
+    const [currentSelected, setCurrentSelected] = useState<string | undefined>(selectedCell.info)
 
     useEffect(() => {
         setCurrentSelected(selectedCell.info)
@@ -78,7 +82,7 @@ function OptionsBar(props: OptionsBarProps) {
         <div
             className="creation-options__wrapper"
         >
-            {staticCreationElement.map((el:any) => {
+            {staticCreationElement.map((el:StaticCreationOptions) => {
                 return(
                     <button
                         key={el.value}

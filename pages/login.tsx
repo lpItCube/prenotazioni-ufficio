@@ -8,6 +8,7 @@ import ErrorAlert from '../components/login/ErrorAlert'
 import LoginForm from '../components/login/LoginForm'
 import Logo from "../components/Ui/Logo";
 import Spinner from "../components/Ui/Spinner"
+import { AUTH_OK } from "../_shared"
 
 function Login() {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" })
@@ -48,7 +49,7 @@ function Login() {
   }
 
 
-  if (session.status === 'authenticated' && !enterFromLogin) {
+  if (session.status === AUTH_OK && !enterFromLogin) {
     router.push('/prenota')
     return
   }

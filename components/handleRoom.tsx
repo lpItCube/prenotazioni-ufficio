@@ -9,6 +9,7 @@ import { getActualRoom, setActualRoom } from "../features/roomSlice"
 import Modal from "./modal"
 import { getOnlyDate } from "../utils/datePharser"
 import { useAuthHook } from "../hooks/useAuthHook"
+import { ADD, ADDALL, DELETE, REQUESTALL, SEATS_MODAL, USER } from "../_shared"
 
 type Reserve = {
   id: string,
@@ -154,11 +155,11 @@ function Grid({ fromTo, setSeatName, setAction, room }: any) {
     const role = session.data!.user!.role
     //prenota tutti posti se sei admin
     dispatch(toggleModal(!modalStatus))
-    dispatch(setModalType('seats-modal'))
-    if (role !== "USER") {
-      setAction("ADDALL")
+    dispatch(setModalType(SEATS_MODAL))
+    if (role !== USER) {
+      setAction(ADDALL)
     } else {
-      setAction("REQUESTALL")
+      setAction(REQUESTALL)
     }
     //se non sei admin mandi una richiesta
   }
@@ -353,14 +354,14 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
 
   const handleAddSingleSeat = () => {
     dispatch(toggleModal(!modalStatus))
-    dispatch(setModalType('seats-modal'))
-    setAction("ADD")
+    dispatch(setModalType(SEATS_MODAL))
+    setAction(ADD)
   }
 
   const handleDeleteSingleSeat = () => {
     dispatch(toggleModal(!modalStatus))
-    dispatch(setModalType('seats-modal'))
-    setAction("DELETE")
+    dispatch(setModalType(SEATS_MODAL))
+    setAction(DELETE)
   }
 
   useEffect(() => {
@@ -369,7 +370,7 @@ function Seat({ create, setSeatName, setAction, cell }: any) {
       return
     }
     const roomIsReserved: Reserve = reserves.find((r: Reserve) => r.seat.type === "whole" && r.seat.roomId === roomId && r.status === "accepted")
-    const isAdmin = role !== "USER"
+    const isAdmin = role !== USER
     const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
     const seatReserve = reserves.find((r: Reserve) => r.seat.name === cell.seatName)
     const yourReserve = seatReserve?.user.username === username

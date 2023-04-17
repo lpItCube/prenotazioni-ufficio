@@ -52,7 +52,7 @@ const YourReserve: React.FC<YourReserveProps> = (props): JSX.Element => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     useEffect(() => {
-        const handleClickOutside = (event: any) => {
+        const handleClickOutside = (event: MouseEvent) => {
             if (reserveRef.current && !reserveRef.current.contains(event.target)) {
                 setIsOpen(false)
             }
@@ -126,13 +126,13 @@ const YourReserve: React.FC<YourReserveProps> = (props): JSX.Element => {
                                         >
                                             <div className="your-reserve__book--name">{res.seat.name}</div>
                                             {res.from &&
-                                                <div className="your-reserve__book--time">{getStringHours(res.from).hours} - {getStringHours(res.to).hours}</div>
+                                                <div className="your-reserve__book--time">{getStringHours(res.from) as string} - {getStringHours(res.to) as string}</div>
                                             }
                                             <FiEye
                                                 size={32}
                                                 color={Colors.white}
                                                 className="your-reserve__view"
-                                                onClick={() => handleHours(getStringHours(res.from).hours, getStringHours(res.to).hours)}
+                                                onClick={() => handleHours(getStringHours(res.from) as string, getStringHours(res.to) as string)}
                                             />
                                         </div>
                                     )
