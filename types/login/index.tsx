@@ -11,3 +11,8 @@ export interface InputLoginProps {
     name:string,
     required:boolean
 }
+
+export interface UserInfo {
+    email: string,
+    password: string
+}
