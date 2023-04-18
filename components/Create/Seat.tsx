@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect } from "react"
 
 // Types
-import { Reserve } from "../../types";
+import { GridPoint, Reserve } from "../../types";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { getReserves } from "../../features/reserveSlice";
+import { getReserves, setReserves } from "../../features/reserveSlice";
 import { getActualRoom } from "../../features/roomSlice";
 import { getModalStatus, setModalType, toggleModal } from "../../features/modalSlice";
 
@@ -45,7 +45,12 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
         setAction(ADD)
     }
 
-    const handleDeleteSingleSeat = () => {
+    const handleDeleteSingleSeat = (cell:GridPoint) => {
+        // In caso si voglia attivare la modifica a un'unica riserva per volta, andrà rilanciato il
+        // setReserves al close della modale con le prenotazioni nell'attuale fascia oraria
+        // const filtred = reserves.filter((res:Reserve) => res?.seat?.name === cell.seatName)
+        // console.log('CLICK HERE',filtred)
+        // dispatch(setReserves({reserveData:filtred}))
         dispatch(toggleModal(!modalStatus))
         dispatch(setModalType(SEATS_MODAL))
         setAction(DELETE)
@@ -56,7 +61,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
             setSeatProps({ canvasClass: "yours" })
             return
         }
-
+        console.log('RESERVES',reserves)
         const isAdmin = role !== USER
         const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
         const seatReserve = reserves.find((r: Reserve) => r.seat?.name === cell.seatName)
@@ -104,10 +109,11 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
         <div className="creation-options__seat-container">
             <div
                 className={`creation-options__seat ${seatProps.canvasClass}`}
-                onClick={seatProps.canvasClass === "clickable" ?
-                    () => { setSeatName(cell.seatName); handleAddSingleSeat(); } :
-                    seatProps.canvasClass.includes("clickable del") ?
-                        () => { setSeatName(cell.seatName); handleDeleteSingleSeat() } : () => { }
+                onClick={seatProps.canvasClass === "clickable" 
+                    ? () => { setSeatName(cell.seatName); handleAddSingleSeat(); } 
+                    : seatProps.canvasClass.includes("clickable del") 
+                        ? () => { setSeatName(cell.seatName); handleDeleteSingleSeat(cell) } 
+                        : () => {}
                 }
                 ref={canvasRef}
             >

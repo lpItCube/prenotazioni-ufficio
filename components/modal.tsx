@@ -93,6 +93,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		))
 
 		dispatch(setDayReserves({ dayReserveData: allDayReserve }))
+		// Setta le prenotazioni all'ADD di una specifica
 		dispatch(setReserves({ reserveData: reloadData }))
 	}
 
@@ -186,6 +187,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 			))
 
 			dispatch(setDayReserves({ dayReserveData: allDayReserve }))
+			// Setta le prenotazioni al DELETE su una specifica
 			dispatch(setReserves({ reserveData: reloadData }))
 			setHitModalButton({ loading: false, id: null })
 
