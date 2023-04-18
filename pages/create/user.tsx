@@ -26,7 +26,6 @@ function User() {
   const [users, setUsers] = useState<User[]>([])
   const [selectedDomain, setSelectedDomain] = useState<string|undefined>(undefined);
   const [selectedRole, setSelectedRole] = useState<string|undefined>(undefined);
-  const [selectedRoom, setSelectedRoom] = useState<string|undefined>(undefined);
 
   useEffect(() => {
     const getDomains = async() => {
