@@ -3,22 +3,17 @@ import { useEffect, useRef } from 'react'
 // Components
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
-type CalendarProps = {
-    selectedDate: any,
-    setSelectedDate: any,
-    handleConfirmDate: any,
-    setOpenCalendar:any,
+interface CalendarProps {
+    selectedDate: Date,
+    setSelectedDate: (data:Date) => void,
+    handleConfirmDate: (data:Date) => void,
+    setOpenCalendar: (isOpen:boolean) => void,
     openCalendar:boolean
 }
 
-function CalendarElement({
-    selectedDate,
-    setSelectedDate,
-    handleConfirmDate,
-    setOpenCalendar,
-    openCalendar
-}: CalendarProps) {
+const CalendarElement: React.FC<CalendarProps> = (props): JSX.Element => {
 
+    const { selectedDate, setSelectedDate, handleConfirmDate, setOpenCalendar, openCalendar } = props
     const ref = useRef<any>(null)
 
     useEffect(() => {
@@ -102,7 +97,7 @@ function CalendarElement({
 
     // UseRef per controllare se il click è interno
     useEffect(() => {
-        const handleClickOutside = (event: any) => {
+        const handleClickOutside = (event: MouseEvent) => {
             if (ref.current && !ref.current.contains(event.target)) {
                 setOpenCalendar(false)
             } 

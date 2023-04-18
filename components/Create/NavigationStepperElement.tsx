@@ -4,12 +4,8 @@ interface NavigationStepperElementProps {
     icon: JSX.Element
 }
 
-function NavigationStepperElement(props: NavigationStepperElementProps) {
-    const {
-        onclick,
-        label,
-        icon
-    } = props
+const NavigationStepperElement: React.FC<NavigationStepperElementProps> = (props): JSX.Element => {
+    const { onclick, label, icon } = props
 
     return (
         <div

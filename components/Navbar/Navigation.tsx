@@ -21,25 +21,33 @@ import { getPendingNotification, setPendingNotification } from "../../features/n
 // Hooks
 import { useAuthHook } from '../../hooks/useAuthHook'
 import { AUTH_OK } from "../../_shared"
+import { Reserve } from "../../types"
 
-function Navigation({
-    hitNotification,
-    setHitNotification
-  }: any) {
+interface NavigationProps {
+    hitNotification: boolean,
+    setHitNotification: (nots:boolean) => void
+}
+
+const Navigation: React.FC<NavigationProps> = (props) => {
+
+    const { hitNotification, setHitNotification} = props
+
+    const session = useSession()
 
     const { userData } = useAuthHook()
-    const navbarStatus: boolean = useSelector(getNavbarStatus)
-    const userRole: string = userData.role
-    const session = useSession()
+    const userRole = userData.role
+
     const dispatch = useDispatch()
+    const navbarStatus = useSelector(getNavbarStatus)
     const pendingNotification = useSelector(getPendingNotification)
-    const [pendingNotif, setPendingNotif] = useState(pendingNotification)
-    const [hitLogout, setHitLogout] = useState(false)
+
+    const [pendingNotif, setPendingNotif] = useState<string>(pendingNotification)
+    const [hitLogout, setHitLogout] = useState<boolean>(false)
 
     useEffect(() => {
         const getReserves = async () => {
-            const response = await axios.get(`/api/reserve/pending`)
-            dispatch(setPendingNotification({pending:response.data.length}))
+            const response: Reserve[] = await (await axios.get(`/api/reserve/pending`)).data
+            dispatch(setPendingNotification({pending:response.length}))
         }
         if (session.status === AUTH_OK)
             getReserves()
@@ -98,12 +106,14 @@ function Navigation({
                                 text="Tutte le prenotazioni"
                                 isActive={path === '/prenotazioni'}
                                 notification={false}
+                                icon={false}
                             />
                             <CustomLink
                                 href="/prenotazioni/pending"
                                 text="Da approvare"
                                 notification={pendingNotif}
                                 isActive={path.includes('prenotazioni') && path.includes('pending')}
+                                icon={false}
                             />
                         </ul>
                     }

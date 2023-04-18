@@ -6,7 +6,7 @@ interface StepperProps {
   stepperState?: number
 }
 
-const StepOne = () => {
+const StepOne: React.FC = (): JSX.Element => {
   const shouldReduceMotion = useReducedMotion();
   
   const variants = {
@@ -30,7 +30,7 @@ const StepOne = () => {
   );
 };
 
-const StepTwo = () => {
+const StepTwo : React.FC = (): JSX.Element => {
   const shouldReduceMotion = useReducedMotion();
   
   const variants = {
@@ -54,7 +54,7 @@ const StepTwo = () => {
   );
 };
 
-const Stepper = (props:StepperProps) => {
+const Stepper: React.FC<StepperProps> = (props): JSX.Element => {
   const { stepperState } = props
   
   return (

@@ -1,4 +1,6 @@
 import { useEffect } from 'react'
+
+// Next
 import { useRouter } from 'next/router'
 
 // Redux
@@ -8,16 +10,19 @@ import { toggleNavbar } from '../../features/navigationSlice'
 
 import Link from 'next/link'
 
-function CustomLink({ 
-    href, 
-    icon, 
-    text,
-    isActive,
-    notification
-}: any) {
+interface CustomLinkProps {
+    href: string,
+    icon: any,
+    text: string,
+    isActive: boolean,
+    notification: number | boolean | string
+}
+
+const CustomLink: React.FC<CustomLinkProps> = (props): JSX.Element => {
+
+    const { href, icon, text,isActive, notification } = props 
 
     const dispatch = useDispatch()
-
     const path = useRouter().pathname
 
     useEffect(() => {
@@ -38,7 +43,7 @@ function CustomLink({
                 >
                     {text}
                 </p>
-                {notification > 0 && 
+                {notification as number > 0 && 
                     <p
                         className={'navigation__link--notification'}
                     >{notification}</p>

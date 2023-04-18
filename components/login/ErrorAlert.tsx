@@ -1,14 +1,12 @@
 import React from 'react'
 
-type AlertProps = {
-    title:String,
-    text:String
-}
+// Types
+import { AlertProps } from '../../types'
 
-function ErrorAlert({
-    title,
-    text
-} : AlertProps ) {
+const ErrorAlert: React.FC<AlertProps> = (props): JSX.Element => {
+
+  const { title, text } = props
+
   return (
     <div className="invalidLogin">
         <p className="invalidLogin__title min">{title}</p>

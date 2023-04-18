@@ -1,8 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
+interface InitialStateTypes {
+    startHour: number,
+    endHour: number
+}
+
+const initialState: InitialStateTypes = {
     startHour: 9,
     endHour:10
+}
+
+interface TimePickerState {
+    timePicker: {
+        startHour: number,
+        endHour: number
+    }
 }
 
 const timePickerSlice = createSlice({
@@ -20,5 +32,5 @@ const timePickerSlice = createSlice({
 
 export default timePickerSlice.reducer
 export const { setStartHour, setEndHour } = timePickerSlice.actions
-export const getStartHour = (state:any) => state.timePicker.startHour 
-export const getEndHour = (state:any) => state.timePicker.endHour
+export const getStartHour = (state:TimePickerState) => state.timePicker.startHour 
+export const getEndHour = (state:TimePickerState) => state.timePicker.endHour

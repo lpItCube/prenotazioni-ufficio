@@ -64,6 +64,7 @@ const Calendar:React.FC<CalendarProps> = (props) : JSX.Element => {
     <>
       <div className="date-tool__container">
         <div className="date-tool__settings">
+          { /* DEBUG INSIDE 0 */}
           <DatePicker
             date={selectedDate}
             handleOpenCalendar={handleOpenCalendar}

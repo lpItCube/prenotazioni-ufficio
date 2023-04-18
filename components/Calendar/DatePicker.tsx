@@ -1,31 +1,26 @@
 // Utils
 import { getStringDate } from "../../utils/datePharser"
 
-// Components 
+// Icon
 import { IoCalendarOutline } from "react-icons/io5"
+
+// Components 
 import { Colors } from "../Ui/Colors"
 import CalendarElement from "./CalendarElement"
 
-type DatePickerProps = {
+interface DatePickerProps {
     date: Date,
-    handleOpenCalendar: any,
-    openCalendar:any,
-    selectedDate:any,
-    setSelectedDate:any,
-    handleConfirmDate:any,
-    setOpenCalendar:any,
+    handleOpenCalendar: () => void,
+    openCalendar: boolean,
+    selectedDate: Date,
+    setSelectedDate: (data:Date) => void,
+    handleConfirmDate: (data:Date) => void,
+    setOpenCalendar: (isOpen:boolean) => void,
 }
 
-function DatePicker({
-    date,
-    handleOpenCalendar,
-    openCalendar,
-    selectedDate,
-    setSelectedDate,
-    handleConfirmDate,
-    setOpenCalendar,
-}: DatePickerProps) {
+const DatePicker: React.FC<DatePickerProps> = (props): JSX.Element => {
 
+    const { date, handleOpenCalendar, openCalendar, selectedDate, setSelectedDate, handleConfirmDate, setOpenCalendar } = props
 
     return (
         <div
@@ -33,19 +28,19 @@ function DatePicker({
             className="datepicker__container"
         >
             <p className="label">
-                Data {}
+                Data
             </p>
             <div className="datepicker__wrapper">
                 <div className="datepicker__date">
                     <p
                         className="datepicker__number"
-                    >{getStringDate(date).day}</p>
+                    >{getStringDate(date.toString()).day}</p>
                     <p
                         className="datepicker__number"
-                    >{getStringDate(date).month}</p>
+                    >{getStringDate(date.toString()).month}</p>
                     <p
                         className="datepicker__number"
-                    >{getStringDate(date).year}</p>
+                    >{getStringDate(date.toString()).year}</p>
                 </div>
                 <IoCalendarOutline
                     size={18}

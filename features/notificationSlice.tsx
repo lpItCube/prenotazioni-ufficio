@@ -1,7 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
+interface InitialState {
+    pending: string
+}
+
+const initialState: InitialState = {
     pending:'',
+}
+
+interface NotificationState {
+    notification: {
+        pending: string
+    }
 }
 
 const notificationSlice = createSlice({
@@ -16,4 +26,4 @@ const notificationSlice = createSlice({
 
 export default notificationSlice.reducer
 export const { setPendingNotification } = notificationSlice.actions
-export const getPendingNotification = (state:any) => state.notification.pending
+export const getPendingNotification = (state:NotificationState) => state.notification.pending

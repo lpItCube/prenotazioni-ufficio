@@ -9,14 +9,9 @@ interface GridOptionsProps {
     handleSave: () => void
 }
 
-function GridOptions(props: GridOptionsProps) {
-    const {
-        xCells,
-        setXCells,
-        yCells,
-        setYCells,
-        handleSave
-    } = props
+const GridOptions: React.FC<GridOptionsProps> = (props): JSX.Element => {
+    
+    const { xCells, setXCells, yCells, setYCells, handleSave } = props
 
     return (
         <div className="room-creation__options">
@@ -34,15 +29,13 @@ function GridOptions(props: GridOptionsProps) {
                     onChange={setYCells}
                 />
             </div>
-            {/* <button onClick={handleXY}>Submit Input</button> */}
             <Button
                 type="button"
-                icon=""
+                icon={false}
                 text="Salva"
                 className={`cta cta--primary`}
                 onClick={handleSave}
             />
-            {/* <button onClick={handleSave}>Save</button> */}
         </div>
     )
 }

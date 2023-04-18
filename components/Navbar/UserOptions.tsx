@@ -1,16 +1,13 @@
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook"
 
-type UserProps = {
-    session: any,
-    icon: any
+interface UserProps {
+    icon: any 
 }
 
-function User({
-    session,
-    icon
-}: UserProps) {
+const User: React.FC<UserProps> = (props): JSX.Element => {
 
+    const { icon } = props
     const { userData } = useAuthHook()
 
     return (

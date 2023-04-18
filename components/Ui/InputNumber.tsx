@@ -45,7 +45,7 @@ function InputNumber(props: InputNumberProps) {
                 <Button
                     onClick={() => setInputValue(prev => prev -1)}
                     className='cta cta--primary round cta__icon'
-                    type='add'
+                    type='button'
                     icon={<IoRemove size={16} />}
                     text=''
                 />
@@ -59,7 +59,7 @@ function InputNumber(props: InputNumberProps) {
                 <Button
                     onClick={() => setInputValue(prev => prev +1)}
                     className='cta cta--primary round cta__icon'
-                    type='add'
+                    type='button'
                     icon={<IoAdd size={16} />}
                     text=''
                 />

@@ -5,7 +5,7 @@ import Select from "../Ui/Select"
 import Option from '../Ui/Option'
 import { OptionItem } from '../../types'
 
-type ReserveFiltersProps = {
+interface ReserveFiltersProps {
     setFilterMode: ({label, value}:OptionItem) => void,
     setFilterDay: ({label, value}:OptionItem) => void,
     filterMode: OptionItem,

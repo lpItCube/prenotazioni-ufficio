@@ -1,21 +1,11 @@
+// Types
+import { InputLoginProps } from "../../types"
 
-type InputProps = {
-    icon:any,
-    handleInfo:any,
-    type:string,
-    placeholder:string,
-    name:string,
-    required:boolean
-}
 
-function Input({
-    icon,
-    handleInfo,
-    type,
-    placeholder,
-    name,
-    required
-}: InputProps) {
+const Input: React.FC<InputLoginProps> = (props): JSX.Element => {
+
+    const { icon, handleInfo, type, placeholder, name, required } = props
+
     return (
         <div className="content-input">
             <div className="content-input__icon">
