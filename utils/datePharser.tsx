@@ -1,7 +1,5 @@
 
-export const getStringDate = (
-    date
-: Date) => {
+export const getStringDate = (date: string) => {
 
 
     const allMonths = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"]

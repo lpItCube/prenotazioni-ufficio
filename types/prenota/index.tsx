@@ -12,6 +12,7 @@ export interface Seat {
     name: string,
     roomId: string,
     type: string,
+    room?: Room,
     reserve?: Reserve | []
 }
 

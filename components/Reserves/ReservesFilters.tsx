@@ -3,47 +3,34 @@ import { useState, useEffect, useRef } from 'react'
 // Components
 import Select from "../Ui/Select"
 import Option from '../Ui/Option'
+import { OptionItem } from '../../types'
 
 type ReserveFiltersProps = {
-    setFilterMode: any,
-    setFilterDay: any,
-    setFilterRoom: any,
-    filterMode: any,
-    filterDay: any,
-    filterRoom: any,
+    setFilterMode: ({label, value}:OptionItem) => void,
+    setFilterDay: ({label, value}:OptionItem) => void,
+    filterMode: OptionItem,
+    filterDay: OptionItem,
     showFilters: boolean
 }
 
-function ReservesFilters({
-    setFilterMode,
-    setFilterDay,
-    setFilterRoom,
-    filterMode,
-    filterDay,
-    filterRoom,
-    showFilters
-}: ReserveFiltersProps) {
+const ReservesFilters: React.FC<ReserveFiltersProps> = (props): JSX.Element => {
 
-    const [userSelect, setUserSelect] = useState(false)
-    const [daySelect, setDaySelect] = useState(false)
-    const [roomSelect, setRoomSelect] = useState(false)
+    const { setFilterMode, setFilterDay, filterMode, filterDay, showFilters } = props
 
     const userRef = useRef<any>(null)
     const dayRef = useRef<any>(null)
-    const roomRef = useRef<any>(null)
+
+    const [userSelect, setUserSelect] = useState<boolean>(false)
+    const [daySelect, setDaySelect] = useState<boolean>(false)
+
 
     useEffect(() => {
-        // UseRef per controllare se il click è interno
-
-        const handleClickOutside = (event: any) => {
+        const handleClickOutside = (event: MouseEvent) => {
             if (userRef.current && !userRef.current.contains(event.target)) {
                 setUserSelect(false)
             }
             if (dayRef.current && !dayRef.current.contains(event.target)) {
                 setDaySelect(false)
-            }
-            if (roomRef.current && !roomRef.current.contains(event.target)) {
-                setRoomSelect(false)
             }
 
         };
@@ -61,9 +48,6 @@ function ReservesFilters({
     }
     const handleOpenData = () => {
         setDaySelect(prev => !prev)
-    }
-    const handleOpenRoom = () => {
-        setRoomSelect(prev => !prev)
     }
 
     return (
@@ -95,41 +79,10 @@ function ReservesFilters({
                             key={'otherUsers'}
                             onClick={() => setFilterMode({ label: 'Altri utenti', value: 'otherUsers' })}
                             label={'Altri utenti'}
-                            className={`${filterMode === 'otherUsers' ? ' current' : ''}`}
+                            className={`${filterMode.value === 'otherUsers' ? ' current' : ''}`}
                         />
                     </Select>
                 </div>
-                {/* <div
-                    ref={roomRef}
-                    className='select__ref'
-                >
-
-                    <Select
-                        label='Stanza'
-                        value={filterRoom.label}
-                        onClick={() => handleOpenRoom}
-                        openOption={roomSelect}
-                    >
-                        <Option
-                            key={'filterDay'}
-                            onClick={() => setFilterRoom({ label: 'Tutte le stanze', value: '' })}
-                            label='Tutte le stanze'
-                            className={`${filterRoom.value === '' ? ' current' : ''}`}
-                        />
-                        <Option
-                            key={'stanzaIt'}
-                            onClick={() => setFilterRoom({ label: 'Stanza IT', value: 'it' })}
-                            label='Stanza IT'
-                            className={`${filterRoom.value === 'it' ? ' current' : ''}`}
-                        />
-                        <Option
-                            key={'stanzaMeet'}
-                            onClick={() => setFilterRoom({ label: 'Stanza Meet', value: 'meet' })}
-                            label='Stanza Meet'
-                            className={`${filterRoom.value === 'meet' ? ' current' : ''}`}
-                        />
-                    </Select>
-                </div> */}
                 <div
                     ref={dayRef}
                     className='select__ref'

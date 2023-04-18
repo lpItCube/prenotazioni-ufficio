@@ -11,77 +11,74 @@ import Spinner from "../components/Ui/Spinner"
 import { AUTH_OK } from "../_shared"
 
 function Login() {
-  const [userInfo, setUserInfo] = useState({ email: "", password: "" })
-  const [loginError, setLoginError] = useState(false)
-  const [loadingLogin, setLoadingLogin] = useState(false)
-  const [enterFromLogin, setEnterFromLogin] = useState(false)
 
-  const router = useRouter()
-  const session = useSession()
+	const [userInfo, setUserInfo] = useState<{email:string, password:string}>({ email: "", password: "" })
+	const [loginError, setLoginError] = useState<boolean>(false)
+	const [loadingLogin, setLoadingLogin] = useState<boolean>(false)
+	const [enterFromLogin, setEnterFromLogin] = useState<boolean>(false)
 
-
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault()
-
-    setEnterFromLogin(true)
-    setLoadingLogin(true)
-    setLoginError(false)
+	const router = useRouter()
+	const session = useSession()
 
 
-    const res = await signIn("credentials", {
-      email: userInfo.email,
-      password: userInfo.password,
-      redirect: false
-    })
+	const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+		e.preventDefault()
+
+		setEnterFromLogin(true)
+		setLoadingLogin(true)
+		setLoginError(false)
 
 
-    const urlToEncode: any = res?.url?.split('callbackUrl=')[1]
-
-    if (res && res!.error) {
-      setLoginError(true)
-      setLoadingLogin(false)
-    }
-
-    else urlToEncode
-      ? router.push(decodeURIComponent(urlToEncode))
-      : router.push('/prenota')
-
-  }
+		const res = await signIn("credentials", {
+			email: userInfo.email,
+			password: userInfo.password,
+			redirect: false
+		})
 
 
-  if (session.status === AUTH_OK && !enterFromLogin) {
-    router.push('/prenota')
-    return
-  }
+		const urlToEncode: string | undefined = res?.url?.split('callbackUrl=')[1]
 
-  let loginForm
+		if (res && res!.error) {
+			setLoginError(true)
+			setLoadingLogin(false)
+		}
 
-  if (session.status === 'loading') {
-    loginForm = <Spinner />
-  } else {
-    loginForm = <LoginForm
-      handleSubmit={handleSubmit}
-      setUserInfo={setUserInfo}
-      userInfo={userInfo}
-      isLoading={loadingLogin}
-    />
-  }
+		else urlToEncode
+			? router.push(decodeURIComponent(urlToEncode))
+			: router.push('/prenota')
+	}
 
+	if (session.status === AUTH_OK && !enterFromLogin) {
+		router.push('/prenota')
+		return
+	}
 
-  return (
-    <div className="loginContainer">
-      <div className="loginModal">
-        <Logo />
-        {loginError &&
-          <ErrorAlert
-            title={'Credenziali non valide'}
-            text={'Inserisci username e password corretti'}
-          />
-        }
-        {loginForm}
-      </div>
-    </div>
-  )
+	let loginForm
+
+	if (session.status === 'loading') {
+		loginForm = <Spinner />
+	} else {
+		loginForm = <LoginForm
+			handleSubmit={handleSubmit}
+			setUserInfo={setUserInfo}
+			userInfo={userInfo}
+			isLoading={loadingLogin}
+		/>
+	}
+	return (
+		<div className="loginContainer">
+			<div className="loginModal">
+				<Logo />
+				{loginError &&
+					<ErrorAlert
+						title={'Credenziali non valide'}
+						text={'Inserisci username e password corretti'}
+					/>
+				}
+				{loginForm}
+			</div>
+		</div>
+	)
 }
 
 export default Login

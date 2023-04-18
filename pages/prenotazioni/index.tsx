@@ -1,6 +1,10 @@
-import axios from "axios"
-import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
+
+// Axios
+import axios, { AxiosResponse } from "axios"
+
+// Next
+import { useSession } from "next-auth/react"
 
 // Utils
 import { getStringDate, getStringHours } from '../../utils/datePharser'
@@ -11,61 +15,51 @@ import { useAuthHook } from "../../hooks/useAuthHook";
 // Components 
 import Spinner from "../../components/Ui/Spinner"
 import { Table, TableHeader, TableBody, TableRow, TableCol } from "../../components/Ui/Table"
-import Modal from "../../components/modal"
-import { RiDeleteBin3Line } from "react-icons/ri"
 import Button from "../../components/Ui/Button"
 import ReservesFilters from "../../components/Reserves/ReservesFilters"
+
+// Icons
+import { RiDeleteBin3Line } from "react-icons/ri"
 import { IoEllipsisHorizontalOutline } from 'react-icons/io5'
 
-function Prenotazioni() {
+// Types
+import { HitModalButton, OptionItem, Reserve } from "../../types";
 
+// Costants
+import { USER } from "../../_shared";
+
+const Prenotazioni: React.FC = (): JSX.Element => {
 
 	const session = useSession()
-	const [allReserves, setAllReserves] = useState([])
-	const [isLoading, setIsLoading] = useState(false)
-	const [handleDelete, setHandleDelete] = useState(false)
-
-
-	type stateObj = {
-		label: String,
-		value: String
-	}
-
-	const [filterMode, setFilterMode] = useState<stateObj>({ label: 'Le mie prenotazioni', value: 'myUser' })
-	const [filterRoom, setFilterRoom] = useState<stateObj>({ label: 'Tutte le stanze', value: '' })
-	const [filterDay, setFilterDay] = useState<stateObj>({ label: 'Tutte le date', value: '' })
-	const [showFilters, setShowFilters] = useState(false)
-	const [hitDeleteButton, setHitDeleteButton] = useState({ loading: false, id: null })
-
 	const { userData } = useAuthHook()
-
 	const userRole = userData.role
 	const userId = userData.id
+
+	const [allReserves, setAllReserves] = useState<Reserve[]>([])
+	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [handleDelete, setHandleDelete] = useState<boolean>(false)
+	const [filterMode, setFilterMode] = useState<OptionItem>({ label: 'Le mie prenotazioni', value: 'myUser' })
+	const [filterRoom, setFilterRoom] = useState<OptionItem>({ label: 'Tutte le stanze', value: '' })
+	const [filterDay, setFilterDay] = useState<OptionItem>({ label: 'Tutte le date', value: '' })
+	const [showFilters, setShowFilters] = useState<boolean>(false)
+	const [hitDeleteButton, setHitDeleteButton] = useState<HitModalButton>({ loading: false, id: null })
+
 
 	useEffect(() => {
 		setIsLoading(true)
 	}, [])
 
 	useEffect(() => {
-
-		const getReserves = async (method: any) => {
-
-
-			const response = await axios.get(`/api/reserve/currentUser?currentUser=${userId}&method=${method}`)
-			let sortedResponse
+		const getReserves = async (method: string) => {
+			const response: AxiosResponse<Reserve[]> = await axios.get(`/api/reserve/currentUser?currentUser=${userId}&method=${method}`)
+			let sortedResponse: Reserve[]
 
 			sortedResponse = response.data
 
-			if (filterRoom.value !== '') {
-				if (filterRoom.value === 'it') {
-					sortedResponse = sortedResponse.filter((res: any) => res.seat.type === filterRoom.value)
-				} else {
-					sortedResponse = sortedResponse.filter((res: any) => res.seat.type === 'meet' || res.seat.type === 'meet-whole')
-				}
-			}
 			if (filterDay.value !== '') {
-				sortedResponse = sortedResponse.filter((res: any) => new Date(res.from).toDateString() === filterDay.value)
+				sortedResponse = sortedResponse.filter((res: Reserve) => new Date(res.from).toDateString() === filterDay.value)
 			}
+
 			const reorderData = sortedResponse.sort((a: any, b: any) => (a.to > b.to) ? 1 : -1)
 
 			setAllReserves(reorderData)
@@ -87,23 +81,22 @@ function Prenotazioni() {
 	}, [session, handleDelete, filterMode, filterRoom, filterDay, userId, hitDeleteButton.loading])
 
 
-	const handleDeleteRow = async (reserveData: any) => {
-
+	const handleDeleteRow = async (reserveData: Reserve) => {
 		setHitDeleteButton({ loading: true, id: reserveData.id })
-		const deleteSeat = await axios.delete("/api/reserve/" + reserveData.id);
+		await axios.delete("/api/reserve/" + reserveData.id);
 	}
 
 	const handleShowFilters = () => {
 		setShowFilters(prev => !prev)
 	}
 
-	let tableContent: any
+	let tableContent: JSX.Element
 
 
 	if (allReserves.length > 0) {
 		tableContent = (
 			<>
-				{allReserves.map((r: any, index: number) => {
+				{allReserves.map((r: Reserve, index: number) => {
 					return (
 						<TableRow
 							key={index}
@@ -114,15 +107,17 @@ function Prenotazioni() {
 							>
 								<p>{getStringDate(r.from).day} {getStringDate(r.from).month} {getStringDate(r.from).year}</p>
 							</TableCol>
+							{r.from && r.to &&
+								<TableCol
+									className=""
+								>
+									<p>{getStringHours(r.from) as string} - {getStringHours(r.to) as string}</p>
+								</TableCol>
+							}
 							<TableCol
 								className=""
 							>
-								<p>{getStringHours(r.from).hours} - {getStringHours(r.to).hours}</p>
-							</TableCol>
-							<TableCol
-								className=""
-							>
-								{r.seat.name}
+								{r?.seat?.name}
 							</TableCol>
 							<TableCol
 								className=""
@@ -137,7 +132,7 @@ function Prenotazioni() {
 							<TableCol
 								className="prenotazioni__cta"
 							>
-								{(userRole !== 'USER' || userRole === 'USER' && r.user.id === userId) &&
+								{(userRole !== USER || userRole === USER && r.user.id === userId) &&
 									<>
 										{hitDeleteButton.loading && hitDeleteButton.id === r.id
 											? <Spinner />
@@ -198,8 +193,6 @@ function Prenotazioni() {
 				setFilterMode={setFilterMode}
 				filterDay={filterDay}
 				setFilterDay={setFilterDay}
-				filterRoom={filterRoom}
-				setFilterRoom={setFilterRoom}
 				showFilters={showFilters}
 			/>
 
@@ -221,7 +214,6 @@ function Prenotazioni() {
 					/>
 				</div>
 				<Table>
-
 					<TableHeader
 						headerColumns={['Data', 'Orario', 'Postazione', 'Utente', 'Stato', '']}
 					/>
