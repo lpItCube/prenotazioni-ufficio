@@ -103,7 +103,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			user: true
 		}
 	})
-	console.log("first appearance -> ", initialData)
+	// console.log("first appearance -> ", initialData)
 	const filteredReserveDate = initialData.filter(r => !(r.from > new Date(toDate) || r.to < new Date(fromDate)))
 
 	return {

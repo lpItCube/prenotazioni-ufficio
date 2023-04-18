@@ -3,7 +3,7 @@ import prisma from "../../../lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const seatName = req.query.roomId as string
-  console.log("SEAT name -> " + seatName)
+  // console.log("SEAT name -> " + seatName)
   try {
     const result = await prisma.seat.findUnique({
       where: { name: seatName }

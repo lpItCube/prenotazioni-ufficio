@@ -66,7 +66,6 @@ const pending: React.FC<PendingProps> = (props): JSX.Element => {
         setHitManageButton({ loading: true, id })
         if (status === APPROVE) {
             const reserve: Reserve = await (await axios.get(`/api/reserve/${id}`)).data
-            console.log('type', reserve)
             const room = reserve?.seat?.room as Room
             const reservesInRoom = await (await axios.get(`/api/roomReserves/${room.id}`)).data
             const reserveToDelete: Reserve[] = reservesInRoom.filter((r: Reserve) =>

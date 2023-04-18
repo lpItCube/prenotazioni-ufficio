@@ -73,7 +73,6 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
                 }
             } else {
                 if (!isAdmin) {
-                    console.log('type','not admin')
                     setSeatProps({ canvasClass: "not-available" })
                 }
                 else {

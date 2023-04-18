@@ -79,7 +79,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 
 
 	async function reloadData() {
-		console.log('SET RES 2', fromTo)
+		// console.log('SET RES 2', fromTo)
 
 		const reserves: Reserve[] = await (await axios.get(`/api/roomReserves/${roomId}`)).data
 		// const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))

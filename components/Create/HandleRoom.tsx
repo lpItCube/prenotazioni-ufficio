@@ -113,7 +113,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
         }
         getRoom()
         const setReservess = async () => {
-            console.log('SET RES 3')
+            // console.log('SET RES 3')
             if(fromTo) {
                 const reserves: Reserve[] = await (await axios.get(`/api/reserve`)).data
                 const filteredRes = reserves.filter((r: Reserve) => (
