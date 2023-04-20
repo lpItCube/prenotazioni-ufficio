@@ -21,7 +21,7 @@ import { Domain, FromToHour, Reserve } from "../../types"
 
 // Utils
 import { createNewDate } from "../../utils/datePharser"
-import { ADMIN, AUTH_OK, PRISTINE } from "../../_shared"
+import { ADMIN, AUTH_OK, PRISTINE, USER } from "../../_shared"
 
 interface PrenotaProps {
 	initialData: Reserve,
@@ -83,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	if (session === null || session.user === null) return { props: { initialData: null } }
 	let domain: Domain | any = ""
 	let domainList: Domain[] | any = []
-	if (session.user?.role !== ADMIN) {
+	if (session.user?.role === USER) {
 		domain = await prisma.domain.findUnique({
 			where: { id: session.user?.domainId! },
 			include: { office: { include: { room: true } } }
