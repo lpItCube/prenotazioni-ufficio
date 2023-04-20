@@ -12,18 +12,31 @@ import { Provider } from 'react-redux'
 // Components
 import Navbar from '../components/Navbar/navbar'
 import Header from '../components/Header'
+import { MousePosition } from '../types'
+import SeatPopup from '../components/Book/SeatPopup'
 
 export default function App({ Component, pageProps }: AppProps) {
 
 	const [appIsLoading, setAppIsLoading] = useState<boolean>(false)
 	const [hitNotification, setHitNotification] = useState<boolean>(false)
+	const [cursorPos, setCursorPos] = useState<MousePosition>({ x: 0, y: 0 });
+
+	const handleMouseMove = (e: any) => {
+        setCursorPos({
+            x: e.clientX,
+            y: e.clientY 
+        })
+    }
 
 	return (
 		<SessionProvider session={pageProps.session}>
 			<Provider store={store}>
 				{
 					Component.name !== "Login" ?
-						<>
+						<div onMouseMove={handleMouseMove}>
+							<SeatPopup
+								cursorPos={cursorPos}
+							/>
 							<Header
 								setAppIsLoading={setAppIsLoading}
 							/>
@@ -45,7 +58,7 @@ export default function App({ Component, pageProps }: AppProps) {
 									</>
 								}
 							</div>
-						</>
+						</div>
 						: <Component {...pageProps} />
 				}
 			</Provider>

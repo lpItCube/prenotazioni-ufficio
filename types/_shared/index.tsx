@@ -50,3 +50,8 @@ export interface HitModalButton {
     loading: boolean,
     id: string | null
 }
+
+export interface MousePosition {
+    x: number,
+    y: number
+}

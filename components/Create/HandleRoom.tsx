@@ -71,7 +71,6 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
     const reserveAllDay = useSelector(getDayReserves)
     const { userData } = useAuthHook()
     const userId: string = userData.id
-    const username: string = userData.name
 
     const [room, setRoom] = useState<Room>()
     const [xCells, setXCells] = useState<number>(0)
@@ -241,6 +240,9 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
                 <>
                     <div className="room-creation">
                         <div className="room-grid">
+                            <div>
+                                
+                            </div>
                             {(room && room.xSize && room.ySize) &&
                                 <Grid 
                                     setSeatName={setSeatName} 

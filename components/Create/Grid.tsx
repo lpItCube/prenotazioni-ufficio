@@ -37,7 +37,7 @@ const Grid: React.FC<GridProps> = (props): JSX.Element => {
 	return (
 		<>
 			<div className="creation-table__wrapper">
-				<div className="creation-table__body" id="isometric-container" style={{ width: xSize * 50 + 'px' }}>
+				<div className="creation-table__body" style={{ width: xSize * 50 + 'px' }}>
 					{grid?.map((row, rowIndex) => (
 						<div className="creation-table__row" key={rowIndex}>
 							{row.map((cell, columnIndex) => (

@@ -5,7 +5,7 @@ import { Reserve } from "../../types";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { getReserves } from "../../features/reserveSlice";
+import { getReserves, setUserOnSeat } from "../../features/reserveSlice";
 import { getActualRoom } from "../../features/roomSlice";
 import { getModalStatus, setModalType, toggleModal } from "../../features/modalSlice";
 
@@ -104,11 +104,18 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
         <div className="creation-options__seat-container">
             <div
                 className={`creation-options__seat ${seatProps.canvasClass}`}
-                onClick={seatProps.canvasClass === "clickable" ?
-                    () => { setSeatName(cell.seatName); handleAddSingleSeat(); } :
-                    seatProps.canvasClass.includes("clickable del") ?
-                        () => { setSeatName(cell.seatName); handleDeleteSingleSeat() } : () => { }
+                onClick={seatProps.canvasClass === "clickable"
+                    ? () => { setSeatName(cell.seatName); handleAddSingleSeat(); }
+                    : seatProps.canvasClass.includes("clickable del")
+                        ? () => {
+                            setSeatName(cell.seatName);
+                            handleDeleteSingleSeat()
+                        }
+                        : () => {}
                 }
+                // Setta il nome utente del posto
+                onMouseOver={() => dispatch(setUserOnSeat({userOnSeat:reserves.find((res:Reserve) => res.seat?.name === cell.seatName)?.user.username}))}
+                onMouseLeave={() => dispatch(setUserOnSeat({userOnSeat:''}))}
                 ref={canvasRef}
             >
             </div>
