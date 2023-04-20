@@ -48,7 +48,7 @@ const ModalSingleReserve: React.FC<ModalSingleReserveProps> = (props): JSX.Eleme
 					</>
 				}
 				?</p>
-			{reserveData
+			{/* {reserveData
 				&& seatName === MEET_ROOM
 				&& otherReserveInPeriod
 				&& otherReserveInPeriod.length > 0
@@ -77,7 +77,7 @@ const ModalSingleReserve: React.FC<ModalSingleReserveProps> = (props): JSX.Eleme
 						}
 					</div>
 				</>
-			}
+			} */}
 			{/* {console.log(hitModalButton.loading)} */}
 			{!hitModalButton.loading
 				? <Button

@@ -124,6 +124,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
                     selectDate === getOnlyDate(r.from) && r.user.id === userId
                 ))
                 dispatch(setDayReserves({ dayReserveData: allDayReserve }))
+                // Setta le prenotazioni al cambio di orario
                 dispatch(setReserves({ reserveData: filteredRes }))
             }
 
