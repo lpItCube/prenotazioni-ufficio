@@ -112,9 +112,9 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
         }
         getRoom()
         const setReservess = async () => {
-            // console.log('SET RES 3')
             if(fromTo) {
                 const reserves: Reserve[] = await (await axios.get(`/api/reserve`)).data
+                // console.log('SET RES 3')
                 const filteredRes = reserves.filter((r: Reserve) => (
                     ((fromTo.from && r.to && new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to)) ||
                     (fromTo.from && r.to && fromTo.to && new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to))) &&

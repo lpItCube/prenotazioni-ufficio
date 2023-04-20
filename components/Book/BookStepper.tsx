@@ -1,5 +1,5 @@
 // Costants
-import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from "../../_shared"
+import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState, USER } from "../../_shared"
 
 // Components
 import Select from "../Ui/Select"
@@ -60,6 +60,7 @@ const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
 
     const { userData } = useAuthHook()
     const userRole = userData.role
+
 
     const containerVariants = {
         initial: {
@@ -163,8 +164,8 @@ const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
                                 exit="exit"
                                 className='creation-stepper__box'
                             >
-                                { ((userRole === 'USER' && currentStepper !== StepperState.DOMAIN) 
-                                    || (userRole === 'ADMIN')) &&
+                                { ((userRole === USER && currentStepper !== StepperState.DOMAIN) 
+                                    || (userRole !== USER)) &&
                                     <RiDeleteBin3Line
                                         className="creation-stepper__box--remove"
                                         size={32}

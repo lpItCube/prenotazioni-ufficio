@@ -6,7 +6,7 @@ import axios from "axios"
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
 import { setModalType, toggleModal } from "../features/modalSlice"
-import { getReserves, setDayReserves, setReserves } from "../features/reserveSlice"
+import { getDayReserves, getReserves, setDayReserves, setReserves } from "../features/reserveSlice"
 import { getActualRoom } from "../features/roomSlice"
 
 // Hooks 
@@ -40,6 +40,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 
 	const dispatch = useDispatch()
 	const reserveData = useSelector(getReserves)
+	const reserveInDay = useSelector(getDayReserves)
 	const roomId = useSelector(getActualRoom)
 
 	const { userData } = useAuthHook()
@@ -81,7 +82,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 
 
 	async function reloadData() {
-		// console.log('SET RES 2', fromTo, roomId)
+		// console.log('SET RES 2')
 
 		const reserves: Reserve[] = await (await axios.get(`/api/roomReserves/${roomId}`)).data
 		// const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
@@ -143,10 +144,15 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		setHitModalButton({ loading: true, id: null })
 
 		const seatId: string = await (await axios.get(`/api/seats/${seatName}`)).data.id
-		let bookStatus = ACCEPTED
+		const myReserveInDay = reserveInDay.filter((r:Reserve) => r.user.id === userId)
+		let bookStatus = userRole === USER 
+			? myReserveInDay.length > 0
+				? PENDING
+				: ACCEPTED
+			: ACCEPTED
 
 		if (action === Actions.ADD) {
-
+			// Intervento pending state per utente USER se ha già effettuato una prenotazione
 			await axios.post("/api/addReserve", {
 				seatId: seatId,
 				userId: userId,
@@ -177,7 +183,20 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 			await axios.patch("/api/reserve/approveReserve", {id})
 			await reloadData()
 		} else {
-			await axios.delete("/api/reserve/" + id);
+			await(await axios.delete("/api/reserve/" + id)).data;
+
+			// Se un user cancella la prenotazione accettata, in automatico viene accettata quella dopo
+			const resDay = reserveInDay.filter((r:Reserve) => r.userId === userId && r.id !== id)
+			const alreadyAccepted = resDay.filter((r:Reserve) => r.status === ACCEPTED).length
+
+			if(!alreadyAccepted) {
+				const firstInPending = resDay.find((r:Reserve) => r.status === 'pending') as Reserve
+				if(firstInPending) {
+					const id = firstInPending.id
+					await axios.patch("/api/reserve/approveReserve", {id})
+				}
+			}
+
 			const reserves:Reserve[] = await (await axios.get(`/api/roomReserves/${roomId}`)).data
 			const reloadData = reserves.filter((r: Reserve) => (
                 (fromTo.from && r.to && new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to)) ||
