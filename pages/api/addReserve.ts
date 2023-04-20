@@ -55,11 +55,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let fromDate: any = ''
   let endDate: any = ''
 
-  if (yourReserved && seat?.type !== "whole" && yourReserved.user.role === Role.USER)
-    res.status(403).json("Per questa data hai già prenotato un posto")
-  else if (roomReserved && seat?.type === "whole")
-    res.status(403).json("Non puoi prenotare la stanza già occupata")
-  else
+  // if (yourReserved && seat?.type !== "whole" && yourReserved.user.role === Role.USER)
+  //   res.status(403).json("Per questa data hai già prenotato un posto")
+  // else if (roomReserved && seat?.type === "whole")
+  //   res.status(403).json("Non puoi prenotare la stanza già occupata")
+  // else
 
   fromDate = new Date(data.from);
   fromDate.setHours(fromDate.getHours() + 1);
