@@ -62,30 +62,71 @@ const pending: React.FC<PendingProps> = (props): JSX.Element => {
     }, [reserves, session])
 
 
-    const handleApprovation = async (status: number, id: string) => {
+    // const handleApprovation = async (status: number, id: string) => {
+    //     console.log('APPRO')
+    //     setHitManageButton({ loading: true, id })
+    //     if (status === APPROVE) {
+    //         const reserve: Reserve = await (await axios.get(`/api/reserve/${id}`)).data
+            
+    //         const room = reserve?.seat?.room as Room
+    //         const reservesInRoom = await (await axios.get(`/api/roomReserves/${room.id}`)).data
+
+            
+    //         const reserveToDelete: Reserve[] = reservesInRoom.filter((r: Reserve) =>
+    //             !((new Date(r.from) > new Date(reserve.to as string)) ||
+    //                 (r.to && new Date(r.to) < new Date(reserve.from as string)) && r.id !== id)
+    //         )
+
+    //         await reserveToDelete.forEach(async (r: any) => {
+    //             await axios.delete("/api/reserve/" + r.id)
+    //         })
+    //         await axios.patch("/api/reserve/approveReserve", {id})
+
+    //         // await axios.patch("/api/reserve/approveReserve", {id})
+    //         // const awaitDelete = reserveToDelete.map((r: Reserve) => {
+    //         //     return axios.delete("/api/reserve/" + r.id);
+    //         // });
+
+    //         // console.log('ID',awaitDelete)
+    //         // await Promise.all(awaitDelete);
+    //         // await axios.patch("/api/reserve/approveReserve", { id });
+            
+
+    //         const response: AxiosResponse<Reserve[]> = await axios.get(`/api/reserve/pending`)
+    //         const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
+    //         setReserves(reorderData)
+    //     } else {
+    //         await axios.delete("/api/reserve/" + id);
+    //         const response = await axios.get(`/api/reserve/pending`)
+    //         const reorderData: Reserve[] = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
+    //         setReserves(reorderData)
+    //     }
+    //     dispatch(setPendingNotification({ pending: reserves.length - 1 }))
+    //     setHitManageButton({ loading: false, id: null })
+    //     setHitNotification(true)
+    // }
+
+    const handleApprovation = async (status: any, id: any) => {
         setHitManageButton({ loading: true, id })
         if (status === APPROVE) {
-            const reserve: Reserve = await (await axios.get(`/api/reserve/${id}`)).data
-            const room = reserve?.seat?.room as Room
+            const reserve = await (await axios.get(`/api/reserve/${id}`)).data
+            const room = reserve!.seat!.room!
             const reservesInRoom = await (await axios.get(`/api/roomReserves/${room.id}`)).data
-            const reserveToDelete: Reserve[] = reservesInRoom.filter((r: Reserve) =>
-                !((new Date(r.from) > new Date(reserve.to as string)) ||
-                    (r.to && new Date(r.to) < new Date(reserve.from as string)) && r.id !== id)
+            const reserveToDelete = reservesInRoom.filter((r: any) => 
+                !(new Date(r.from) > new Date(reserve.to as string) || new Date(r.to) < new Date(reserve.from as string)) && r.id !== id
             )
-            const awaitDelete = reserveToDelete.map((r: Reserve) => {
-                return axios.delete("/api/reserve/" + r.id);
-            });
+            await reserveToDelete.forEach(async (r: any) => {
+                await axios.delete("/api/reserve/" + r.id)
+            })
+            await axios.patch("/api/reserve/approveReserve", {id})
 
-            await Promise.all(awaitDelete);
-            await axios.patch("/api/reserve/approveReserve", { id });
-
-            const response: AxiosResponse<Reserve[]> = await axios.get(`/api/reserve/pending`)
+            const response = await axios.get(`/api/reserve/pending`)
             const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
             setReserves(reorderData)
         } else {
-            await axios.delete("/api/reserve/" + id);
+            const deleteSeat = await axios.delete("/api/reserve/" + id);
             const response = await axios.get(`/api/reserve/pending`)
-            const reorderData: Reserve[] = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
+            const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
             setReserves(reorderData)
         }
         dispatch(setPendingNotification({ pending: reserves.length - 1 }))
