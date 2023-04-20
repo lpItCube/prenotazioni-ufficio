@@ -1,31 +1,26 @@
 // Redux
-import { useSelector, useDispatch } from 'react-redux'
-import { toggleModal, getModalStatus, getModalType, setModalType } from "../../features/modalSlice"
+import { useSelector } from 'react-redux'
+import { getModalStatus, getModalType } from "../../features/modalSlice"
 
 // Components
 import { IoClose } from "react-icons/io5";
 import { Colors } from './Colors';
-import { PRISTINE } from '../../_shared';
 
 type ModalComponentProps = {
     modalTitle: string,
     subTitle: string,
     refType: number,
-    children:any
+    children:any,
+    handleCloseModal: () => void
 }
 
 const ModalComponent: React.FC<ModalComponentProps> = (props): JSX.Element => {
 
-    const { modalTitle, subTitle, refType, children } = props
+    const { modalTitle, subTitle, refType, children, handleCloseModal } = props
 
-    const dispatch = useDispatch()
     const modalStatus = useSelector(getModalStatus)
     const modalType = useSelector(getModalType)
 
-    const handleCloseModal = () => {
-        dispatch(toggleModal(false))
-        dispatch(setModalType(PRISTINE))
-    }
 
     return (
         <div

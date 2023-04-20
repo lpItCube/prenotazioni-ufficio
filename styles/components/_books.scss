@@ -2,7 +2,8 @@
     &__container {
         position:absolute;
         z-index: 10;
-        @include transform(32px,-4px, 0);
+        margin-left: 32px;
+        margin-top: -4px;
         padding: 4px 12px 4px 8px;
         background: $statusBuisy;
         border-radius: 18px;

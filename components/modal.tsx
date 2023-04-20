@@ -5,7 +5,7 @@ import axios from "axios"
 
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
-import { toggleModal } from "../features/modalSlice"
+import { setModalType, toggleModal } from "../features/modalSlice"
 import { getReserves, setDayReserves, setReserves } from "../features/reserveSlice"
 import { getActualRoom } from "../features/roomSlice"
 
@@ -25,7 +25,7 @@ import ModalApprovation from "./Modals/ModalApprovation";
 import ModalSingleReserve from "./Modals/ModalSingleReserve";
 
 // Costants
-import { ACCEPTED, APPROVE, Actions, MEET_WHOLE, ModalType, PENDING, USER, WHOLE } from "../_shared"
+import { ACCEPTED, APPROVE, Actions, MEET_WHOLE, ModalType, PENDING, PRISTINE, USER, WHOLE } from "../_shared"
 import { FromToHour, HitModalButton, Reserve, Room, Seat } from "../types"
 
 interface ModalProps {
@@ -73,13 +73,15 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 
 
 	const handleCloseModal = () => {
+		reloadData()
 		setHitModalButton({ loading: false, id: null })
 		dispatch(toggleModal(false))
+		dispatch(setModalType(PRISTINE))
 	}
 
 
 	async function reloadData() {
-		// console.log('SET RES 2', fromTo)
+		// console.log('SET RES 2', fromTo, roomId)
 
 		const reserves: Reserve[] = await (await axios.get(`/api/roomReserves/${roomId}`)).data
 		// const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
@@ -206,9 +208,10 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 			{action === Actions.ADD || action === Actions.ADDALL || action === Actions.REQUESTALL
 				?
 				<ModalComponent
-				modalTitle={`Aggiungi prenotazione`}
-				subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from)} - ${getStringHours(fromTo.to)}` : ''}
-				refType={ModalType.SEATS}
+					modalTitle={`Aggiungi prenotazione`}
+					subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from)} - ${getStringHours(fromTo.to)}` : ''}
+					refType={ModalType.SEATS}
+					handleCloseModal={handleCloseModal}
 				>
 					<ModalSingleReserve
 						action={action}
@@ -223,6 +226,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 					modalTitle={`${action === Actions.ADD ? 'Aggiungi' : 'Gestisci'} prenotazione`}
 					subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from)} - ${getStringHours(fromTo.to)}` : ''}
 					refType={ModalType.SEATS}
+					handleCloseModal={handleCloseModal}
 				>
 					<ModalApprovation
 						reserve={userReserve}
@@ -241,6 +245,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 					modalTitle={`${action === Actions.APPROVE ? 'Approva' : 'Gestisci'} prenotazione`}
 					subTitle={fromTo ? `fascia oraria: ${getStringHours(fromTo.from)} - ${getStringHours(fromTo.to)}` : ''}
 					refType={ModalType.APPROVE}
+					handleCloseModal={handleCloseModal}
 				>
 					<ModalApprovation
 						reserve={reservedIndDay}
