@@ -14,7 +14,7 @@ import DatePicker from "./Calendar/DatePicker";
 
 // Type
 import { FromToHour, Reserve } from "../types";
-import { createNewDate } from "../utils/datePharser";
+import { transformDate } from "../utils/datePharser";
 
 interface CalendarProps {
   setFromTo: (data:{from: string, to: string}) => void
@@ -37,17 +37,23 @@ const Calendar:React.FC<CalendarProps> = (props) : JSX.Element => {
   }
 
   const handleChangeHour = async (startHour: string, endHour: string): Promise<void> => {
-    const fromDate: string = createNewDate(startHour, selectedDate)
-    const toDate: string = createNewDate(endHour, selectedDate)
+    const fromDate: string = transformDate(startHour, selectedDate)
+    const toDate: string = transformDate(endHour, selectedDate)
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
   }
   
   const handleConfirmDate = async (selDate: Date): Promise<void> => {
-    const fromDate: string = createNewDate(fromToHours.from as string, selDate)
-    const toDate: string = createNewDate(fromToHours.to as string, selDate)
+    const fromDate: string = transformDate(fromToHours.from as string, selDate)
+    const toDate: string = transformDate(fromToHours.to as string, selDate)
     setFromTo({ from: fromDate, to: toDate })
   }
+
+  useEffect(() => {
+    const fromDate: string = transformDate(fromToHours.from as string, selectedDate)
+    const toDate: string = transformDate(fromToHours.to as string, selectedDate)
+    setFromTo({ from: fromDate, to: toDate })
+  }, [selectedDate])
 
   useEffect(() => {
 		const wholeRoom: Reserve | undefined = reserveData.find((r: Reserve) => r?.seat?.type === "whole")
@@ -64,7 +70,6 @@ const Calendar:React.FC<CalendarProps> = (props) : JSX.Element => {
     <>
       <div className="date-tool__container">
         <div className="date-tool__settings">
-          { /* DEBUG INSIDE 0 */}
           <DatePicker
             date={selectedDate}
             handleOpenCalendar={handleOpenCalendar}

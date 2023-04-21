@@ -41,5 +41,22 @@ export const createNewDate = (hour: string, selectedDate?:Date) : string => {
 	const currMonth: string = ("0" + (new Date().getMonth() + 1)).slice(-2)
 	const day: string = ("0" + new Date().getDate()).slice(-2)
 	const textDate: string = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
+
+	return textDate
+}
+
+export const transformDate = (hour: string, selectedDate?:Date) : string => {
+    let currYear: number
+    let currMonth: any
+    let day: any
+    if(selectedDate) {
+        currYear = selectedDate.getFullYear()
+        currMonth = ("0" + (selectedDate.getMonth() + 1)).slice(-2)
+        day = ("0" + selectedDate.getDate()).slice(-2)
+    } else {
+        currYear = new Date().getFullYear()
+    }
+	const textDate: string = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
+
 	return textDate
 }
