@@ -47,8 +47,8 @@ export const createNewDate = (hour: string, selectedDate?:Date) : string => {
 
 export const transformDate = (hour: string, selectedDate?:Date) : string => {
     let currYear: number
-    let currMonth: any
-    let day: any
+    let currMonth: string = ''
+    let day: string = ''
     if(selectedDate) {
         currYear = selectedDate.getFullYear()
         currMonth = ("0" + (selectedDate.getMonth() + 1)).slice(-2)
