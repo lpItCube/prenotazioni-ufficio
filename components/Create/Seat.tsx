@@ -5,12 +5,12 @@ import { GridPoint, Reserve } from "../../types";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { getReserves, setReserves, setUserOnSeat } from "../../features/reserveSlice";
+import { getDayAllReserves, getDayReserves, getReserves, setReserves, setUserOnSeat } from "../../features/reserveSlice";
 import { getActualRoom } from "../../features/roomSlice";
 import { getModalStatus, setModalType, toggleModal } from "../../features/modalSlice";
 
 // Costants
-import { ADD, DELETE, SEATS_MODAL, USER } from "../../_shared";
+import { ADD, DELETE, SEATS_MODAL, USER, WHOLE } from "../../_shared";
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
@@ -32,6 +32,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
     const reserves = useSelector(getReserves)
     const roomId = useSelector(getActualRoom)
     const modalStatus = useSelector(getModalStatus)
+    const reservesInDay = useSelector(getDayAllReserves)
 
     const { userData } = useAuthHook()
     const username = userData.name
@@ -46,7 +47,10 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
     }
 
     const handleDeleteSingleSeat = (cell:GridPoint) => {
-        const filtred = reserves.filter((res:Reserve) => res?.seat?.name === cell.seatName)
+        // In caso si voglia attivare la modifica a un'unica riserva per volta, andrà rilanciato il
+        // setReserves al close della modale con le prenotazioni nell'attuale fascia oraria
+        // console.log('CLICK HERE',filtred)
+        const filtred = reserves.filter((res:Reserve) => (res?.seat?.name === cell.seatName) || (res.seat?.type === WHOLE))
         dispatch(setReserves({reserveData:filtred}))
         dispatch(toggleModal(!modalStatus))
         dispatch(setModalType(SEATS_MODAL))
@@ -71,7 +75,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
             const isYour = reserves.some((r: Reserve) => r.user.username === username && r.seat?.name.includes('whole'))
             const isPending = reserves.some((r: Reserve) => r.status === "pending")
             if (isYour) {
-                setSeatProps({ canvasClass: "your" })
+                setSeatProps({ canvasClass: "your clickable del" })
                 if (isPending) {
                     setSeatProps({ canvasClass: "pending" })
                 }
@@ -102,6 +106,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
                 setSeatProps({ canvasClass: `${isPending ? 'pending': 'your'} clickable del` })
             }
         }
+
     }, [reserves, roomId, username, role])
 
 
@@ -122,8 +127,11 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
                         : () => {}
                 }
                 // Setta il nome utente del posto
-                onMouseOver={() => dispatch(setUserOnSeat({userOnSeat:reserves.find((res:Reserve) => res.seat?.name === cell.seatName)?.user.username}))}
-                onMouseLeave={() => dispatch(setUserOnSeat({userOnSeat:''}))}
+                onMouseOver={() => dispatch(setUserOnSeat(
+                    {userOnSeat:reservesInDay.filter((res:Reserve) => (res.seat?.name === cell.seatName) || (res.seat?.type === WHOLE))}
+                    ))
+                }
+                onMouseLeave={() => dispatch(setUserOnSeat({userOnSeat:[]}))}
                 ref={canvasRef}
             >
             </div>

@@ -116,15 +116,25 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
             if(fromTo) {
                 const reserves: Reserve[] = await (await axios.get(`/api/reserve`)).data
                 const filteredRes = reserves.filter((r: Reserve) => (
-                    ((fromTo.from && r.to && new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to)) ||
-                    (fromTo.from && r.to && fromTo.to && new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to))) &&
+                    fromTo.from && fromTo.to && r.to && r.from &&
+                    (
+                        (new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to) && new Date(fromTo.to) > new Date(r.from)) || 
+                        (new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to)) ||
+                        (new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to)) ||
+                        (new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to) && new Date(fromTo.from) < new Date(r.to))
+                    ) &&
                     r.seat?.roomId === roomId
                 ))
                 const selectDate:string = fromTo.from ? getOnlyDate(fromTo.from) : ''
                 const allDayReserve = reserves.filter((r: Reserve) => (
-                    selectDate === getOnlyDate(r.from) && r.user.id === userId && r.seat?.roomId === roomId
+                    selectDate === getOnlyDate(r.from) && r.seat?.roomId === roomId
                 ))
-                dispatch(setDayReserves({ dayReserveData: allDayReserve }))
+
+                dispatch(setDayReserves({ 
+                    dayReserveData: allDayReserve.filter((r:Reserve) => r.user.id === userId),
+                    dayAllReserveData: allDayReserve
+                }))
+
                 // Setta le prenotazioni al cambio di orario
                 dispatch(setReserves({ reserveData: filteredRes }))
             }
