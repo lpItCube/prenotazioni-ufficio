@@ -34,18 +34,20 @@ export enum Actions {
     REQUESTALL,
     APPROVE,
     MANAGE,
-    DISAPPROVE
+    DISAPPROVE,
 }
 
 export const SEATS_MODAL = 1
 export const APPROVE_MODAL = 2
 export const LEGENDA_MODAL = 3
+export const EDIT_MODAL = 4
 
 export enum ModalType {
     PRISTINE,
     SEATS,
     APPROVE,
-    LEGENDA
+    LEGENDA,
+    EDIT
 }
 
 export const AUTH_OK = 'authenticated'

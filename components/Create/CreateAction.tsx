@@ -9,7 +9,7 @@ import TabBar from '../Ui/TabBar';
 import Input from '../Ui/Input';
 
 // Costants
-import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState } from '../../_shared';
+import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, EDIT_MODAL, StepperState } from '../../_shared';
 
 // Framer motion
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,8 +18,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Domain, FormMethod, ITabButton, Office, OptionItem, Room } from '../../types';
 
 // Icons
-import { IoAddCircleOutline } from "react-icons/io5";
+import { TbEdit } from "react-icons/tb";
 import { RiDeleteBin3Line } from "react-icons/ri"
+import { BsArrowRight } from "react-icons/bs";
+import Textarea from '../Ui/Textarea';
+
+// Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { getModalStatus, setModalType, toggleModal } from '../../features/modalSlice';
 
 
 interface CreateActionProps {
@@ -34,6 +40,7 @@ interface CreateActionProps {
 	stepperState: number,
 	createName: string,
 	direction: number,
+	description?: string,
 	setDirection: (num: number) => void,
 	setCreateName: (name: string) => void,
 	handleCreation: (type: number) => void,
@@ -43,6 +50,7 @@ interface CreateActionProps {
 	setSelectedDomain: (item: OptionItem) => void,
 	setSelectedOffice: (item: OptionItem) => void,
 	setSelectedRoom: (item: OptionItem) => void,
+	setDescription?: (desc: string) => void
 }
 
 
@@ -60,6 +68,7 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 		stepperState,
 		createName,
 		direction,
+		description,
 		setDirection,
 		handleCreation,
 		setCreateName,
@@ -68,8 +77,12 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 		setStepperState,
 		setSelectedDomain,
 		setSelectedOffice,
-		setSelectedRoom
+		setSelectedRoom,
+		setDescription
 	} = props
+
+	const dispatch = useDispatch()
+	const modalStatus = useSelector(getModalStatus)
 
 	const [method, setMethod] = useState<number>(FormMethod.SELEZIONA)
 	const [isDisabledSelect, setIsDisabledSelect] = useState<boolean>(false)
@@ -122,23 +135,22 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 
 	const buttonEnter = {
 		initial: {
-			scale: 0,
+			right: -16,
 			opacity: 0
 		},
 		animate: {
-			scale: 1,
 			opacity: 1,
+			right: 0,
 			transition: {
-				delay: 0.2,
-				duration: 0.3,
+				duration: 0.2,
 				ease: 'easeInOut',
 			},
 		},
 		exit: {
-			scale: 0,
 			opacity: 0,
+			right: -16,
 			transition: {
-				duration: 0.3,
+				duration: 0.2,
 				ease: 'easeInOut',
 			},
 		}
@@ -161,6 +173,11 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 
 	const toggleMethod = (tab: number) => {
 		setMethod(tab)
+	}
+
+	const handleEditRoom = () => {
+		dispatch(toggleModal(!modalStatus))
+		dispatch(setModalType(EDIT_MODAL))
 	}
 
 	const placeholder: string = stepperState === StepperState.DOMAIN
@@ -239,7 +256,7 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 																onClick={() => handleCreation(currentStepper)}
 																className={`cta cta--primary cta__icon${!createName ? ' disabled' : ''}`}
 																type='button'
-																icon={<IoAddCircleOutline size={20} color={Colors.white} />}
+																icon={<BsArrowRight size={20} color={Colors.white} />}
 																text={''}
 																disabled={!createName}
 															/>
@@ -250,6 +267,14 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 										)
 									}
 								</div>
+								{stepperState === StepperState.ROOM && setDescription && method === FormMethod.AGGIUNGI &&
+									<Textarea
+										label={''}
+										value={description ? description : ''}
+										onChange={setDescription}
+										placeholder={'Aggiungi una descrizione'}
+									/>
+								}
 							</div>
 						</motion.div>
 					</div>
@@ -283,14 +308,24 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 									}, 100)
 								}}
 							/>
-							<div className='creation-stepper__box--title'>
+							<div 
+								className='creation-stepper__box--title'
+								onClick={() => handleEditRoom()}
+							>
 								<p
 									className="select__label label"
 								>
 									{label}
 								</p>
-								<p>
+								<p className='creation-stepper__room--name'>
 									{selectObj.label}
+									{currentStepper === StepperState.ROOM && 
+										<TbEdit
+											size={18}
+											color={Colors.green700}
+											className="creation-stepper__box--edit"
+										/>
+									}
 								</p>
 							</div>
 						</motion.div>

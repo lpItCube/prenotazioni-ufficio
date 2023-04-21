@@ -52,19 +52,6 @@
             background-color: white;
             padding: 16px 16px 24px;
             border-radius: 4px;
-        }
-
-        &-cta {
-            position: absolute;
-            right: 0;
-        }
-
-        &-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            position: relative;
-
             .select {
 
                 &__container {
@@ -88,7 +75,12 @@
                 &__container {
                     padding: 0;
                     width: $col12;
-                    @include animate(0.2s ease-in-out)
+                    max-width: $col12;
+                    @include animate(0.2s ease-in-out);
+                    &.description {
+                        margin-top: 16px;
+                        margin-bottom: 0;
+                    }
                 }
 
                 &__value-container {
@@ -97,6 +89,23 @@
                     display: block;
                 }
             }
+
+            textarea {
+                resize: vertical;
+            }
+        }
+
+        &-cta {
+            position: absolute;
+            right: 0;
+        }
+
+        &-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            position: relative;
+
 
             &.w-cta {
                 .input {
@@ -113,6 +122,21 @@
         padding: 0 8px;
     }
 
+    &__room {
+        &--name {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+                svg {
+                    path {
+                        color: $warning300;
+                        outline: none;
+                    }
+                }
+            }
+        }
+    }
     &__box {
         display: flex;
         flex-wrap: wrap;
@@ -135,7 +159,9 @@
             }
         }
 
-        .svg {}
+        &--edit {
+            margin-left: 8px;
+        }
     }
 
     // &__element {

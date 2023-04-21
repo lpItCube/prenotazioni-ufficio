@@ -66,6 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   fromDate.setHours(fromDate.getHours() + 1);
   endDate = new Date(data.to);
   endDate.setHours(endDate.getHours() + 1);
+  
   try {
     const result = await prisma.reserve.create({
       data: {
@@ -75,6 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
     // console.log('CREA',result)
+    console.log('HERE', result)
     res.status(200).json(result)
   } catch (e) {
 

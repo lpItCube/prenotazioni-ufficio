@@ -37,7 +37,7 @@ const HandleOffice: React.FC<HandleOfficeProps> = (props) : JSX.Element => {
 	const userRole = userData.role
 
 	const dispatch = useDispatch()
-	const modalStatus: boolean = useSelector(getModalStatus)
+	const modalStatus = useSelector(getModalStatus)
 	const reserveData: Reserve[] = useSelector(getReserves)
 	const isYourRoom: boolean = useSelector(getIsYourRoom)
 

@@ -6,12 +6,14 @@ import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 // Components
-import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5"
-import { BsJournalCheck } from "react-icons/bs";
-
-import { TbDoorExit } from "react-icons/tb"
 import { Colors } from "../Ui/Colors";
 import Logout from "./Logout";
+
+// Icons
+import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5"
+import { BsJournalCheck } from "react-icons/bs";
+import { TbDoorExit } from "react-icons/tb"
+import { AiOutlineBuild } from "react-icons/ai";
 
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
@@ -20,7 +22,7 @@ import { getPendingNotification, setPendingNotification } from "../../features/n
 
 // Hooks
 import { useAuthHook } from '../../hooks/useAuthHook'
-import { AUTH_OK } from "../../_shared"
+import { AUTH_OK, USER } from "../../_shared"
 import { Reserve } from "../../types"
 
 interface NavigationProps {
@@ -75,6 +77,19 @@ const Navigation: React.FC<NavigationProps> = (props) => {
                     Menu:
                 </p>
                 <ul>
+                    {userRole !== USER && 
+                        <CustomLink
+                            href="/create/room"
+                            notification={false}
+                            icon={
+                                <AiOutlineBuild
+                                    size={18}
+                                    color={path === '/create/room' ? Colors.dark700 : Colors.light500}
+                                />}
+                            text="Crea stanza"
+                            isActive={path === '/create/room'}
+                        />
+                    }
                     <CustomLink
                         href="/prenota"
                         notification={false}
@@ -97,7 +112,7 @@ const Navigation: React.FC<NavigationProps> = (props) => {
                         text="Prenotazioni"
                         isActive={path.includes('prenotazioni')}
                     />
-                    {userRole !== 'USER' && path.includes('prenotazioni') &&
+                    {userRole !== USER && path.includes('prenotazioni') &&
                         <ul
                             className="navigation__children"
                         >
@@ -117,8 +132,6 @@ const Navigation: React.FC<NavigationProps> = (props) => {
                             />
                         </ul>
                     }
-
-
                     <CustomLink
                         href="/profilo"
                         notification={false}

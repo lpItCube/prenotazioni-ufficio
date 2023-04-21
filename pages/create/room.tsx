@@ -14,9 +14,14 @@ import CreateAction from "../../components/Create/CreateAction"
 import prisma from "../../lib/prisma"
 
 // Costants
-import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, PRISTINE, StepperState } from "../../_shared"
+import { DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, ModalType, PRISTINE, StepperState } from "../../_shared"
 import { Domain, Office, OptionItem, Room } from "../../types"
 import { useAuthHook } from "../../hooks/useAuthHook"
+import ModalComponent from "../../components/Ui/ModalComponent"
+
+// Redux
+import { useDispatch, useSelector } from "react-redux"
+import { getModalType, setModalType, toggleModal } from "../../features/modalSlice"
 
 
 const Room: React.FC = (): JSX.Element => {
@@ -29,6 +34,9 @@ const Room: React.FC = (): JSX.Element => {
 	const username = userData.name
 	const role = userData.role
 
+	const dispatch = useDispatch()
+	const modalType = useSelector(getModalType)
+
 	const [domains, setDomains] = useState<Domain[]>([])
 	const [offices, setOffices] = useState<Office[]>([])
 	const [rooms, setRooms] = useState<Room[]>([])
@@ -40,6 +48,7 @@ const Room: React.FC = (): JSX.Element => {
 	const [openOffice, setOpenOffice] = useState<boolean>(false)
 	const [openStanza, setOpenStanza] = useState<boolean>(false)
 	const [createName, setCreateName] = useState<string>('')
+	const [description, setDescription] = useState<string>('')
 	const [direction, setDirection] = useState<number>(DirectionMode.POSITIVE)
 	const [action, setAction] = useState<number>(PRISTINE)
 
@@ -109,6 +118,12 @@ const Room: React.FC = (): JSX.Element => {
 		setSelectedRoom({ label: 'Seleziona', value: '' })
 	}, [selectedOffice])
 
+	useEffect(() => {
+		if(modalType === ModalType.EDIT) {
+			console.log('CHANGE MODAL TYPE', selectedRoom.label, selectedRoom.value, description)
+		}
+	}, [modalType])
+ 
 
 	const handleCreation = async (type: number) => {
 		if (type === StepperState.DOMAIN) {
@@ -120,7 +135,7 @@ const Room: React.FC = (): JSX.Element => {
 			setSelectedOffice({ value: res.data.id, label: res.data.name })
 			setOffices([...offices, res.data])
 		} else if (type === StepperState.ROOM) {
-			const res: AxiosResponse<Room> = await axios.post("/api/room", { name: createName, officeId: selectedOffice.value })
+			const res: AxiosResponse<Room> = await axios.post("/api/room", { name: createName, officeId: selectedOffice.value, description: description })
 			setSelectedRoom({ value: res.data.id, label: res.data.name })
 			setRooms([...rooms, res.data])
 		}
@@ -140,6 +155,10 @@ const Room: React.FC = (): JSX.Element => {
 		setOpenStanza(prev => !prev)
 	}
 
+	const handleCloseModal = () => {
+		dispatch(toggleModal(false))
+		dispatch(setModalType(PRISTINE))
+	}
 
 	return (
 		<div
@@ -226,6 +245,8 @@ const Room: React.FC = (): JSX.Element => {
 							setSelectedDomain={setSelectedDomain}
 							setSelectedOffice={setSelectedOffice}
 							setSelectedRoom={setSelectedRoom}
+							setDescription={setDescription}
+							description={description}
 						/>
 					</div>
 				</div>
@@ -239,6 +260,14 @@ const Room: React.FC = (): JSX.Element => {
 					setAction={setAction}
 				/>
 			}
+			<ModalComponent
+				modalTitle={`Modifica stanza`}
+				subTitle={'Modifica'}
+				refType={ModalType.EDIT}
+				handleCloseModal={handleCloseModal}
+			>
+				Modal
+			</ModalComponent>
 		</div>
 	)
 }

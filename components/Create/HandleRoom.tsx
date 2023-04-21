@@ -45,7 +45,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
     const variants = {
         initial: {
             opacity: 0,
-            y: 8
+            y: -8
         },
         visible: {
             opacity: 1,
@@ -57,7 +57,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
         },
         hidden: {
             opacity: 0,
-            y: 8,
+            y: -8,
             transition: {
                 duration: 0.3,
                 ease: 'easeInOut',
