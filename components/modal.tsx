@@ -144,7 +144,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		setHitModalButton({ loading: true, id: null })
 
 		const seatId: string = await (await axios.get(`/api/seats/${seatName}`)).data.id
-		const myReserveInDay = reserveInDay.filter((r:Reserve) => r.user.id === userId)
+		const myReserveInDay = reserveInDay.filter((r:Reserve) => r.user.id === userId && r.seat?.type !== WHOLE)
 		let bookStatus = userRole === USER 
 			? myReserveInDay.length > 0
 				? PENDING
@@ -189,8 +189,9 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 			const resDay = reserveInDay.filter((r:Reserve) => r.userId === userId && r.id !== id)
 			const alreadyAccepted = resDay.filter((r:Reserve) => r.status === ACCEPTED).length
 
+			console.log(resDay)
 			if(!alreadyAccepted) {
-				const firstInPending = resDay.find((r:Reserve) => r.status === 'pending') as Reserve
+				const firstInPending = resDay.find((r:Reserve) => r.status === 'pending' && r.seat?.type !== WHOLE) as Reserve
 				if(firstInPending) {
 					const id = firstInPending.id
 					await axios.patch("/api/reserve/approveReserve", {id})

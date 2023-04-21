@@ -64,14 +64,16 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
         const seatReserve = reserves.find((r: Reserve) => r.seat?.name === cell.seatName)
         const yourReserve = seatReserve?.user.username === username
         const wholeRoom = reserves.find((r: Reserve) => r.seat?.type === "whole")
-        const isPending = reserves.some((r: Reserve) => r.status === "pending")
+        const isPending = reserves.find((r: Reserve) => r.status === "pending" && r.seat?.name === cell.seatName)
+
 
         if (wholeRoom) {
             const isYour = reserves.some((r: Reserve) => r.user.username === username && r.seat?.name.includes('whole'))
+            const isPending = reserves.some((r: Reserve) => r.status === "pending")
             if (isYour) {
                 setSeatProps({ canvasClass: "your" })
                 if (isPending) {
-                    setSeatProps({ canvasClass: "pending clickable del" })
+                    setSeatProps({ canvasClass: "pending" })
                 }
             } else {
                 if (!isAdmin) {
@@ -96,6 +98,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
                 setSeatProps(prev => ({ canvasClass: `${prev.canvasClass} not-available` }))
             }
             if (yourReserve) {
+
                 setSeatProps({ canvasClass: `${isPending ? 'pending': 'your'} clickable del` })
             }
         }
