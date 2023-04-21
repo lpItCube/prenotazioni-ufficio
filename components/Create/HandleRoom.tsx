@@ -81,7 +81,11 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
     const [selectedCell, setSelectedCell] = useState<GridPoint>()
     const [showOptions, setShowOptions] = useState<boolean>(false)
     const [updateGrid, setUpdateGrid] = useState<GridPoint[]>([])
+    const [firstUpdate, setFirstUpdate] = useState<boolean>(false)
 
+    useEffect(() => {
+        setFirstUpdate(true)
+    },[])
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -142,7 +146,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
         }
         if (!create)
             setReservess()
-    }, [roomId, fromTo])
+    }, [roomId, fromTo, firstUpdate])
 
 
     const handleSave = async () => {
