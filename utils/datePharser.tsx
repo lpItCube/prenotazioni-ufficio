@@ -17,7 +17,7 @@ export const getStringDate = (date: string) => {
 }
 
 
-export const getStringHours = (date: string | null): void | string => {
+export const getStringHours = (date: string | null): string | void => {
 
     if(!date) return
     const hours =  String(new Date(date).getHours()).padStart(2, '0') + ':00' 

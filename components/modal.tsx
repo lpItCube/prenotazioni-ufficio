@@ -84,17 +84,26 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		// console.log('SET RES 2', fromTo, roomId)
 
 		const reserves: Reserve[] = await (await axios.get(`/api/roomReserves/${roomId}`)).data
-		// const reloadData = reserves.filter((r: any) => (new Date(r.from) >= new Date(fromTo.from as string) && new Date(r.to) <= new Date(fromTo.to as string) ))
 		const reloadData = reserves.filter((r: Reserve) => (
-			(fromTo.from && r.to && new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to)) ||
-			(fromTo.from && r.to && fromTo.to && new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to))
-		))
-		const selectDate: string = fromTo.from ? getOnlyDate(fromTo.from) : ''
-		const allDayReserve = reserves.filter((r: Reserve) => (
-			selectDate === getOnlyDate(r.from) && r.user.id === userId
+			fromTo.from && fromTo.to && r.to && r.from &&
+			(
+				(new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to) && new Date(fromTo.to) > new Date(r.from)) || 
+				(new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to)) ||
+				(new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to)) ||
+				(new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to) && new Date(fromTo.from) < new Date(r.to))
+			) &&
+			r.seat?.roomId === roomId
 		))
 
-		dispatch(setDayReserves({ dayReserveData: allDayReserve }))
+		const selectDate: string = fromTo.from ? getOnlyDate(fromTo.from) : ''
+		const allDayReserve = reserves.filter((r: Reserve) => (
+			selectDate === getOnlyDate(r.from)
+		))
+
+		dispatch(setDayReserves({ 
+			dayReserveData: allDayReserve.filter((r:Reserve) => r.user.id === userId),
+			dayAllReserveData: allDayReserve
+		}))
 		// Setta le prenotazioni all'ADD di una specifica
 		dispatch(setReserves({ reserveData: reloadData }))
 	}
@@ -180,15 +189,25 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 			await axios.delete("/api/reserve/" + id);
 			const reserves:Reserve[] = await (await axios.get(`/api/roomReserves/${roomId}`)).data
 			const reloadData = reserves.filter((r: Reserve) => (
-                (fromTo.from && r.to && new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.from) < new Date(r.to)) ||
-                (fromTo.from && r.to && fromTo.to && new Date(r.to) > new Date(fromTo.from) && new Date(r.to) <= new Date(fromTo.to))
-            ))
+				fromTo.from && fromTo.to && r.to && r.from &&
+				(
+					(new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to) && new Date(fromTo.to) > new Date(r.from)) || 
+					(new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to)) ||
+					(new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to)) ||
+					(new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to) && new Date(fromTo.from) < new Date(r.to))
+				) &&
+				r.seat?.roomId === roomId
+			))
 			const selectDate = fromTo.from ? getOnlyDate(fromTo.from) : ''
 			const allDayReserve = reserves.filter((r: Reserve) => (
-				selectDate === getOnlyDate(r.from) && r.user.id === userId
+				selectDate === getOnlyDate(r.from)
 			))
-
-			dispatch(setDayReserves({ dayReserveData: allDayReserve }))
+	
+			dispatch(setDayReserves({ 
+				dayReserveData: allDayReserve.filter((r:Reserve) => r.user.id === userId),
+				dayAllReserveData: allDayReserve
+			}))
+			
 			// Setta le prenotazioni al DELETE su una specifica
 			dispatch(setReserves({ reserveData: reloadData }))
 			setHitModalButton({ loading: false, id: null })

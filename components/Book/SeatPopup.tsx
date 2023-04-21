@@ -4,9 +4,10 @@ import { AnimatePresence, motion } from "framer-motion"
 // Redux
 import { useSelector } from "react-redux"
 import { getUserOnSeat } from "../../features/reserveSlice"
-import { MousePosition } from "../../types"
+import { MousePosition, Reserve } from "../../types"
 import { useAuthHook } from "../../hooks/useAuthHook"
-import { USER } from "../../_shared"
+import { PENDING, USER, WHOLE } from "../../_shared"
+import { getStringHours } from "../../utils/datePharser"
 
 interface SeatPopupProps {
     cursorPos: MousePosition
@@ -22,45 +23,70 @@ const SeatPopup: React.FC<SeatPopupProps> = (props): JSX.Element | null => {
 
     const popupVariants = {
         initial: {
-            opacity:0,
-            scale:0
+            opacity: 0,
+            scale: 0,
+            y: '-50%'
         },
         animate: {
-            opacity:1,
-            scale:1,
+            opacity: 1,
+            scale: 1,
+            y: '-50%'
         },
         exit: {
-            opacity:0,
-            scale:0,
+            opacity: 0,
+            scale: 0,
+            y: '-50%'
         }
     }
 
-    const popup = userOnSeat && role !== USER
+
+    const popup = userOnSeat.length > 0 && role !== USER
         ? (
             <motion.div
                 variants={popupVariants}
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className={`seat-popup__container ${userOnSeat === currentUser ? 'is-you' : 'is-other'}`}
+                className={`seat-popup__container`}
                 style={{
                     left: cursorPos.x,
                     top: cursorPos.y
                 }}
             >
-                <div className="seat-popup__arrow" />
-                <p
-                    className="seat-popup__name"
-                >
-                    {userOnSeat}
-                </p>
+                {/* <div className="seat-popup__arrow" /> */}
+                <div className="seat-popup__data--wrapper">
+                    {userOnSeat.map((r: Reserve) => {
+                        const from = getStringHours(r.from)
+                        const to = getStringHours(r.to as string)
+                        return (
+                            <div
+                                key={r.id}
+                                className="seat-popup__data--container"
+                            >
+                                <div className={`seat-popup__indicator ${r.status === PENDING
+                                    ? 'is-pending'
+                                    : r.user.username === currentUser
+                                        ? 'is-you'
+                                        : 'is-other'}`}
+                                />
+                                <p
+                                    className={`seat-popup__name`}
+                                >
+                                    {r.user.username} | {from as string} - {to as string} {r.seat?.type === WHOLE && 'WHOLE'}
+                                </p>
+                            </div>
+                        )
+                    })}
+                </div>
             </motion.div>
         ) : null
 
     return (
-    <AnimatePresence>
-        {popup}
-    </AnimatePresence>
+        <>
+            <AnimatePresence>
+                {popup}
+            </AnimatePresence>
+        </>
     )
 }
 
