@@ -47,7 +47,6 @@ const Prenota: React.FC<PrenotaProps> = (props): JSX.Element => {
 		dispatch(setReserves({ reserveData: initialData }))
 	}, [])
 
-	console.log('FROM TO',fromTo)
 
 	useEffect(() => {
 		const event = new Event("visibilitychange");

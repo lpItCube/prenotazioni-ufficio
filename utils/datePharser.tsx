@@ -57,7 +57,6 @@ export const transformDate = (hour: string, selectedDate?:Date) : string => {
         currYear = new Date().getFullYear()
     }
 	const textDate: string = currYear + "-" + currMonth + "-" + day + "T" + hour + ":00:00";
-    console.log(textDate)
 
 	return textDate
 }
