@@ -9,7 +9,7 @@ import { getDayReserves, setDayReserves, setReserves } from "../../features/rese
 import axios, { AxiosResponse } from "axios"
 
 // Types
-import { Room, Reserve, GridPoint, FromToHour, Seat } from "../../types"
+import { Room, Reserve, GridPoint, FromToHour, Seat, OptionItem } from "../../types"
 
 // Components
 import Modal from "../modal"
@@ -27,20 +27,27 @@ import { getOnlyDate } from "../../utils/datePharser"
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook"
-import { OPTION_CHAIR } from "../../_shared"
+import { ModalType, OPTION_CHAIR, PRISTINE } from "../../_shared"
+import ModalComponent from "../Ui/ModalComponent"
+import { setModalType, toggleModal } from "../../features/modalSlice"
+import Input from "../Ui/Input"
+import Textarea from "../Ui/Textarea"
+import Button from "../Ui/Button"
+import Spinner from "../Ui/Spinner"
 
 interface HandleRoomProps {
     fromTo?: FromToHour,
     action: number,
-    setAction: (action:number) => void,
+    setAction: (action: number) => void,
     roomId: string,
-    create: boolean
+    create: boolean,
+    setSelectedRoom?: (item: any) => void,
 }
 
 
 const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 
-    const { fromTo, action, setAction, roomId, create } = props
+    const { fromTo, action, setAction, roomId, create, setSelectedRoom } = props
 
     const variants = {
         initial: {
@@ -82,10 +89,18 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
     const [showOptions, setShowOptions] = useState<boolean>(false)
     const [updateGrid, setUpdateGrid] = useState<GridPoint[]>([])
     const [firstUpdate, setFirstUpdate] = useState<boolean>(false)
+    const [roomName, setRoomName] = useState<string>("")
+    const [roomDescription, setRoomDescription] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     useEffect(() => {
         setFirstUpdate(true)
-    },[])
+    }, [])
+
+    useEffect(() => {
+        setRoomName(room?.name ? room.name : "")
+        setRoomDescription(room?.description ? room.description : "")
+    }, [room])
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -117,25 +132,25 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
         getRoom()
         const setReservess = async () => {
             // console.log('SET RES 3')
-            if(fromTo) {
+            if (fromTo) {
                 const reserves: Reserve[] = await (await axios.get(`/api/reserve`)).data
                 const filteredRes = reserves.filter((r: Reserve) => (
                     fromTo.from && fromTo.to && r.to && r.from &&
                     (
-                        (new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to) && new Date(fromTo.to) > new Date(r.from)) || 
+                        (new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to) && new Date(fromTo.to) > new Date(r.from)) ||
                         (new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) <= new Date(r.to)) ||
                         (new Date(fromTo.from) <= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to)) ||
                         (new Date(fromTo.from) >= new Date(r.from) && new Date(fromTo.to) >= new Date(r.to) && new Date(fromTo.from) < new Date(r.to))
                     ) &&
                     r.seat?.roomId === roomId
                 ))
-                const selectDate:string = fromTo.from ? getOnlyDate(fromTo.from) : ''
+                const selectDate: string = fromTo.from ? getOnlyDate(fromTo.from) : ''
                 const allDayReserve = reserves.filter((r: Reserve) => (
                     selectDate === getOnlyDate(r.from) && r.seat?.roomId === roomId
                 ))
 
-                dispatch(setDayReserves({ 
-                    dayReserveData: allDayReserve.filter((r:Reserve) => r.user.id === userId),
+                dispatch(setDayReserves({
+                    dayReserveData: allDayReserve.filter((r: Reserve) => r.user.id === userId),
                     dayAllReserveData: allDayReserve
                 }))
 
@@ -150,18 +165,29 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 
 
     const handleSave = async () => {
+        setIsLoading(true)
         const newRoom: Room = {
             ...room as Room,
+            name: roomName,
+            description: roomDescription,
             xSize: xCells,
             ySize: yCells,
             gridPoints: grid?.flat()
         }
 
-        await axios.put("/api/room/", { ...newRoom, id: roomId })
+        setRoom(newRoom)
+        try {
+            await axios.put("/api/room/", { ...newRoom, id: roomId })
+            handleCloseModal()
+            setIsLoading(false)
+        } catch (e) {
+            console.log(e)
+        }
         try {
             await axios.delete(`/api/seats/${roomId}`)
             if (seats.length > 0) {
                 await axios.post("/api/seats/", { seats })
+                setIsLoading(false)
             }
         } catch (e) {
             console.log(e)
@@ -196,6 +222,22 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
     };
 
 
+    const handleCloseModal = () => {
+        dispatch(toggleModal(false))
+        dispatch(setModalType(PRISTINE))
+    }
+
+    const handleSaveRoom = () => {
+        setIsLoading(true)
+        if (setSelectedRoom) {
+            setSelectedRoom((prev: OptionItem) => ({
+                label: roomName,
+                value: prev.value
+            }))
+        }
+        handleSave()
+    }
+
     return (
         <>
             {create ? (
@@ -206,6 +248,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
                         yCells={yCells}
                         setYCells={setYCells}
                         handleSave={handleSave}
+                        isLoading={isLoading}
                     />
                     <div className="room-creation">
                         <div className="room-grid">
@@ -251,19 +294,54 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
                             />
                         </div>
                     </div>
+                    <ModalComponent
+                        modalTitle={`Modifica stanza ${room?.name}`}
+                        subTitle={'Modifica'}
+                        refType={ModalType.EDIT}
+                        handleCloseModal={handleCloseModal}
+                    >
+                        {/* 
+                        Al save della modale lanciare setSelectedRoom settando la label +
+                        fare la put su la stanza con id room.id +
+                        settare setRoom per il nome e la descrizione +
+                        lanciare handleSave function
+                        */}
+                        <Input
+                            label=""
+                            value={roomName}
+                            onChange={setRoomName}
+                            placeholder="Nome stanza"
+                        />
+                        <Textarea
+                            label=""
+                            value={roomDescription}
+                            onChange={setRoomDescription}
+                            placeholder="Descrizione stanza"
+                        />
+                        {isLoading
+                            ? <Spinner />
+                            : <Button
+                                type="button"
+                                icon={false}
+                                text="Salva"
+                                className="cta cta--primary"
+                                onClick={() => handleSaveRoom()}
+                            />
+                        }
+                    </ModalComponent>
                 </>
             ) : (
                 <>
                     <div className="room-creation">
                         <div className="room-grid">
                             <div>
-                                
+
                             </div>
                             {(room && room.xSize && room.ySize) &&
-                                <Grid 
-                                    setSeatName={setSeatName} 
-                                    setAction={setAction} 
-                                    room={room} 
+                                <Grid
+                                    setSeatName={setSeatName}
+                                    setAction={setAction}
+                                    room={room}
                                 />
                             }
                         </div>
@@ -271,11 +349,21 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
                             reserves={reserveAllDay}
                         />
                     </div>
+                    {room?.description && 
+                        <ModalComponent
+                            modalTitle={`Stanza ${room?.name}`}
+                            subTitle={'Informazioni'}
+                            refType={ModalType.READ}
+                            handleCloseModal={handleCloseModal}
+                        >
+                            {room?.description}
+                        </ModalComponent>
+                    }
                     {fromTo &&
-                        <Modal 
-                            seatName={seatName} 
-                            action={action} 
-                            fromTo={fromTo} 
+                        <Modal
+                            seatName={seatName}
+                            action={action}
+                            fromTo={fromTo}
                         />
                     }
                 </>

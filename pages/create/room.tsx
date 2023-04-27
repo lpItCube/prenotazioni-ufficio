@@ -81,6 +81,7 @@ const Room: React.FC = (): JSX.Element => {
 
 
 	useEffect(() => {
+
 		const getDomains = async () => {
 			const res: Domain[] = (await axios.get("/api/domain")).data
 			if (res) setDomains(res)
@@ -97,14 +98,17 @@ const Room: React.FC = (): JSX.Element => {
 		} else {
 			setOffices([])
 		}
+	}, [domains])
 
+
+	useEffect(() => {
 		const office = offices.find((office) => office.id === selectedOffice.value)
 		if (office && office.hasOwnProperty("room") && office.room.length > 0) {
 			setRooms(office.room)
 		} else {
 			setRooms([])
 		}
-	}, [domains])
+	}, [offices])
 
 
 
@@ -118,12 +122,6 @@ const Room: React.FC = (): JSX.Element => {
 		setSelectedRoom({ label: 'Seleziona', value: '' })
 	}, [selectedOffice])
 
-	useEffect(() => {
-		if(modalType === ModalType.EDIT) {
-			console.log('CHANGE MODAL TYPE', selectedRoom.label, selectedRoom.value, description)
-		}
-	}, [modalType])
- 
 
 	const handleCreation = async (type: number) => {
 		if (type === StepperState.DOMAIN) {
@@ -155,10 +153,6 @@ const Room: React.FC = (): JSX.Element => {
 		setOpenStanza(prev => !prev)
 	}
 
-	const handleCloseModal = () => {
-		dispatch(toggleModal(false))
-		dispatch(setModalType(PRISTINE))
-	}
 
 	return (
 		<div
@@ -258,16 +252,9 @@ const Room: React.FC = (): JSX.Element => {
 					create={true}
 					action={action}
 					setAction={setAction}
+					setSelectedRoom={setSelectedRoom}
 				/>
 			}
-			<ModalComponent
-				modalTitle={`Modifica stanza`}
-				subTitle={'Modifica'}
-				refType={ModalType.EDIT}
-				handleCloseModal={handleCloseModal}
-			>
-				Modal
-			</ModalComponent>
 		</div>
 	)
 }

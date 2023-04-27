@@ -310,7 +310,7 @@ const CreateAction: React.FC<CreateActionProps> = (props): JSX.Element => {
 							/>
 							<div 
 								className='creation-stepper__box--title'
-								onClick={() => handleEditRoom()}
+								onClick={() => currentStepper === StepperState.ROOM && handleEditRoom()}
 							>
 								<p
 									className="select__label label"

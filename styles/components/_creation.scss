@@ -52,6 +52,7 @@
             background-color: white;
             padding: 16px 16px 24px;
             border-radius: 4px;
+
             .select {
 
                 &__container {
@@ -72,26 +73,9 @@
             }
 
             .input {
-                &__container {
-                    padding: 0;
-                    width: $col12;
-                    max-width: $col12;
-                    @include animate(0.2s ease-in-out);
-                    &.description {
-                        margin-top: 16px;
-                        margin-bottom: 0;
-                    }
-                }
-
                 &__value-container {
                     background-color: $green100;
-                    width: $col12;
-                    display: block;
                 }
-            }
-
-            textarea {
-                resize: vertical;
             }
         }
 
@@ -127,6 +111,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+
             &:hover {
                 svg {
                     path {
@@ -137,6 +122,7 @@
             }
         }
     }
+
     &__box {
         display: flex;
         flex-wrap: wrap;
@@ -152,6 +138,7 @@
             background-color: $warning300;
             border-radius: 100%;
             padding: 6px;
+
             &:hover {
                 background-color: $statusPending;
                 border-radius: 100%;
@@ -182,12 +169,14 @@
 
     &-create {
         &__body {
-            flex:0
+            flex: 0
         }
+
         &__container {
             min-height: 100%;
             display: flex;
             flex-direction: column;
+
             .cta {
                 &.square {
                     text-align: center;
@@ -198,10 +187,11 @@
     }
 
     &-creation {
-        flex:1;
+        flex: 1;
         align-items: center;
         justify-content: center;
         position: relative;
+
         // background-color: $createRoomBg;
         &__options {
             position: relative;
@@ -210,14 +200,16 @@
             width: $col12;
             display: flex;
             flex-wrap: wrap;
-            padding:4px 24px 16px;
+            padding: 4px 24px 16px;
             background-color: $green100;
             justify-content: space-between;
             align-items: flex-end;
         }
+
         &__grid-controller {
             display: flex;
             flex-wrap: wrap;
+
             .input-number {
                 &__wrapper {
                     margin-right: 32px;
@@ -270,15 +262,18 @@
         /* flex: 1 1; */
         display: flex;
         width: $col12;
+
         .creation-table {
             &__col {
                 border-right: 1px solid $light500;
                 border-bottom: solid 1px $light500;
+
                 &:nth-last-child(1) {
                     border-right: none;
                 }
             }
         }
+
         &:nth-last-child(1) {
             .creation-table {
                 &__col {
@@ -306,12 +301,15 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+
         &.selected {
-           background-color: $statusYours;
+            background-color: $statusYours;
         }
+
         &:hover {
             background-color: $statusYours;
         }
+
         .creation-options {
             &__table {
                 &--angle {
@@ -328,7 +326,7 @@
         position: sticky;
         z-index: 100;
         top: 16px;
-        bottom:16px;
+        bottom: 16px;
         left: 16px;
         height: calc(100% - 32px);
         overflow: auto;
@@ -336,6 +334,7 @@
         display: table;
         padding: 16px 0;
     }
+
     &__box {
         background: white;
         position: relative;
@@ -344,12 +343,14 @@
         box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
         display: table;
     }
+
     &__wrapper {
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
-        gap:4px;
+        gap: 4px;
     }
+
     &__element {
         width: 48px;
         height: 48px;
@@ -358,72 +359,89 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border:none;
+        border: none;
         cursor: pointer;
+
         &.clear {
             background-color: $warning300;
+
             &:hover {
                 background-color: $warning500;
             }
         }
+
         &.disabled {
             background-color: $light500;
             pointer-events: none;
         }
+
         &.selected,
         &:hover {
             background-color: $green100
         }
+
         &--vLine {
             @extend .creation-options__element;
             flex-direction: column;
             justify-content: space-between;
             padding: 10px;
+
             &.bottom {
                 justify-content: flex-end
             }
         }
+
         &--hLine {
             @extend .creation-options__element;
             justify-content: space-between;
-            padding:10px;
+            padding: 10px;
+
             &.right {
                 justify-content: flex-end;
             }
         }
     }
+
     &__seat {
         &--container {
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         width: 24px;
         height: 24px;
         border-radius: 100%;
         background-color: $green500;
+
         &.your {
             background-color: $statusYours;
         }
+
         &.not-available {
             background-color: transparent;
             border: solid 2px $green500;
         }
+
         &.buisy {
             background-color: $statusBuisy;
+
             &.not-available {
                 background-color: transparent;
                 border: solid 2px $statusBuisy;
             }
         }
+
         &.pending {
             background-color: $statusPending;
         }
     }
+
     &__table {
         &--angle {
             width: 25px;
             height: 25px;
+
             &-br {
                 @extend .creation-options__table--angle;
                 border: 3px solid $statusNotAvailable;
@@ -431,6 +449,7 @@
                 border-left: none;
                 border-radius: 0 0 25px 0;
             }
+
             &-bl {
                 @extend .creation-options__table--angle;
                 border: 3px solid $statusNotAvailable;
@@ -438,6 +457,7 @@
                 border-right: none;
                 border-radius: 0 0 0 25px;
             }
+
             &-tr {
                 @extend .creation-options__table--angle;
                 border: 3px solid $statusNotAvailable;
@@ -445,6 +465,7 @@
                 border-right: none;
                 border-radius: 25px 0 0px 0;
             }
+
             &-tl {
                 @extend .creation-options__table--angle;
                 border: 3px solid $statusNotAvailable;
@@ -453,25 +474,30 @@
                 border-radius: 0 25px 0 0;
             }
         }
+
         &--vertical {
             width: 25px;
             height: 3px;
             background-color: $statusNotAvailable;
         }
+
         &--horizontal {
             width: 3px;
             height: 25px;
             background-color: $statusNotAvailable;
         }
+
         &--hLineLeft,
         &--hLineRight {
             width: 3px;
             height: 49px;
             background-color: $statusNotAvailable;
         }
+
         &--hLineRight {
             margin-left: auto;
         }
+
         &--vLineTop,
         &--vLineBottom {
             width: 49px;
@@ -479,11 +505,12 @@
             background-color: $statusNotAvailable;
             margin-bottom: auto;
         }
+
         &--vLineBottom {
             margin-top: auto;
             margin-bottom: 0;
         }
-        
+
     }
 
 }
@@ -495,6 +522,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         .creation-options {
             &__table {
                 &--vertical {
@@ -504,4 +532,28 @@
             }
         }
     }
+}
+
+
+.input {
+    &__container {
+        padding: 0;
+        width: $col12;
+        max-width: $col12;
+        @include animate(0.2s ease-in-out);
+        text-align: left;
+        &.description {
+            margin-top: 16px;
+            margin-bottom: 0;
+        }
+    }
+
+    &__value-container {
+        width: $col12;
+        display: block;
+    }
+}
+
+textarea {
+    resize: vertical;
 }

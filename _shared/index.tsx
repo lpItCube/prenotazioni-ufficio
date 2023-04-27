@@ -41,13 +41,15 @@ export const SEATS_MODAL = 1
 export const APPROVE_MODAL = 2
 export const LEGENDA_MODAL = 3
 export const EDIT_MODAL = 4
+export const READ_MODAL = 5
 
 export enum ModalType {
     PRISTINE,
     SEATS,
     APPROVE,
     LEGENDA,
-    EDIT
+    EDIT,
+    READ
 }
 
 export const AUTH_OK = 'authenticated'

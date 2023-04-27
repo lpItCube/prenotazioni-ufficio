@@ -1,17 +1,19 @@
 import InputNumber from "../Ui/InputNumber"
 import Button from "../Ui/Button"
+import Spinner from "../Ui/Spinner"
 
 interface GridOptionsProps {
     xCells: number,
     setXCells: (x: number) => void,
     yCells: number,
     setYCells: (y: number) => void,
-    handleSave: () => void
+    handleSave: () => void,
+    isLoading: boolean
 }
 
 const GridOptions: React.FC<GridOptionsProps> = (props): JSX.Element => {
-    
-    const { xCells, setXCells, yCells, setYCells, handleSave } = props
+
+    const { xCells, setXCells, yCells, setYCells, handleSave, isLoading } = props
 
     return (
         <div className="room-creation__options">
@@ -29,13 +31,16 @@ const GridOptions: React.FC<GridOptionsProps> = (props): JSX.Element => {
                     onChange={setYCells}
                 />
             </div>
-            <Button
-                type="button"
-                icon={false}
-                text="Salva"
-                className={`cta cta--primary`}
-                onClick={handleSave}
-            />
+            {isLoading
+                ? <Spinner />
+                : <Button
+                    type="button"
+                    icon={false}
+                    text="Salva"
+                    className={`cta cta--primary`}
+                    onClick={handleSave}
+                />
+            }
         </div>
     )
 }

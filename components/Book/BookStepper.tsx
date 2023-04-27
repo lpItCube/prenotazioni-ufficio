@@ -1,5 +1,5 @@
 // Costants
-import { ADMIN, DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, StepperState, USER } from "../../_shared"
+import { ADMIN, DEFAULT_DOMAIN_VALUE, DEFAULT_OFFICE_VALUE, DEFAULT_ROOM_VALUE, DirectionMode, READ_MODAL, StepperState, USER } from "../../_shared"
 
 // Components
 import Select from "../Ui/Select"
@@ -11,10 +11,15 @@ import { AnimatePresence, motion } from "framer-motion"
 
 // Icons
 import { RiDeleteBin3Line } from "react-icons/ri"
+import { BiInfoCircle } from "react-icons/bi";
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook"
 import { BookStepperObj } from "../../types"
+
+// Redux
+import { useDispatch, useSelector } from "react-redux"
+import { getModalStatus, setModalType, toggleModal } from "../../features/modalSlice"
 
 interface BookStepperProps {
     defaultSelect: string,
@@ -36,7 +41,7 @@ interface BookStepperProps {
     setSelectedRoom: (room: any) => void
 }
 
-const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
+const BookStepper: React.FC<BookStepperProps> = (props): JSX.Element => {
     const {
         defaultSelect,
         currentStepper,
@@ -60,6 +65,9 @@ const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
 
     const { userData } = useAuthHook()
     const userRole = userData.role
+
+    const dispatch = useDispatch()
+    const modalStatus = useSelector(getModalStatus)
 
 
     const containerVariants = {
@@ -107,6 +115,11 @@ const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
             },
         },
     };
+
+    const handleInfoRoom = () => {
+        dispatch(toggleModal(!modalStatus))
+		dispatch(setModalType(READ_MODAL))
+    }
 
     return (
         <AnimatePresence>
@@ -164,7 +177,7 @@ const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
                                 exit="exit"
                                 className='creation-stepper__box'
                             >
-                                { ((userRole === USER && currentStepper !== StepperState.DOMAIN) 
+                                {((userRole === USER && currentStepper !== StepperState.DOMAIN)
                                     || (userRole !== USER)) &&
                                     <RiDeleteBin3Line
                                         className="creation-stepper__box--remove"
@@ -174,7 +187,7 @@ const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
                                             setDirection(DirectionMode.NEGATIVE)
                                             setTimeout(() => {
                                                 setStepperState(currentStepper)
-                                                if(currentStepper === StepperState.DOMAIN) {
+                                                if (currentStepper === StepperState.DOMAIN) {
                                                     setSelectedDomain(DEFAULT_DOMAIN_VALUE)
                                                     setSelectedOffice(DEFAULT_OFFICE_VALUE)
                                                     setSelectedRoom(DEFAULT_ROOM_VALUE)
@@ -188,14 +201,24 @@ const BookStepper:React.FC<BookStepperProps> = (props): JSX.Element => {
                                         }}
                                     />
                                 }
-                                <div className='creation-stepper__box--title'>
+                                <div
+                                    className='creation-stepper__box--title'
+                                    onClick={() => currentStepper === StepperState.ROOM && selectObj?.description && handleInfoRoom()}
+                                >
                                     <p
                                         className="select__label label"
                                     >
                                         {label}
                                     </p>
-                                    <p>
-                                        {selectObj?.name}
+                                    <p className='creation-stepper__room--name'>
+                                        {label}
+                                        {currentStepper === StepperState.ROOM && selectObj?.description &&
+                                            <BiInfoCircle
+                                                size={18}
+                                                color={Colors.green700}
+                                                className="creation-stepper__box--edit"
+                                            />
+                                        }
                                     </p>
                                 </div>
                             </motion.div>

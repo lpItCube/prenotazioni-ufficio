@@ -38,6 +38,7 @@ export interface Reserve {
 
 export interface BookStepperObj {
     id: string,
+    description?: string,
     name: string,
     office?: Office[],
     room?: Room[],
