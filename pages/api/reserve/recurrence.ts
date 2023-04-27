@@ -8,7 +8,7 @@ type Data = {
   reservedDays: string[]
   from: Date
   to: Date
-  recurrenceDay: string
+  recurrenceDay: string[]
 }
 
 type ReserveToAdd = {
@@ -52,15 +52,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 }
 
-function getDatesForDayOfWeek(recurrenceDay: string, recurrenceFrom: Date, recurrenceTo: Date) {
+function getDatesForDayOfWeek(recurrenceDays: string[], recurrenceFrom: Date, recurrenceTo: Date) {
   const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  const targetDayOfWeek = daysOfWeek.indexOf(recurrenceDay.toLowerCase());
+
+  // Convert provided days of the week to lowercase
+  const targetDaysOfWeek = recurrenceDays.map(day => day.toLowerCase());
 
   let dates = [];
   let currentDate = new Date(recurrenceFrom.getTime());
 
   while (currentDate <= recurrenceTo) {
-    if (currentDate.getDay() === targetDayOfWeek) {
+    if (targetDaysOfWeek.includes(daysOfWeek[currentDate.getDay()])) {
       dates.push(new Date(currentDate.getTime()));
     }
     currentDate.setDate(currentDate.getDate() + 1);
