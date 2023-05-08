@@ -39,6 +39,7 @@ model Reserve {
   from         DateTime 
   to           DateTime
   status       String?
+  motivation   String?
 }
 
 model Domain {

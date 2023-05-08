@@ -4,10 +4,11 @@ interface InputProps {
     onChange: (text: string) => void,
     placeholder: string,
     refState?: any,
+    message?: string
 }
 
 const Textarea: React.FC<InputProps> = (props): JSX.Element => {
-    const { label, value, onChange, refState, placeholder } = props
+    const { label, value, onChange, refState, placeholder, message } = props
 
     return (
         <div
@@ -22,6 +23,13 @@ const Textarea: React.FC<InputProps> = (props): JSX.Element => {
                 placeholder={placeholder}
                 rows={3}
             />
+            {message && 
+                <p
+                    className="input__message--warning"
+                >
+                    {message}
+                </p>
+            }
         </div>
     )
 }

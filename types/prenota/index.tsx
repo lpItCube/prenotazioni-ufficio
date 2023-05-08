@@ -33,7 +33,8 @@ export interface Reserve {
     status: string,
     user: User,
     userId: string,
-    to?: string
+    to?: string,
+    motivation?: string
 }
 
 export interface BookStepperObj {

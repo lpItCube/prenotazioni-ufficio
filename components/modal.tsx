@@ -50,6 +50,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 	const [hitModalButton, setHitModalButton] = useState<HitModalButton>({ loading: false, id: null })
 	const [userReserve, setUserReserve] = useState<Reserve[]>([])
 	const [otherReserveInPeriod, setOtherReserveInPeriod] = useState<Reserve[]>([])
+	const [motivation, setMotivation] = useState<string>("")
 
 
 	const toApprove = reserveData && reserveData.length > 0 
@@ -113,16 +114,23 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		setHitModalButton({ loading: true, id: null })
 		const room: Room = await (await axios.get(`/api/room/${roomId}`)).data
 		const wholeRoom = room?.seat?.find((s: Seat) => s.type === WHOLE)
-		await axios.post("/api/addReserve", {
-			seatId: wholeRoom?.id,
-			userId: userId,
-			reservedDays: [],
-			from: fromTo.from ? new Date(fromTo.from) : '',
-			to: fromTo.to ? new Date(fromTo.to) : '',
-			status: PENDING
-		})
-		await reloadData()
-		handleCloseModal()
+
+		try {
+			await axios.post("/api/addReserve", {
+				seatId: wholeRoom?.id,
+				userId: userId,
+				reservedDays: [],
+				from: fromTo.from ? new Date(fromTo.from) : '',
+				to: fromTo.to ? new Date(fromTo.to) : '',
+				status: PENDING,
+				motivation
+			})
+			await reloadData()
+			handleCloseModal()
+			setMotivation("")
+		} catch(error) {
+			console.log(error)
+		}
 	}
 
 	async function handleRoom() {
@@ -136,17 +144,23 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 			//TODO notify each user whose reservation has been cancelled
 		}));
 
-		await axios.post("/api/addReserve", {
-			seatId: wholeRoom?.id,
-			userId: userId,
-			reservedDays: [],
-			from: fromTo.from ? new Date(fromTo.from) : '',
-			to: fromTo.to ? new Date(fromTo.to) : '',
-			status: ACCEPTED
-		})
+		try {
+			await axios.post("/api/addReserve", {
+				seatId: wholeRoom?.id,
+				userId: userId,
+				reservedDays: [],
+				from: fromTo.from ? new Date(fromTo.from) : '',
+				to: fromTo.to ? new Date(fromTo.to) : '',
+				status: ACCEPTED,
+				motivation
+			})
+			await reloadData()
+			handleCloseModal()
+			setMotivation("")
+		} catch (error) {
+			console.log(error)
+		}
 
-		await reloadData()
-		handleCloseModal()
 	}
 
 	async function handleSeat() {
@@ -162,14 +176,20 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 
 		if (action === Actions.ADD) {
 			// Intervento pending state per utente USER se ha già effettuato una prenotazione
-			await axios.post("/api/addReserve", {
-				seatId: seatId,
-				userId: userId,
-				reservedDays: [],
-				from: fromTo.from ? new Date(fromTo.from) : '',
-				to: fromTo.to ? new Date(fromTo.to) : '',
-				status: bookStatus
-			})
+			try {
+				await axios.post("/api/addReserve", {
+					seatId: seatId,
+					userId: userId,
+					reservedDays: [],
+					from: fromTo.from ? new Date(fromTo.from) : '',
+					to: fromTo.to ? new Date(fromTo.to) : '',
+					status: bookStatus,
+					motivation
+				})
+				setMotivation("")
+			} catch(error) {
+				console.log(error)
+			}
 
 		} else if (action === Actions.DELETE) {
 			const reserveToDelete:Reserve | undefined = reserveData.find((reserve: any) => reserve.seat.name === seatName)
@@ -259,6 +279,8 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 						userReserve={userReserve}
 						handleSeat={action === Actions.ADD ? handleSeat : action === Actions.ADDALL ? handleRoom : requestRoom}
 						hitModalButton={hitModalButton}
+						motivation={motivation}
+						setMotivation={setMotivation}
 					/>
 				</ModalComponent>
 				: <ModalComponent

@@ -54,6 +54,12 @@
                 color: $warning700;
             }
         }
+        &.disabled {
+            color:$light500;
+            &.cta {
+                background-color: transparent;
+            }
+        }
     }
     &--secondary-delete {
         color:white;

@@ -36,6 +36,13 @@ const ModalApprovation: React.FC<ModalApprovationProps> = (props): JSX.Element =
                                 <div className="approve__row--info">
                                     <div className="approve__row--user">{res.user.username}</div>
                                     <div className="approve__row">{res?.seat?.name}</div>
+                                    {res.motivation &&
+                                        <div className="approve__row--motivation">
+                                            <p className="extra-min">
+                                                {res.motivation}
+                                            </p>
+                                        </div>
+                                    }
                                     {res.from && res.to &&
                                         <div className="approve__row">{getStringHours(res.from) as string} - {getStringHours(res.to) as string}</div>
                                     }
@@ -73,6 +80,13 @@ const ModalApprovation: React.FC<ModalApprovationProps> = (props): JSX.Element =
                                 <div className="approve__row--info">
                                     <div className="approve__row--user">{res.user.username}</div>
                                     <div className="approve__row">{res?.seat?.name}</div>
+                                    {res.motivation &&
+                                        <div className="approve__row--motivation">
+                                            <p className="extra-min">
+                                                {res.motivation}
+                                            </p>
+                                        </div>
+                                    }
                                     {res.from && res.to &&
                                         <div className="approve__row">{getStringHours(res.from) as string} - {getStringHours(res.to) as string}</div>
                                     }
