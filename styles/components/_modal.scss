@@ -80,6 +80,10 @@
   &__title {
     .label {
       margin-top: 4px;
+      @include pxToRem(12);
+      background-color: $statusYours;
+      padding:4px;
+      display: table;
     }
   }
 

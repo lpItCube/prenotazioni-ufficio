@@ -211,7 +211,7 @@ const BookStepper: React.FC<BookStepperProps> = (props): JSX.Element => {
                                         {label}
                                     </p>
                                     <p className='creation-stepper__room--name'>
-                                        {label}
+                                        {selectObj?.name}
                                         {currentStepper === StepperState.ROOM && selectObj?.description &&
                                             <BiInfoCircle
                                                 size={18}
