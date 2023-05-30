@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 
-// Next
-import { useSession } from "next-auth/react"
-
 // Axios
 import axios, { AxiosResponse } from 'axios'
+
+// Next
+import { useSession } from "next-auth/react"
 
 // Redux
 import { useDispatch } from "react-redux"
@@ -33,7 +33,7 @@ interface PendingProps {
 }
 
 
-const pending: React.FC<PendingProps> = (props): JSX.Element => {
+const Pending: React.FC<PendingProps> = (props): JSX.Element => {
 
     const { setHitNotification } = props
 
@@ -254,4 +254,4 @@ const pending: React.FC<PendingProps> = (props): JSX.Element => {
     )
 }
 
-export default pending
+export default Pending

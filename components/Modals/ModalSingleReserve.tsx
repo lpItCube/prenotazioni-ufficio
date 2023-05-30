@@ -84,7 +84,7 @@ const ModalSingleReserve: React.FC<ModalSingleReserveProps> = (props): JSX.Eleme
 					<p className="modal__text txt-h6">
 						Vuoi procedere con la prenotazione del posto
 						<b>{' ' + seatName}</b>
-						?
+						&apos;?
 					</p>
 					{needMotivation &&
 						<Textarea
@@ -100,7 +100,7 @@ const ModalSingleReserve: React.FC<ModalSingleReserveProps> = (props): JSX.Eleme
 			{(action === Actions.ADDALL || action === Actions.REQUESTALL) &&
 				<>
 					<p className="modal__text txt-h6">
-						Vuoi prenotare l'intera stanza
+						Vuoi prenotare l&apos;intera stanza
 						<b>{' ' + actualRoomName}</b>
 						?
 					</p>
