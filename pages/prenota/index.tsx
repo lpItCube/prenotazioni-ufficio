@@ -94,7 +94,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		})
 	}
 
-	console.log("DOMAIN -> ", domain)
+	// console.log("DOMAIN -> ", session.user?.role)
+	// console.log("DOMAIN -> ", domainList)
 
 	const fromDate = createNewDate("09")
 	const toDate = createNewDate("10")

@@ -1,20 +1,23 @@
+import { useState, useEffect } from "react"
+
 // Components
 import Button from "../Ui/Button"
 import Spinner from "../Ui/Spinner"
 
-// Utils
-import { getStringHours } from "../../utils/datePharser"
-
 // Redux
 import { useSelector } from "react-redux"
-import { getReserves } from "../../features/reserveSlice"
 import { getActualRoomName } from "../../features/roomSlice"
 
 // Costants
-import { Actions, MEET, MEET_ROOM } from "../../_shared"
+import { Actions, USER, WHOLE } from "../../_shared"
 
 // Types
 import { HitModalButton, Reserve } from "../../types"
+import Textarea from "../Ui/Textarea"
+import { getDayReserves } from "../../features/reserveSlice"
+
+// Hooks
+import { useAuthHook } from "../../hooks/useAuthHook"
 
 interface ModalSingleReserveProps {
 	action: number,
@@ -22,70 +25,104 @@ interface ModalSingleReserveProps {
 	otherReserveInPeriod: Reserve[],
 	userReserve: Reserve[],
 	handleSeat: () => void,
-	hitModalButton: HitModalButton
+	hitModalButton: HitModalButton,
+	motivation: string,
+	setMotivation: (motivation: string) => void
 }
 
 const ModalSingleReserve: React.FC<ModalSingleReserveProps> = (props): JSX.Element => {
 
-	const { action, seatName, otherReserveInPeriod, userReserve, handleSeat, hitModalButton } = props 
+	const { action, seatName, handleSeat, hitModalButton, motivation, setMotivation, userReserve } = props
 
-	const reserveData = useSelector(getReserves)
 	const actualRoomName = useSelector(getActualRoomName)
+	const reserveInDay = useSelector(getDayReserves)
+
+	const { userData } = useAuthHook()
+	const userId = userData.id
+	const userRole = userData.role
+
+	const [buttonType, setButtonType] = useState<string>("")
+	const [isClickable, setIsClickable] = useState<boolean>(false)
+	const [needMotivation, setNeedMotivation] = useState<boolean>(false)
+
+	useEffect(() => {
+		const myReserveInDay = reserveInDay.filter((r: Reserve) => r.user.id === userId && r.seat?.type !== WHOLE)
+		if (userRole === USER && myReserveInDay.length > 0) {
+			setNeedMotivation(true)
+			setIsClickable(false)
+		}
+	}, [userReserve, reserveInDay, userId])
+
+
+	useEffect(() => {
+		if (action === Actions.ADD && !needMotivation) {
+			setButtonType("cta cta--secondary-ok")
+			setIsClickable(true)
+		} else if ((action === Actions.ADDALL || action === Actions.REQUESTALL) || needMotivation) {
+			let buttonClass: string = ""
+			let clickable: boolean = false
+			if (!motivation) {
+				buttonClass = "cta cta--secondary-ok disabled"
+				clickable = false
+			} else {
+				buttonClass = "cta cta--secondary-ok"
+				clickable = true
+			}
+			setButtonType(buttonClass)
+			setIsClickable(clickable)
+		} else {
+			setButtonType("cta cta--primary-delete")
+			setIsClickable(true)
+		}
+	}, [action, motivation, needMotivation])
 
 
 	return (
 		<>
-			<p className="modal__text txt-h6">
-				{action === Actions.ADD &&
-					<>
+			{action === Actions.ADD &&
+				<>
+					<p className="modal__text txt-h6">
 						Vuoi procedere con la prenotazione del posto
 						<b>{' ' + seatName}</b>
-					</>
-				}
-				{(action === Actions.ADDALL || action === Actions.REQUESTALL) &&
-					<>
-						Vuoi prenotare l'intera stanza <b>{' ' + actualRoomName}</b>
-					</>
-				}
-				?</p>
-			{/* {reserveData
-				&& seatName === MEET_ROOM
-				&& otherReserveInPeriod
-				&& otherReserveInPeriod.length > 0
-				&&
-				<>
-					<br />
-					<p
-						className="modal__text modal__text--warning txt-h6"
-					>Attenzione! Sono già presenti prenotazioni per questi orari, procedendo verranno cancellate.</p>
-					<div className="approve__container">
-						{
-							userReserve.length > 0 && userReserve.filter((res: Reserve) => res?.seat?.type === MEET).map((res: Reserve) => {
-								const status = res.status === 'accepted' ? 'accepted' : 'pending'
-								return (
-									<div key={res.id} className={`approve__reserve ${status}`}>
-										<div className="approve__row--info">
-											<div className="approve__row--user">{res.user.username}</div>
-											<div className="approve__row">{res?.seat?.name}</div>
-											{res.from && res.to &&
-												<div className="approve__row">{getStringHours(res.from) as string} - {getStringHours(res.to) as string}</div>
-											}
-										</div>
-									</div>
-								)
-							})
-						}
-					</div>
+						?
+					</p>
+					{needMotivation &&
+						<Textarea
+							label=""
+							value={motivation}
+							onChange={(e) => setMotivation(e)}
+							placeholder="Motivazione della richiesta"
+							message={!isClickable ? "Devi fornire una motivazione per poter prenotare." : ""}
+						/>
+					}
 				</>
-			} */}
-			{/* {console.log(hitModalButton.loading)} */}
+			}
+			{(action === Actions.ADDALL || action === Actions.REQUESTALL) &&
+				<>
+					<p className="modal__text txt-h6">
+						Vuoi prenotare l'intera stanza
+						<b>{' ' + actualRoomName}</b>
+						?
+					</p>
+					<Textarea
+						label=""
+						value={motivation}
+						onChange={(e) => setMotivation(e)}
+						placeholder="Motivazione della richiesta"
+						message={!isClickable ? "Devi fornire una motivazione per poter prenotare." : ""}
+					/>
+				</>
+			}
 			{!hitModalButton.loading
-				? <Button
-					onClick={() => handleSeat()}
-					className={`cta ${action === Actions.ADD || action === Actions.ADDALL || action === Actions.REQUESTALL ? 'cta--secondary-ok' : 'cta--primary-delete'}`}
-					type='button'
-					icon={false}
-					text={action === Actions.ADD || action === Actions.ADDALL || action === Actions.REQUESTALL ? 'Conferma' : 'Cancella'} />
+				? (
+					<Button
+						onClick={isClickable ? () => handleSeat() : () => { }}
+						className={buttonType}
+						type='button'
+						icon={false}
+						text={action === Actions.ADD || action === Actions.ADDALL || action === Actions.REQUESTALL ? 'Conferma' : 'Cancella'}
+					/>
+				)
 				: <Spinner />
 			}
 		</>

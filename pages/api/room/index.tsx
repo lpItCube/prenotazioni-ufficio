@@ -5,7 +5,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   type Data = {
     id: string
-    name: string
+    name: string,
+    description: string | null,
     officeId: string
     gridPoints: any
     xSize: number
@@ -42,7 +43,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const room = await prisma.room.update({
         where: { id: body.id },
-        data: { 
+        data: {
+          name: body.name,
+          description: body.description, 
           gridPoints: body.gridPoints,
           xSize: body.xSize,
           ySize: body.ySize

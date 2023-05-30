@@ -10,6 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const findToDelete = await prisma.reserve.findUnique({
         where: { id: reserveId },
       })
+
+      console.log('FIND TO DELETE', findToDelete)
   
   
       if(!findToDelete) return res.status(204).json({message:'Ricarica la pagina.'})
@@ -17,8 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await prisma.reserve.delete({
         where: { id: reserveId }
       })
+
+      const restReserve = await prisma.reserve.findMany()
   
-      res.status(200).json(result)
+      res.status(200).json(restReserve)
     } catch(e) {
       res.status(404)
     }

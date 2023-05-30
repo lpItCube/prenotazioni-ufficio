@@ -39,6 +39,7 @@ model Reserve {
   from         DateTime 
   to           DateTime
   status       String?
+  motivation   String?
 }
 
 model Domain {
@@ -65,6 +66,7 @@ model Room {
   gridPoints   Json?
   xSize        Int?
   ySize        Int?
+  description  String?
 }
 
 enum Role {

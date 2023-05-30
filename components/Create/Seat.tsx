@@ -10,7 +10,7 @@ import { getActualRoom } from "../../features/roomSlice";
 import { getModalStatus, setModalType, toggleModal } from "../../features/modalSlice";
 
 // Costants
-import { ADD, DELETE, SEATS_MODAL, USER, WHOLE } from "../../_shared";
+import { ADD, DELETE, PENDING, SEATS_MODAL, USER, WHOLE } from "../../_shared";
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
@@ -67,15 +67,17 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
         const yourReserveInRoom = reserves.find((r: Reserve) => r.user.username === username)
         const seatReserve = reserves.find((r: Reserve) => r.seat?.name === cell.seatName)
         const yourReserve = seatReserve?.user.username === username
-        const wholeRoom = reserves.find((r: Reserve) => r.seat?.type === "whole")
+        const wholeRoom = reserves.find((r: Reserve) => r.seat?.type === WHOLE)
+        const isPending = reserves.find((r: Reserve) => r.status === PENDING && r.seat?.name === cell.seatName)
+
 
         if (wholeRoom) {
             const isYour = reserves.some((r: Reserve) => r.user.username === username && r.seat?.name.includes('whole'))
-            const isPending = reserves.some((r: Reserve) => r.status === "pending")
+            const isPending = reserves.some((r: Reserve) => r.status === PENDING)
             if (isYour) {
                 setSeatProps({ canvasClass: "your clickable del" })
                 if (isPending) {
-                    setSeatProps({ canvasClass: "pending clickable del" })
+                    setSeatProps({ canvasClass: "pending" })
                 }
             } else {
                 if (!isAdmin) {
@@ -92,7 +94,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
         } else {
 
             const free = !seatReserve
-            const color = free ? "" : " buisy"
+            const color = free ? "" : isPending ? " pending" : " buisy"
             const canvasClass = free ? "clickable" : isAdmin ? "clickable del" : ""
             setSeatProps({ canvasClass: canvasClass + color })
 
@@ -100,7 +102,8 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
                 setSeatProps(prev => ({ canvasClass: `${prev.canvasClass} not-available` }))
             }
             if (yourReserve) {
-                setSeatProps({ canvasClass: "your clickable del" })
+
+                setSeatProps({ canvasClass: `${isPending ? 'pending': 'your'} clickable del` })
             }
         }
 
@@ -112,7 +115,10 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
             <div
                 className={`creation-options__seat ${seatProps.canvasClass}`}
                 onClick={seatProps.canvasClass === "clickable"
-                    ? () => { setSeatName(cell.seatName); handleAddSingleSeat(); }
+                    ? () => { 
+                        setSeatName(cell.seatName); 
+                        handleAddSingleSeat(); 
+                    }
                     : seatProps.canvasClass.includes("clickable del")
                         ? () => {
                             setSeatName(cell.seatName);

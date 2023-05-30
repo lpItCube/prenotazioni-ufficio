@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import Select from "../Ui/Select"
 import Option from '../Ui/Option'
 import { OptionItem } from '../../types'
+import { useAuthHook } from '../../hooks/useAuthHook'
+import { USER } from '../../_shared'
 
 interface ReserveFiltersProps {
     setFilterMode: ({label, value}:OptionItem) => void,
@@ -19,6 +21,8 @@ const ReservesFilters: React.FC<ReserveFiltersProps> = (props): JSX.Element => {
 
     const userRef = useRef<any>(null)
     const dayRef = useRef<any>(null)
+    const { userData } = useAuthHook()
+    const role = userData.role
 
     const [userSelect, setUserSelect] = useState<boolean>(false)
     const [daySelect, setDaySelect] = useState<boolean>(false)
@@ -53,36 +57,38 @@ const ReservesFilters: React.FC<ReserveFiltersProps> = (props): JSX.Element => {
     return (
         <>
             <div className={`date-tool__container date-tool__container--end${!showFilters ? ' hidden-filters' : ''}`}>
-                <div
-                    ref={userRef}
-                    className='select__ref'
-                >
-                    <Select
-                        label='Utenti'
-                        value={filterMode.label}
-                        onClick={() => handleOpenUsers}
-                        openOption={userSelect}
+                {role !== USER && 
+                    <div
+                        ref={userRef}
+                        className='select__ref'
                     >
-                        <Option
-                            key={'myUser'}
-                            onClick={() => setFilterMode({ label: 'Le mie prenotazioni', value: 'myUser' })}
-                            label={'Le mie prenotazioni'}
-                            className={`${filterMode.value === 'myUser' ? ' current' : ''}`}
-                        />
-                        <Option
-                            key={'allUsers'}
-                            onClick={() => setFilterMode({ label: 'Tutti gli utenti', value: '' })}
-                            label={'Tutti gli utenti'}
-                            className={`${filterMode.value === '' ? ' current' : ''}`}
-                        />
-                        <Option
-                            key={'otherUsers'}
-                            onClick={() => setFilterMode({ label: 'Altri utenti', value: 'otherUsers' })}
-                            label={'Altri utenti'}
-                            className={`${filterMode.value === 'otherUsers' ? ' current' : ''}`}
-                        />
-                    </Select>
-                </div>
+                        <Select
+                            label='Utenti'
+                            value={filterMode.label}
+                            onClick={() => handleOpenUsers}
+                            openOption={userSelect}
+                        >
+                            <Option
+                                key={'myUser'}
+                                onClick={() => setFilterMode({ label: 'Le mie prenotazioni', value: 'myUser' })}
+                                label={'Le mie prenotazioni'}
+                                className={`${filterMode.value === 'myUser' ? ' current' : ''}`}
+                            />
+                            <Option
+                                key={'allUsers'}
+                                onClick={() => setFilterMode({ label: 'Tutti gli utenti', value: '' })}
+                                label={'Tutti gli utenti'}
+                                className={`${filterMode.value === '' ? ' current' : ''}`}
+                            />
+                            <Option
+                                key={'otherUsers'}
+                                onClick={() => setFilterMode({ label: 'Altri utenti', value: 'otherUsers' })}
+                                label={'Altri utenti'}
+                                className={`${filterMode.value === 'otherUsers' ? ' current' : ''}`}
+                            />
+                        </Select>
+                    </div>
+                }
                 <div
                     ref={dayRef}
                     className='select__ref'

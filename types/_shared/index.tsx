@@ -10,6 +10,7 @@ export interface GridPoint {
 export interface Room {
     gridPoints: GridPoint[],
     id: string,
+    description?: string,
     name: string,
     officeId: string,
     seat?: Seat[],
