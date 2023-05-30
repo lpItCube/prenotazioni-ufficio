@@ -45,7 +45,7 @@ const Prenota: React.FC<PrenotaProps> = (props): JSX.Element => {
 		setFromTo({ from: fromDate, to: toDate })
 		// Setta le prenotazioni al primo loading
 		dispatch(setReserves({ reserveData: initialData }))
-	}, [])
+	}, [dispatch, initialData])
 
 
 	useEffect(() => {

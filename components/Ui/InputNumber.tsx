@@ -27,8 +27,9 @@ function InputNumber(props: InputNumberProps) {
     },[value])
 
     useEffect(() => {
+        console.log('RERENDER')
         onChange(inputValue)
-    }, [inputValue])
+    }, [inputValue, onChange])
    
     return (
         <div

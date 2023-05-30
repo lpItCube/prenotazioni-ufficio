@@ -36,7 +36,7 @@ function Header({
 
     useEffect(() => {
         setAppIsLoading(roleLoading)
-    }, [roleLoading])
+    }, [roleLoading, setAppIsLoading])
 
     return (
         <header

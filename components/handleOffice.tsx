@@ -59,7 +59,7 @@ const HandleOffice: React.FC<HandleOfficeProps> = (props) : JSX.Element => {
 		if (domainList.length === 0) {
 			setSelectedDomain(domain)
 		}
-	}, [])
+	}, [domain, domainList.length])
 
 
 	useEffect(() => {

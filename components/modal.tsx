@@ -71,7 +71,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		if (reserveData.length > 0) {
 			setOtherReserveInPeriod(reserveData.filter((reserve: Reserve) => reserve?.seat?.type !== MEET_WHOLE))
 		}
-	}, [reserveData])
+	}, [reserveData, userId, userRole])
 
 
 	const handleCloseModal = () => {

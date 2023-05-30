@@ -59,7 +59,7 @@ const Pending: React.FC<PendingProps> = (props): JSX.Element => {
     useEffect(() => {
         dispatch(setPendingNotification({ pending: reserves.length }))
         setHitNotification(true)
-    }, [reserves, session])
+    }, [reserves, session, dispatch, setHitNotification])
 
 
     // const handleApprovation = async (status: number, id: string) => {

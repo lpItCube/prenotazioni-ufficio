@@ -42,7 +42,8 @@ const Calendar:React.FC<CalendarProps> = (props) : JSX.Element => {
     setFromToHours({ from: startHour, to: endHour })
     setFromTo({ from: fromDate, to: toDate })
   }
-  
+  console.log('FR',fromToHours)
+
   const handleConfirmDate = async (selDate: Date): Promise<void> => {
     const fromDate: string = transformDate(fromToHours.from as string, selDate)
     const toDate: string = transformDate(fromToHours.to as string, selDate)
@@ -53,7 +54,7 @@ const Calendar:React.FC<CalendarProps> = (props) : JSX.Element => {
     const fromDate: string = transformDate(fromToHours.from as string, selectedDate)
     const toDate: string = transformDate(fromToHours.to as string, selectedDate)
     setFromTo({ from: fromDate, to: toDate })
-  }, [selectedDate])
+  }, [selectedDate, fromToHours.from, fromToHours.to, setFromTo])
 
   useEffect(() => {
 		const wholeRoom: Reserve | undefined = reserveData.find((r: Reserve) => r?.seat?.type === "whole")
@@ -63,7 +64,7 @@ const Calendar:React.FC<CalendarProps> = (props) : JSX.Element => {
 		} else {
       dispatch(setIsYourRoom(false))
     }
-	}, [reserveData])
+	}, [reserveData, dispatch, username])
 
 
   return (
@@ -78,6 +79,7 @@ const Calendar:React.FC<CalendarProps> = (props) : JSX.Element => {
             setSelectedDate={setSelectedDate}
             handleConfirmDate={handleConfirmDate}
             setOpenCalendar={setOpenCalendar}
+            setFromToHours={setFromToHours}
           />
           <HourPicker
             handleChangeHour={handleChangeHour}

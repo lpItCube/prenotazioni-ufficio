@@ -161,7 +161,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
         }
         if (!create)
             setReservess()
-    }, [roomId, fromTo, firstUpdate])
+    }, [roomId, fromTo, firstUpdate, create, dispatch, userId])
 
 
     const handleSave = async () => {

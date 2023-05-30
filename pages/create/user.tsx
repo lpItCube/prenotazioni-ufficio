@@ -40,7 +40,7 @@ function User() {
     if (domain && domain.user.length > 0) {
       setUsers(domain.user)
     } 
-  }, [selectedDomain])
+  }, [selectedDomain, domains])
 
   const handleSelectDomain = async(e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDomain(e.target.value)

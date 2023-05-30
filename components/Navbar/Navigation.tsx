@@ -53,7 +53,7 @@ const Navigation: React.FC<NavigationProps> = (props) => {
         }
         if (session.status === AUTH_OK)
             getReserves()
-    }, [session])
+    }, [session, dispatch])
 
     useEffect(() => {
         setPendingNotif(pendingNotification)
@@ -61,7 +61,7 @@ const Navigation: React.FC<NavigationProps> = (props) => {
             setPendingNotif(pendingNotification)
             setHitNotification(false)
         }
-    }, [pendingNotification, session, hitNotification])
+    }, [pendingNotification, session, hitNotification, setHitNotification])
 
     const path = useRouter().pathname
 

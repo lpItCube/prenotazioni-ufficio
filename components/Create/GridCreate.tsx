@@ -61,7 +61,7 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 		return () => {
 			window.removeEventListener('click', handleClickOutside, true);
 		};
-	}, [])
+	}, [optionRef, setSelectedCell])
 
 
 	useEffect(() => {
@@ -76,7 +76,7 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 				setSeats([{ name: `${room.name}-whole`, type: "whole", roomId: roomId }])
 			}
 		}
-	}, [room])
+	}, [room, roomId, setSeats, setUpdateGrid])
 
 
 
@@ -94,7 +94,7 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 		}
 		setGrid(newGrid);
 
-	}, [xSize, ySize, updateGrid]);
+	}, [xSize, ySize, updateGrid, setGrid]);
 
 
 	useEffect(() => {
@@ -142,7 +142,7 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 		return () => {
 			window.removeEventListener('keyup', handleKeyUp);
 		}
-	}, [selectedCell]);
+	}, [selectedCell, grid, setSelectedCell, xSize, ySize]);
 
 
 	const handleCellClick = (point: GridPoint) => {

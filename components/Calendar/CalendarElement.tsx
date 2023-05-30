@@ -2,18 +2,20 @@ import { useEffect, useRef } from 'react'
 
 // Components
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { FromToHour } from '../../types';
 
 interface CalendarProps {
     selectedDate: Date,
-    setSelectedDate: (data:Date) => void,
-    handleConfirmDate: (data:Date) => void,
-    setOpenCalendar: (isOpen:boolean) => void,
-    openCalendar:boolean
+    setSelectedDate: (data: Date) => void,
+    handleConfirmDate: (data: Date) => void,
+    setOpenCalendar: (isOpen: boolean) => void,
+    openCalendar: boolean,
+    setFromToHours: ({ from, to }:FromToHour) => void
 }
 
 const CalendarElement: React.FC<CalendarProps> = (props): JSX.Element => {
 
-    const { selectedDate, setSelectedDate, handleConfirmDate, setOpenCalendar, openCalendar } = props
+    const { selectedDate, setSelectedDate, handleConfirmDate, setOpenCalendar, openCalendar, setFromToHours } = props
     const ref = useRef<any>(null)
 
     useEffect(() => {
@@ -73,6 +75,7 @@ const CalendarElement: React.FC<CalendarProps> = (props): JSX.Element => {
                     setSelectedDate(selDate)
                     handleConfirmDate(selDate)
                     setOpenCalendar(false)
+                    setFromToHours({ from: "09", to: "10" })
                 })
             });
         }
@@ -92,21 +95,20 @@ const CalendarElement: React.FC<CalendarProps> = (props): JSX.Element => {
                 renderCalendar()
             })
         })
-
-    }, [selectedDate])
+    }, [selectedDate, handleConfirmDate, setOpenCalendar, setSelectedDate, setFromToHours])
 
     // UseRef per controllare se il click è interno
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (ref.current && !ref.current.contains(event.target)) {
                 setOpenCalendar(false)
-            } 
+            }
         };
         window.addEventListener('click', handleClickOutside, true);
         return () => {
             window.removeEventListener('click', handleClickOutside, true);
         };
-    }, []);
+    }, [setOpenCalendar]);
 
     return (
         <div className={`calendar-tool${openCalendar ? ' is-open' : ''}`} ref={ref}>

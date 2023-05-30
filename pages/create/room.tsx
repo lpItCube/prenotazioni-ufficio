@@ -98,7 +98,7 @@ const Room: React.FC = (): JSX.Element => {
 		} else {
 			setOffices([])
 		}
-	}, [domains])
+	}, [domains, selectedDomain.value])
 
 
 	useEffect(() => {
@@ -108,7 +108,7 @@ const Room: React.FC = (): JSX.Element => {
 		} else {
 			setRooms([])
 		}
-	}, [offices])
+	}, [offices, selectedOffice.value])
 
 
 

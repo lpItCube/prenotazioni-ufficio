@@ -107,7 +107,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
             }
         }
 
-    }, [reserves, roomId, username, role])
+    }, [reserves, roomId, username, role, cell.seatName, create])
 
 
     return (
