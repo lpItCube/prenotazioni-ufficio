@@ -51,7 +51,7 @@ const ModalSingleReserve: React.FC<ModalSingleReserveProps> = (props): JSX.Eleme
 			setNeedMotivation(true)
 			setIsClickable(false)
 		}
-	}, [userReserve, reserveInDay, userId])
+	}, [userReserve, reserveInDay, userId, userRole])
 
 
 	useEffect(() => {

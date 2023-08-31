@@ -14,6 +14,7 @@ import Navbar from '../components/Navbar/navbar'
 import Header from '../components/Header'
 import { MousePosition } from '../types'
 import SeatPopup from '../components/Book/SeatPopup'
+import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -21,6 +22,8 @@ export default function App({ Component, pageProps }: AppProps) {
 	const [hitNotification, setHitNotification] = useState<boolean>(false)
 	const [cursorPos, setCursorPos] = useState<MousePosition>({ x: 0, y: 0 });
 
+	const router = useRouter();
+	const containsLogin = router.pathname.includes('login');
 	const handleMouseMove = (e: any) => {
         setCursorPos({
             x: e.clientX,
@@ -28,12 +31,13 @@ export default function App({ Component, pageProps }: AppProps) {
         })
     }
 
+
 	return (
 		<SessionProvider session={pageProps.session}>
 			<Provider store={store}>
 				{
-					Component.name !== "Login" ?
-						<div onMouseMove={handleMouseMove}>
+					!containsLogin ?
+						<div>
 							<SeatPopup
 								cursorPos={cursorPos}
 							/>

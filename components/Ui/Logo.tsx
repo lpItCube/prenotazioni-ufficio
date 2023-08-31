@@ -1,7 +1,7 @@
 function Logo() {
   return (
     <div className="content-logo">
-        <img className="logo" src="../../logo.png" />
+        <img className="logo" alt="Logo" src="../../logo.png" />
     </div>
   )
 }

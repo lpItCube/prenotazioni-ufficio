@@ -27,7 +27,7 @@ const CustomLink: React.FC<CustomLinkProps> = (props): JSX.Element => {
 
     useEffect(() => {
         dispatch(toggleNavbar(false))
-    }, [path])
+    }, [path, dispatch])
     
     return (
         <li 

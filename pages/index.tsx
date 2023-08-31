@@ -10,7 +10,7 @@ function Home() {
 
   useEffect(() => {
     router.push('/prenota')
-  },[])
+  },[router])
 
   return <Spinner/>
 }

@@ -7,6 +7,7 @@ import { IoCalendarOutline } from "react-icons/io5"
 // Components 
 import { Colors } from "../Ui/Colors"
 import CalendarElement from "./CalendarElement"
+import { FromToHour } from "../../types"
 
 interface DatePickerProps {
     date: Date,
@@ -16,11 +17,12 @@ interface DatePickerProps {
     setSelectedDate: (data:Date) => void,
     handleConfirmDate: (data:Date) => void,
     setOpenCalendar: (isOpen:boolean) => void,
+    setFromToHours: ({ from, to }:FromToHour) => void
 }
 
 const DatePicker: React.FC<DatePickerProps> = (props): JSX.Element => {
 
-    const { date, handleOpenCalendar, openCalendar, selectedDate, setSelectedDate, handleConfirmDate, setOpenCalendar } = props
+    const { date, handleOpenCalendar, openCalendar, selectedDate, setSelectedDate, handleConfirmDate, setOpenCalendar, setFromToHours } = props
 
     return (
         <div
@@ -55,6 +57,7 @@ const DatePicker: React.FC<DatePickerProps> = (props): JSX.Element => {
                 setSelectedDate={setSelectedDate}
                 handleConfirmDate={handleConfirmDate}
                 setOpenCalendar={setOpenCalendar}
+                setFromToHours={setFromToHours}
             />
         </div>
     )

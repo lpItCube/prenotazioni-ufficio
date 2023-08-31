@@ -23,7 +23,7 @@ const SeatPopup: React.FC<SeatPopupProps> = (props): JSX.Element | null => {
 
     const popupVariants = {
         initial: {
-            opacity: 0,
+            opacity:0,
             scale: 0,
             y: '-50%'
         },
@@ -33,13 +33,13 @@ const SeatPopup: React.FC<SeatPopupProps> = (props): JSX.Element | null => {
             y: '-50%'
         },
         exit: {
-            opacity: 0,
+            opacity:0,
             scale: 0,
             y: '-50%'
         }
     }
 
-
+console.log('userOnSeat',userOnSeat)
     const popup = userOnSeat.length > 0 && role !== USER
         ? (
             <motion.div
@@ -48,10 +48,10 @@ const SeatPopup: React.FC<SeatPopupProps> = (props): JSX.Element | null => {
                 animate="animate"
                 exit="exit"
                 className={`seat-popup__container`}
-                style={{
-                    left: cursorPos.x,
-                    top: cursorPos.y
-                }}
+                // style={{
+                //     left: cursorPos.x,
+                //     top: cursorPos.y
+                // }}
             >
                 {/* <div className="seat-popup__arrow" /> */}
                 <div className="seat-popup__data--wrapper">
