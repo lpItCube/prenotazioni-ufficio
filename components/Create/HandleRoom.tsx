@@ -240,15 +240,29 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 	};
 
 	const handleClearBook = async () => {
-		const response = await axios.delete(
-			`/api/reserve/${currentlyBooked?.id}`
-		);
+		await axios.delete(`/api/reserve/${currentlyBooked?.id}`);
 
 		const reserves: Reserve[] = await (
 			await axios.get(`/api/roomReserves/${roomId}`)
 		).data;
 
 		setBookedSeat(reserves);
+		const newGrid = grid.map((row: any) => {
+			const newNode = row.map((seat: any) => {
+				if (seat.seatName === lastSelected?.seatName) {
+					return {
+						x: seat.x,
+						y: seat.y,
+						info: "",
+					};
+				} else {
+					return seat;
+				}
+			});
+			return newNode;
+		});
+
+		setGrid(newGrid);
 		setSelectedCell(lastSelected);
 		setShowOptions(true);
 
@@ -502,7 +516,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 								/>
 							)}
 						</div>
-						<YourReserve reserves={reserveAllDay} />
+						{/* <YourReserve reserves={reserveAllDay} /> */}
 					</div>
 					{room?.description && (
 						<ModalComponent

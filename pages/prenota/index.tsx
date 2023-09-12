@@ -8,7 +8,7 @@ import { useSession, getSession } from "next-auth/react";
 import prisma from "../../lib/prisma";
 
 // Redux
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setReserves } from "../../features/reserveSlice";
 
 // Components
@@ -22,6 +22,7 @@ import { Domain, FromToHour, Reserve } from "../../types";
 // Utils
 import { createNewDate } from "../../utils/datePharser";
 import { ADMIN, AUTH_OK, PRISTINE, USER } from "../../_shared";
+import { getEndHour, getStartHour } from "../../features/timePickerSlice";
 
 interface PrenotaProps {
 	initialData: Reserve;

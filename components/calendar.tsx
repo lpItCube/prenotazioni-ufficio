@@ -38,12 +38,16 @@ const Calendar: React.FC<CalendarProps> = (props): JSX.Element => {
 		setOpenCalendar(true);
 	};
 
-	const handleChangeHour = (startHour: string, endHour: string): void => {
+	const handleChangeHour = async (
+		startHour: string,
+		endHour: string
+	): Promise<void> => {
 		const fromDate: string = transformDate(startHour, selectedDate);
 		const toDate: string = transformDate(endHour, selectedDate);
 		setFromToHours({ from: startHour, to: endHour });
 		setFromTo({ from: fromDate, to: toDate });
 	};
+	console.log("FR", fromToHours);
 
 	const handleConfirmDate = async (selDate: Date): Promise<void> => {
 		const fromDate: string = transformDate(
@@ -97,7 +101,6 @@ const Calendar: React.FC<CalendarProps> = (props): JSX.Element => {
 					<HourPicker
 						handleChangeHour={handleChangeHour}
 						selectedDate={selectedDate}
-						setFromTo={setFromTo}
 					/>
 				</div>
 			</div>

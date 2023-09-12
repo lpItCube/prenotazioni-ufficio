@@ -14,16 +14,14 @@ import Option from "../Ui/Option";
 // Types
 import { Calendar } from "../../types";
 import { createEndTime, createStartTime } from "../../utils/hourFunctions";
-import { transformDate } from "../../utils/datePharser";
 
 interface HourpickerProps {
 	handleChangeHour: (start: string, end: string) => void;
 	selectedDate: Date;
-	setFromTo: any;
 }
 
 const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
-	const { handleChangeHour, selectedDate, setFromTo } = props;
+	const { handleChangeHour, selectedDate } = props;
 
 	const startTime: Calendar[] = [];
 	const endTime: Calendar[] = [];
@@ -42,23 +40,17 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 	useEffect(() => {
 		setStHour(createStartTime(9, 18, "start"));
 		setEnHour(createEndTime(10, 19, "end"));
-	}, []);
+	}, [selectedDate]);
+
+	useEffect(() => {
+		// console.log('ST', stHour)
+		// console.log('EN', enHour)
+	}, [stHour, enHour]);
 
 	useEffect(() => {
 		dispatch(setStartHour(9));
-		setEnHour(createEndTime(10, 19, "end"));
 		dispatch(setEndHour(10));
 	}, [selectedDate, dispatch]);
-
-	useEffect(() => {
-		setEnHour(createEndTime(endHour, 19, "end"));
-		const fromDate: string = transformDate(
-			startHour.toString(),
-			selectedDate
-		);
-		const toDate: string = transformDate(endHour.toString(), selectedDate);
-		setFromTo({ from: fromDate, to: toDate });
-	}, [startHour, endHour, selectedDate, setFromTo]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -75,6 +67,9 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 		};
 	}, []);
 
+	// const [optionStartHours, setOptionStartHours] = useState<Calendar[]>(startTime)
+	// const [optionEndHours, setOptionEndHours] = useState<Calendar[]>(endTime)
+
 	const handleOpenStartOption = () => {
 		setStartOpen((prev) => !prev);
 	};
@@ -90,9 +85,12 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 				? hourValue
 				: parseInt(currentStart as string);
 		dispatch(setStartHour(startHour));
+		// createEndTime(startHour + 1, 19, 'end')
 		setEnHour(createEndTime(startHour + 1, 19, "end"));
+		// setOptionEndHours(endTime)
 
 		if (endHour <= startHour) {
+			// setEndHour(startHour+1)
 			dispatch(setEndHour(startHour + 1));
 			handleChangeHour(
 				String(startHour).padStart(2, "0"),
@@ -113,6 +111,7 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 				? hourValue
 				: parseInt(currentEnd as string);
 		dispatch(setEndHour(endHour));
+		// setEndHour(endHour)
 
 		handleChangeHour(
 			String(startHour).padStart(2, "0"),
