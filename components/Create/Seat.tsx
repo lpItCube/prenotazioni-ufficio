@@ -43,7 +43,7 @@ const Seat: React.FC<SeatProps> = (props): JSX.Element => {
 	const modalStatus = useSelector(getModalStatus);
 	const reservesInDay = useSelector(getDayAllReserves);
 
-	console.log("RESERVERS", reserves);
+	// console.log("RESERVERS", reserves);
 
 	const { userData } = useAuthHook();
 	const username = userData.name;

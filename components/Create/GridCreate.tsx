@@ -22,10 +22,10 @@ interface GridCreateProps {
 	setSeats: (seats: Seat[]) => void;
 	setSelectedCell: (point: any) => void;
 	selectedCell?: GridPoint;
-	setShowOptions: (bool: boolean) => void;
 	optionRef?: any;
 	updateGrid: GridPoint[];
 	setUpdateGrid: (upd: GridPoint[] | []) => void;
+	handleCellClick: (point: GridPoint) => void;
 }
 
 const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
@@ -41,10 +41,10 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 		setSeats,
 		setSelectedCell,
 		selectedCell,
-		setShowOptions,
 		optionRef,
 		updateGrid,
 		setUpdateGrid,
+		handleCellClick,
 	} = props;
 
 	const cellRef = useRef<any>(null);
@@ -190,20 +190,6 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 			window.removeEventListener("keyup", handleKeyUp);
 		};
 	}, [selectedCell, grid, setSelectedCell, xSize, ySize]);
-
-	const handleCellClick = (point: GridPoint) => {
-		setSelectedCell({
-			x: point.x,
-			y: point.y,
-			info: point.info,
-			seatName: point.seatName,
-		});
-		// setSelectedCell(point)
-		setShowOptions(true);
-		if (grid?.length) {
-			setUpdateGrid(grid.flat());
-		}
-	};
 
 	return (
 		<>

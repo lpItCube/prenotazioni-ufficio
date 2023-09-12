@@ -1,559 +1,561 @@
 .creation-stepper {
-    &__container {
-        width: $col12;
-        padding: 12px 16px;
-        background-color: $light300;
-        box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
-        @include animate(0.2s ease-in-out);
-    }
+	&__container {
+		width: $col12;
+		padding: 12px 16px;
+		background-color: $light300;
+		box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
+		@include animate(0.2s ease-in-out);
+	}
 
-    &__active {
-        height: 100%;
-        min-height: 100vh;
-        overflow: hidden;
-    }
+	&__active {
+		height: 100%;
+		min-height: 100vh;
+		overflow: hidden;
+	}
 
-    &__static {
-        min-height: 64px;
-    }
+	&__static {
+		min-height: 64px;
+	}
 
-    &__navigation {
-        display: flex;
-        flex-wrap: wrap;
-        overflow: hidden;
-    }
+	&__navigation {
+		display: flex;
+		flex-wrap: wrap;
+		overflow: hidden;
+	}
 
-    &__item {
-        width: auto;
-        padding: 0 16px 0 0;
-    }
+	&__item {
+		width: auto;
+		padding: 0 16px 0 0;
+	}
 
-    &__modal {
-        &-wrapper {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            @include transform(-50%, -50%, 0);
-            width: $col12;
-        }
+	&__modal {
+		&-wrapper {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			@include transform(-50%, -50%, 0);
+			width: $col12;
+		}
 
-        &-container {
-            width: 50%;
-            margin: auto;
-        }
+		&-container {
+			width: 50%;
+			margin: auto;
+		}
 
-        &-title {
-            margin-bottom: 8px;
-        }
-    }
+		&-title {
+			margin-bottom: 8px;
+		}
+	}
 
-    &__actions {
-        &-wrapper {
-            background-color: white;
-            padding: 16px 16px 24px;
-            border-radius: 4px;
+	&__actions {
+		&-wrapper {
+			background-color: white;
+			padding: 16px 16px 24px;
+			border-radius: 4px;
 
-            .select {
+			.select {
+				&__container {
+					width: $col12;
+					padding: 0;
+				}
 
-                &__container {
-                    width: $col12;
-                    padding: 0;
-                }
+				&__value-container {
+					background-color: $green100;
+					width: calc(100% - 1px);
+					display: block;
+				}
 
-                &__value-container {
-                    background-color: $green100;
-                    width: calc(100% - 1px);
-                    display: block;
-                }
+				&__options {
+					width: calc(100% - 16px);
+					left: 8px;
+				}
+			}
 
-                &__options {
-                    width: calc(100% - 16px);
-                    left: 8px
-                }
-            }
+			.input {
+				&__value-container {
+					background-color: $green100;
+				}
+			}
+		}
 
-            .input {
-                &__value-container {
-                    background-color: $green100;
-                }
-            }
-        }
+		&-cta {
+			position: absolute;
+			right: 0;
+		}
 
-        &-cta {
-            position: absolute;
-            right: 0;
-        }
+		&-container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			position: relative;
 
-        &-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            position: relative;
+			&.w-cta {
+				.input {
+					&__container {
+						width: calc(100% - 60px);
+					}
+				}
+			}
+		}
+	}
 
+	&__element {
+		width: $col4;
+		padding: 0 8px;
+	}
 
-            &.w-cta {
-                .input {
-                    &__container {
-                        width: calc(100% - 60px);
-                    }
-                }
-            }
-        }
-    }
+	&__room {
+		&--name {
+			display: flex;
+			align-items: center;
+			cursor: pointer;
 
-    &__element {
-        width: $col4;
-        padding: 0 8px;
-    }
+			&:hover {
+				svg {
+					path {
+						color: $warning300;
+						outline: none;
+					}
+				}
+			}
+		}
+	}
 
-    &__room {
-        &--name {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
+	&__box {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
 
-            &:hover {
-                svg {
-                    path {
-                        color: $warning300;
-                        outline: none;
-                    }
-                }
-            }
-        }
-    }
+		&--title {
+			width: calc(100% - 48px);
+			margin-left: 16px;
+		}
 
-    &__box {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
+		&--remove {
+			cursor: pointer;
+			background-color: $warning300;
+			border-radius: 100%;
+			padding: 6px;
 
-        &--title {
-            width: calc(100% - 48px);
-            margin-left: 16px;
-        }
+			&:hover {
+				background-color: $statusPending;
+				border-radius: 100%;
+				fill: white;
+			}
+		}
 
-        &--remove {
-            cursor: pointer;
-            background-color: $warning300;
-            border-radius: 100%;
-            padding: 6px;
+		&--edit {
+			margin-left: 8px;
+		}
+	}
 
-            &:hover {
-                background-color: $statusPending;
-                border-radius: 100%;
-                fill: white
-            }
-        }
-
-        &--edit {
-            margin-left: 8px;
-        }
-    }
-
-    // &__element {
-    //     width: $col4;
-    //     .select {
-    //         &__value-container {
-    //             width: $col12;
-    //             display: block;
-    //         }
-    //         &__options {
-    //             width: calc(100% - 32px)
-    //         }
-    //     }
-    // }
+	// &__element {
+	//     width: $col4;
+	//     .select {
+	//         &__value-container {
+	//             width: $col12;
+	//             display: block;
+	//         }
+	//         &__options {
+	//             width: calc(100% - 32px)
+	//         }
+	//     }
+	// }
 }
 
 .room {
+	&-create {
+		&__body {
+			flex: 0;
+		}
 
-    &-create {
-        &__body {
-            flex: 0
-        }
+		&__container {
+			min-height: 100%;
+			display: flex;
+			flex-direction: column;
 
-        &__container {
-            min-height: 100%;
-            display: flex;
-            flex-direction: column;
+			.cta {
+				&.square {
+					text-align: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
 
-            .cta {
-                &.square {
-                    text-align: center;
-                    justify-content: center;
-                }
-            }
-        }
-    }
+	&-creation {
+		flex: 1;
+		align-items: center;
+		justify-content: center;
+		position: relative;
 
-    &-creation {
-        flex: 1;
-        align-items: center;
-        justify-content: center;
-        position: relative;
+		// background-color: $createRoomBg;
+		&__options {
+			position: relative;
+			z-index: 1;
+			top: 0;
+			width: $col12;
+			display: flex;
+			flex-wrap: wrap;
+			padding: 4px 24px 16px;
+			background-color: $green100;
+			justify-content: space-between;
+			align-items: flex-end;
+		}
 
-        // background-color: $createRoomBg;
-        &__options {
-            position: relative;
-            z-index: 1;
-            top: 0;
-            width: $col12;
-            display: flex;
-            flex-wrap: wrap;
-            padding: 4px 24px 16px;
-            background-color: $green100;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
+		&__grid-controller {
+			display: flex;
+			flex-wrap: wrap;
 
-        &__grid-controller {
-            display: flex;
-            flex-wrap: wrap;
+			.input-number {
+				&__wrapper {
+					margin-right: 32px;
+				}
+			}
+		}
+	}
 
-            .input-number {
-                &__wrapper {
-                    margin-right: 32px;
-                }
-            }
-        }
-    }
-
-    &-grid {
-        // margin-top: 64px;
-        position: absolute;
-        height: 100%;
-        width: $col12;
-        overflow: auto;
-        // background-color: yellow;
-        display: flex;
-    }
+	&-grid {
+		// margin-top: 64px;
+		position: absolute;
+		height: 100%;
+		width: $col12;
+		overflow: auto;
+		// background-color: yellow;
+		display: flex;
+	}
 }
 
 .creation-table {
-    &__wrapper {
-        position: relative;
-        // height: 0;
-        // padding-bottom: 50%;
-        margin: auto;
-        padding: 32px;
-        max-width: calc(100% - 64px);
-        /* min-height: 100%; */
-        margin-left: auto;
-    }
+	&__wrapper {
+		position: relative;
+		// height: 0;
+		// padding-bottom: 50%;
+		margin: auto;
+		padding: 32px;
+		max-width: calc(100% - 64px);
+		/* min-height: 100%; */
+		margin-left: auto;
+	}
 
-    &__body {
-        display: flex;
-        /* flex-wrap: wrap; */
-        height: auto;
-        position: relative;
-        width: 100%;
-        justify-content: space-between;
-        align-items: center;
-        flex-direction: column;
-        overflow: auto;
-        max-width: $col12;
-        margin: auto;
-    }
+	&__body {
+		display: flex;
+		/* flex-wrap: wrap; */
+		height: auto;
+		position: relative;
+		width: 100%;
+		justify-content: space-between;
+		align-items: center;
+		flex-direction: column;
+		overflow: auto;
+		max-width: $col12;
+		margin: auto;
+	}
 
-    &__row {
-        width: auto;
-        /* height: 50%; */
-        /* height: 100%; */
-        /* flex: 1 1; */
-        display: flex;
-        width: $col12;
+	&__row {
+		width: auto;
+		/* height: 50%; */
+		/* height: 100%; */
+		/* flex: 1 1; */
+		display: flex;
+		width: $col12;
 
-        .creation-table {
-            &__col {
-                border-right: 1px solid $light500;
-                border-bottom: solid 1px $light500;
+		.creation-table {
+			&__col {
+				border-right: 1px solid $light500;
+				border-bottom: solid 1px $light500;
 
-                &:nth-last-child(1) {
-                    border-right: none;
-                }
-            }
-        }
+				&:nth-last-child(1) {
+					border-right: none;
+				}
+			}
+		}
 
-        &:nth-last-child(1) {
-            .creation-table {
-                &__col {
-                    border-bottom: none;
-                }
-            }
-        }
-    }
+		&:nth-last-child(1) {
+			.creation-table {
+				&__col {
+					border-bottom: none;
+				}
+			}
+		}
+	}
 
-    &__col {
-        // background-color: rgb(2, 223, 120);
-        /* flex: 1 1; */
-        // border: 1px solid $light500;
-        /* flex: 1 1; */
-        height: 100%;
-        width: 100%;
-        max-width: 100%;
-        /* max-height: 100%; */
-        // height: 50px;
-        // width: 50px;
-        flex: 0 0 calc(50px);
-        height: 50px;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
+	&__col {
+		// background-color: rgb(2, 223, 120);
+		/* flex: 1 1; */
+		// border: 1px solid $light500;
+		/* flex: 1 1; */
+		height: 100%;
+		width: 100%;
+		max-width: 100%;
+		/* max-height: 100%; */
+		// height: 50px;
+		// width: 50px;
+		flex: 0 0 calc(50px);
+		height: 50px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
 
-        &.selected {
-            background-color: $statusYours;
-        }
+		&.selected {
+			background-color: $statusYours;
+		}
 
-        &:hover {
-            background-color: $statusYours;
-        }
+		&:hover {
+			background-color: $statusYours;
+		}
 
-        .creation-options {
-            &__table {
-                &--angle {
-                    width: 49px;
-                    height: 49px;
-                }
-            }
-        }
-    }
+		.creation-options {
+			&__table {
+				&--angle {
+					width: 49px;
+					height: 49px;
+				}
+			}
+		}
+	}
 }
 
 .creation-options {
-    &__aside {
-        position: sticky;
-        z-index: 100;
-        top: 16px;
-        bottom: 16px;
-        left: 16px;
-        height: calc(100% - 32px);
-        overflow: auto;
-        width: auto;
-        display: table;
-        padding: 16px 0;
-    }
+	&__aside {
+		position: sticky;
+		z-index: 100;
+		top: 16px;
+		bottom: 16px;
+		left: 16px;
+		height: calc(100% - 32px);
+		overflow: auto;
+		width: auto;
+		display: table;
+		padding: 16px 0;
+	}
 
-    &__box {
-        background: white;
-        position: relative;
-        padding: 4px;
-        border-radius: 4px;
-        box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
-        display: table;
-    }
+	&__box {
+		background: white;
+		position: relative;
+		padding: 4px;
+		border-radius: 4px;
+		box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
+		display: table;
+	}
 
-    &__wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: column;
-        gap: 4px;
-    }
+	&__wrapper {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+		gap: 4px;
+	}
 
-    &__element {
-        width: 48px;
-        height: 48px;
-        background-color: $light300;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        cursor: pointer;
+	&__element {
+		width: 48px;
+		height: 48px;
+		background-color: $light300;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		cursor: pointer;
 
-        &.clear {
-            background-color: $warning300;
+		&.clear {
+			background-color: $warning300;
 
-            &:hover {
-                background-color: $warning500;
-            }
-        }
+			&:hover {
+				background-color: $warning500;
+			}
+		}
 
-        &.disabled {
-            background-color: $light500;
-            pointer-events: none;
-        }
+		&.clean {
+			background-color: $statusPending;
 
-        &.selected,
-        &:hover {
-            background-color: $green100
-        }
+			&:hover {
+				background-color: $pendingBorder;
+			}
+		}
 
-        &--vLine {
-            @extend .creation-options__element;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 10px;
+		&.disabled {
+			background-color: $light500;
+			pointer-events: none;
+		}
 
-            &.bottom {
-                justify-content: flex-end
-            }
-        }
+		&.selected,
+		&:hover {
+			background-color: $green100;
+		}
 
-        &--hLine {
-            @extend .creation-options__element;
-            justify-content: space-between;
-            padding: 10px;
+		&--vLine {
+			@extend .creation-options__element;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 10px;
 
-            &.right {
-                justify-content: flex-end;
-            }
-        }
-    }
+			&.bottom {
+				justify-content: flex-end;
+			}
+		}
 
-    &__seat {
-        &--container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+		&--hLine {
+			@extend .creation-options__element;
+			justify-content: space-between;
+			padding: 10px;
 
-        width: 24px;
-        height: 24px;
-        border-radius: 100%;
-        background-color: $green500;
+			&.right {
+				justify-content: flex-end;
+			}
+		}
+	}
 
-        &.your {
-            background-color: $statusYours;
-        }
+	&__seat {
+		&--container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
-        &.not-available {
-            background-color: transparent;
-            border: solid 2px $green500;
-        }
+		width: 24px;
+		height: 24px;
+		border-radius: 100%;
+		background-color: $green500;
 
-        &.buisy {
-            background-color: $statusBuisy;
+		&.your {
+			background-color: $statusYours;
+		}
 
-            &.not-available {
-                background-color: transparent;
-                border: solid 2px $statusBuisy;
-            }
-        }
+		&.not-available {
+			background-color: transparent;
+			border: solid 2px $green500;
+		}
 
-        &.pending {
-            background-color: $statusPending;
-        }
-    }
+		&.buisy {
+			background-color: $statusBuisy;
 
-    &__table {
-        &--angle {
-            width: 25px;
-            height: 25px;
+			&.not-available {
+				background-color: transparent;
+				border: solid 2px $statusBuisy;
+			}
+		}
 
-            &-br {
-                @extend .creation-options__table--angle;
-                border: 3px solid $statusNotAvailable;
-                border-top: none;
-                border-left: none;
-                border-radius: 0 0 25px 0;
-            }
+		&.pending {
+			background-color: $statusPending;
+		}
+	}
 
-            &-bl {
-                @extend .creation-options__table--angle;
-                border: 3px solid $statusNotAvailable;
-                border-top: none;
-                border-right: none;
-                border-radius: 0 0 0 25px;
-            }
+	&__table {
+		&--angle {
+			width: 25px;
+			height: 25px;
 
-            &-tr {
-                @extend .creation-options__table--angle;
-                border: 3px solid $statusNotAvailable;
-                border-bottom: none;
-                border-right: none;
-                border-radius: 25px 0 0px 0;
-            }
+			&-br {
+				@extend .creation-options__table--angle;
+				border: 3px solid $statusNotAvailable;
+				border-top: none;
+				border-left: none;
+				border-radius: 0 0 25px 0;
+			}
 
-            &-tl {
-                @extend .creation-options__table--angle;
-                border: 3px solid $statusNotAvailable;
-                border-bottom: none;
-                border-left: none;
-                border-radius: 0 25px 0 0;
-            }
-        }
+			&-bl {
+				@extend .creation-options__table--angle;
+				border: 3px solid $statusNotAvailable;
+				border-top: none;
+				border-right: none;
+				border-radius: 0 0 0 25px;
+			}
 
-        &--vertical {
-            width: 25px;
-            height: 3px;
-            background-color: $statusNotAvailable;
-        }
+			&-tr {
+				@extend .creation-options__table--angle;
+				border: 3px solid $statusNotAvailable;
+				border-bottom: none;
+				border-right: none;
+				border-radius: 25px 0 0px 0;
+			}
 
-        &--horizontal {
-            width: 3px;
-            height: 25px;
-            background-color: $statusNotAvailable;
-        }
+			&-tl {
+				@extend .creation-options__table--angle;
+				border: 3px solid $statusNotAvailable;
+				border-bottom: none;
+				border-left: none;
+				border-radius: 0 25px 0 0;
+			}
+		}
 
-        &--hLineLeft,
-        &--hLineRight {
-            width: 3px;
-            height: 49px;
-            background-color: $statusNotAvailable;
-        }
+		&--vertical {
+			width: 25px;
+			height: 3px;
+			background-color: $statusNotAvailable;
+		}
 
-        &--hLineRight {
-            margin-left: auto;
-        }
+		&--horizontal {
+			width: 3px;
+			height: 25px;
+			background-color: $statusNotAvailable;
+		}
 
-        &--vLineTop,
-        &--vLineBottom {
-            width: 49px;
-            height: 2px;
-            background-color: $statusNotAvailable;
-            margin-bottom: auto;
-        }
+		&--hLineLeft,
+		&--hLineRight {
+			width: 3px;
+			height: 49px;
+			background-color: $statusNotAvailable;
+		}
 
-        &--vLineBottom {
-            margin-top: auto;
-            margin-bottom: 0;
-        }
+		&--hLineRight {
+			margin-left: auto;
+		}
 
-    }
+		&--vLineTop,
+		&--vLineBottom {
+			width: 49px;
+			height: 2px;
+			background-color: $statusNotAvailable;
+			margin-bottom: auto;
+		}
 
+		&--vLineBottom {
+			margin-top: auto;
+			margin-bottom: 0;
+		}
+	}
 }
 
 .box-line {
-    &__vertical {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+	&__vertical {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 
-        .creation-options {
-            &__table {
-                &--vertical {
-                    width: 1px;
-                    height: 100%;
-                }
-            }
-        }
-    }
+		.creation-options {
+			&__table {
+				&--vertical {
+					width: 1px;
+					height: 100%;
+				}
+			}
+		}
+	}
 }
 
-
 .input {
-    &__container {
-        padding: 0;
-        width: $col12;
-        max-width: $col12;
-        @include animate(0.2s ease-in-out);
-        text-align: left;
-        &.description {
-            margin-top: 16px;
-            margin-bottom: 0;
-        }
-    }
+	&__container {
+		padding: 0;
+		width: $col12;
+		max-width: $col12;
+		@include animate(0.2s ease-in-out);
+		text-align: left;
+		&.description {
+			margin-top: 16px;
+			margin-bottom: 0;
+		}
+	}
 
-    &__value-container {
-        width: $col12;
-        display: block;
-    }
+	&__value-container {
+		width: $col12;
+		display: block;
+	}
 }
 
 textarea {
-    resize: vertical;
+	resize: vertical;
 }

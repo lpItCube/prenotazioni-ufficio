@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActualRoom, setActualRoomName } from "../../features/roomSlice";
 import {
 	getDayReserves,
+	getReserves,
 	setDayReserves,
 	setReserves,
 } from "../../features/reserveSlice";
@@ -38,7 +39,17 @@ import { getOnlyDate } from "../../utils/datePharser";
 
 // Hooks
 import { useAuthHook } from "../../hooks/useAuthHook";
-import { ModalType, OPTION_CHAIR, PRISTINE } from "../../_shared";
+import {
+	ADD,
+	Actions,
+	CLEAN,
+	CLEAN_MODAL,
+	DELETE,
+	EDIT_MODAL,
+	ModalType,
+	OPTION_CHAIR,
+	PRISTINE,
+} from "../../_shared";
 import ModalComponent from "../Ui/ModalComponent";
 import { setModalType, toggleModal } from "../../features/modalSlice";
 import Input from "../Ui/Input";
@@ -86,6 +97,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 
 	const dispatch = useDispatch();
 	const reserveAllDay = useSelector(getDayReserves);
+	const reserves = useSelector(getReserves);
 	const { userData } = useAuthHook();
 	const userId: string = userData.id;
 
@@ -96,20 +108,25 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 	const [seatName, setSeatName] = useState<string>("none");
 	const [seats, setSeats] = useState<Seat[]>([]);
 	const [selectedCell, setSelectedCell] = useState<GridPoint>();
+	const [lastSelected, setLastSelected] = useState<GridPoint>();
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [updateGrid, setUpdateGrid] = useState<GridPoint[]>([]);
 	const [firstUpdate, setFirstUpdate] = useState<boolean>(false);
 	const [roomName, setRoomName] = useState<string>("");
 	const [roomDescription, setRoomDescription] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [bookedSeat, setBookedSeat] = useState<Reserve[]>([]);
+	const [currentlyBooked, setCurrentlyBooked] = useState<Reserve | undefined>(
+		undefined
+	);
+	const [currentSelected, setCurrentSelected] = useState<string | undefined>(
+		undefined
+	);
+	const [clearSeatMethod, setClearSeatMethod] = useState<number | null>(null);
 
 	useEffect(() => {
 		setFirstUpdate(true);
 	}, []);
-
-	useEffect(() => {
-		console.log("HERE", seats);
-	}, [seats]);
 
 	useEffect(() => {
 		setRoomName(room?.name ? room.name : "");
@@ -145,12 +162,13 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 			}
 		};
 		getRoom();
-		const setReservess = async () => {
+		const getCurrentReserves = async () => {
 			// console.log('SET RES 3')
 			if (fromTo) {
 				const reserves: Reserve[] = await (
 					await axios.get(`/api/reserve`)
 				).data;
+
 				const filteredRes = reserves.filter(
 					(r: Reserve) =>
 						fromTo.from &&
@@ -191,8 +209,51 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 				dispatch(setReserves({ reserveData: filteredRes }));
 			}
 		};
-		if (!create) setReservess();
+
+		const getRoomReserves = async () => {
+			const reserves: Reserve[] = await (
+				await axios.get(`/api/roomReserves/${roomId}`)
+			).data;
+			setBookedSeat(reserves);
+		};
+
+		if (!create) {
+			getCurrentReserves();
+		} else {
+			getRoomReserves();
+		}
 	}, [roomId, fromTo, firstUpdate, create, dispatch, userId]);
+
+	useEffect(() => {
+		const currentlyBooked = bookedSeat.find((book: Reserve) => {
+			return book?.seat?.name === selectedCell?.seatName;
+		});
+
+		setCurrentlyBooked(currentlyBooked);
+		setCurrentSelected(selectedCell?.info);
+	}, [selectedCell, bookedSeat]);
+
+	const handleClearSeat = async (action: number) => {
+		dispatch(toggleModal(true));
+		dispatch(setModalType(CLEAN_MODAL));
+		setClearSeatMethod(action);
+	};
+
+	const handleClearBook = async () => {
+		const response = await axios.delete(
+			`/api/reserve/${currentlyBooked?.id}`
+		);
+
+		const reserves: Reserve[] = await (
+			await axios.get(`/api/roomReserves/${roomId}`)
+		).data;
+
+		setBookedSeat(reserves);
+		setSelectedCell(lastSelected);
+		setShowOptions(true);
+
+		handleCloseModal();
+	};
 
 	const handleSave = async () => {
 		setIsLoading(true);
@@ -216,7 +277,6 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 		try {
 			await axios.delete(`/api/seats/${roomId}`);
 			if (seats.length > 0) {
-				console.log("SEATS SAVE", seats);
 				await axios.post("/api/seats/", { seats });
 				setIsLoading(false);
 			}
@@ -250,7 +310,6 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 									)
 								) {
 									setSeats([...seats, newSeat]);
-									console.log("HERE NOT");
 								}
 							} else {
 								const seatToDelete = `${room?.name}-${cell.x}-${cell.y}`;
@@ -266,7 +325,6 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 												seat.name !== seatToDelete
 										)
 									);
-									console.log("HERE NOT");
 								}
 							}
 							return {
@@ -281,6 +339,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 			: [];
 		setGrid(newGrid);
 		setUpdateGrid(newGrid.flat());
+		setCurrentSelected(element);
 	};
 
 	const handleCloseModal = () => {
@@ -297,6 +356,24 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 			}));
 		}
 		handleSave();
+	};
+
+	const handleCellClick = (point: GridPoint) => {
+		const selectedPoint = {
+			x: point.x,
+			y: point.y,
+			info: point.info,
+			seatName: point.seatName,
+		};
+
+		setSelectedCell(selectedPoint);
+
+		setLastSelected(selectedPoint);
+
+		setShowOptions(true);
+		if (grid?.length) {
+			setUpdateGrid(grid.flat());
+		}
 	};
 
 	return (
@@ -327,9 +404,17 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 										>
 											<div className="creation-options__box">
 												<OptionsBar
-													selectedCell={selectedCell}
+													currentSelected={
+														currentSelected
+													}
 													handleOptionChange={
 														handleOptionChange
+													}
+													currentlyBooked={
+														currentlyBooked
+													}
+													handleClearSeat={
+														handleClearSeat
 													}
 												/>
 											</div>
@@ -350,11 +435,27 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 								setSeats={setSeats}
 								setSelectedCell={setSelectedCell}
 								selectedCell={selectedCell}
-								setShowOptions={setShowOptions}
 								optionRef={optionRef}
 								updateGrid={updateGrid}
 								setUpdateGrid={setUpdateGrid}
+								handleCellClick={handleCellClick}
 							/>
+							<ModalComponent
+								modalTitle={`Cancella prenotazioni`}
+								subTitle=""
+								refType={ModalType.CLEAN}
+								handleCloseModal={handleCloseModal}
+							>
+								Per modificare questo posto è necessario prima
+								cancellare tutte le prenotazioni attribuite.
+								<Button
+									type="button"
+									icon={false}
+									text="Continua e cancella"
+									className="cta cta--primary"
+									onClick={() => handleClearBook()}
+								/>
+							</ModalComponent>
 						</div>
 					</div>
 					<ModalComponent
@@ -363,12 +464,6 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 						refType={ModalType.EDIT}
 						handleCloseModal={handleCloseModal}
 					>
-						{/* 
-                        Al save della modale lanciare setSelectedRoom settando la label +
-                        fare la put su la stanza con id room.id +
-                        settare setRoom per il nome e la descrizione +
-                        lanciare handleSave function
-                        */}
 						<Input
 							label=""
 							value={roomName}
