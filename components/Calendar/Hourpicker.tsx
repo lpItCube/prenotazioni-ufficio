@@ -14,14 +14,15 @@ import Option from "../Ui/Option";
 // Types
 import { Calendar } from "../../types";
 import { createEndTime, createStartTime } from "../../utils/hourFunctions";
+import { DEFAULT_END_HOUR, DEFAULT_START_HOUR } from "../../_shared";
 
 interface HourpickerProps {
-	handleChangeHour: (start: string, end: string) => void;
+	// handleChangeHour: (start: string, end: string) => void;
 	selectedDate: Date;
 }
 
 const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
-	const { handleChangeHour, selectedDate } = props;
+	const { selectedDate } = props;
 
 	const startTime: Calendar[] = [];
 	const endTime: Calendar[] = [];
@@ -43,13 +44,18 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 	}, [selectedDate]);
 
 	useEffect(() => {
-		// console.log('ST', stHour)
-		// console.log('EN', enHour)
-	}, [stHour, enHour]);
+		const startNumber = parseInt(startHour);
+		const endNumber = parseInt(endHour);
+		setEnHour(createEndTime(startNumber + 1, 19, "end"));
+
+		if (endNumber <= startNumber) {
+			dispatch(setEndHour((startNumber + 1).toString()));
+		}
+	}, [startHour, endHour, dispatch]);
 
 	useEffect(() => {
-		dispatch(setStartHour(9));
-		dispatch(setEndHour(10));
+		dispatch(setStartHour(DEFAULT_START_HOUR));
+		dispatch(setEndHour(DEFAULT_END_HOUR));
 	}, [selectedDate, dispatch]);
 
 	useEffect(() => {
@@ -67,9 +73,6 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 		};
 	}, []);
 
-	// const [optionStartHours, setOptionStartHours] = useState<Calendar[]>(startTime)
-	// const [optionEndHours, setOptionEndHours] = useState<Calendar[]>(endTime)
-
 	const handleOpenStartOption = () => {
 		setStartOpen((prev) => !prev);
 	};
@@ -78,45 +81,12 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 		setEndOpen((prev) => !prev);
 	};
 
-	const handleStartHour = (hourValue: string | number) => {
-		const currentStart = hourValue;
-		const startHour =
-			typeof hourValue === "number"
-				? hourValue
-				: parseInt(currentStart as string);
-		dispatch(setStartHour(startHour));
-		// createEndTime(startHour + 1, 19, 'end')
-		setEnHour(createEndTime(startHour + 1, 19, "end"));
-		// setOptionEndHours(endTime)
-
-		if (endHour <= startHour) {
-			// setEndHour(startHour+1)
-			dispatch(setEndHour(startHour + 1));
-			handleChangeHour(
-				String(startHour).padStart(2, "0"),
-				String(startHour + 1).padStart(2, "0")
-			);
-		} else {
-			handleChangeHour(
-				String(startHour).padStart(2, "0"),
-				String(endHour).padStart(2, "0")
-			);
-		}
+	const handleStartHour = (hourValue: string) => {
+		dispatch(setStartHour(hourValue));
 	};
 
 	const handleEndHour = (hourValue: string | number) => {
-		const currentEnd = hourValue;
-		const endHour =
-			typeof hourValue === "number"
-				? hourValue
-				: parseInt(currentEnd as string);
-		dispatch(setEndHour(endHour));
-		// setEndHour(endHour)
-
-		handleChangeHour(
-			String(startHour).padStart(2, "0"),
-			String(endHour).padStart(2, "0")
-		);
+		dispatch(setEndHour(hourValue));
 	};
 
 	return (
@@ -124,7 +94,7 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 			<div ref={startRef} className="select__ref">
 				<Select
 					label="From"
-					value={`${String(startHour).padStart(2, "0")}:00`}
+					value={`${startHour.padStart(2, "0")}:00`}
 					onClick={() => handleOpenStartOption}
 					openOption={startOpen}
 				>
@@ -151,7 +121,7 @@ const Hourpicker: React.FC<HourpickerProps> = (props): JSX.Element => {
 			<div ref={endRef} className="select__ref">
 				<Select
 					label="to"
-					value={`${String(endHour).padStart(2, "0")}:00`}
+					value={`${endHour.padStart(2, "0")}:00`}
 					onClick={() => handleOpenEndOption}
 					openOption={endOpen}
 				>

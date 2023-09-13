@@ -80,7 +80,7 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 					return _.omit(obj, ["reserve", "id"]);
 				});
 				// setSeats(omitSeats);
-				console.log("HERE OMIT");
+				// console.log("HERE OMIT");
 			} else {
 				setSeats([
 					{
@@ -89,7 +89,7 @@ const GridCreate: React.FC<GridCreateProps> = (props): JSX.Element => {
 						roomId: roomId,
 					},
 				]);
-				console.log("HERE OMIT");
+				// console.log("HERE OMIT");
 			}
 		}
 	}, [room, roomId, setSeats, setUpdateGrid]);

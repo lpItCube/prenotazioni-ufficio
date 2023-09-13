@@ -210,7 +210,6 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 
 	async function handleSeat() {
 		setHitModalButton({ loading: true, id: null });
-		console.log("SN", seatName);
 		const seatId: string = await (
 			await axios.get(`/api/seats/${seatName}`)
 		).data?.id;
@@ -226,7 +225,6 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 
 		if (action === Actions.ADD) {
 			// Intervento pending state per utente USER se ha già effettuato una prenotazione
-			console.log("PROB", seatId, userId, bookStatus);
 			try {
 				await axios.post("/api/addReserve", {
 					seatId: seatId,
@@ -274,7 +272,6 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 				(r: Reserve) => r.status === ACCEPTED
 			).length;
 
-			console.log(resDay);
 			if (!alreadyAccepted) {
 				const firstInPending = resDay.find(
 					(r: Reserve) =>

@@ -56,6 +56,7 @@ import Input from "../Ui/Input";
 import Textarea from "../Ui/Textarea";
 import Button from "../Ui/Button";
 import Spinner from "../Ui/Spinner";
+import { getEndHour, getStartHour } from "../../features/timePickerSlice";
 
 interface HandleRoomProps {
 	fromTo?: FromToHour;
@@ -100,6 +101,8 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 	const reserves = useSelector(getReserves);
 	const { userData } = useAuthHook();
 	const userId: string = userData.id;
+	const startHour = useSelector(getStartHour);
+	const endHour = useSelector(getEndHour);
 
 	const [room, setRoom] = useState<Room>();
 	const [xCells, setXCells] = useState<number>(0);
@@ -163,11 +166,12 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 		};
 		getRoom();
 		const getCurrentReserves = async () => {
-			// console.log('SET RES 3')
 			if (fromTo) {
 				const reserves: Reserve[] = await (
 					await axios.get(`/api/reserve`)
 				).data;
+
+				if (!reserves) return;
 
 				const filteredRes = reserves.filter(
 					(r: Reserve) =>
@@ -222,7 +226,16 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 		} else {
 			getRoomReserves();
 		}
-	}, [roomId, fromTo, firstUpdate, create, dispatch, userId]);
+	}, [
+		roomId,
+		fromTo,
+		firstUpdate,
+		create,
+		dispatch,
+		userId,
+		startHour,
+		endHour,
+	]);
 
 	useEffect(() => {
 		const currentlyBooked = bookedSeat.find((book: Reserve) => {
@@ -516,7 +529,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 								/>
 							)}
 						</div>
-						{/* <YourReserve reserves={reserveAllDay} /> */}
+						<YourReserve reserves={reserveAllDay} />
 					</div>
 					{room?.description && (
 						<ModalComponent

@@ -21,7 +21,14 @@ import { Domain, FromToHour, Reserve } from "../../types";
 
 // Utils
 import { createNewDate } from "../../utils/datePharser";
-import { ADMIN, AUTH_OK, PRISTINE, USER } from "../../_shared";
+import {
+	ADMIN,
+	AUTH_OK,
+	DEFAULT_END_HOUR,
+	DEFAULT_START_HOUR,
+	PRISTINE,
+	USER,
+} from "../../_shared";
 import { getEndHour, getStartHour } from "../../features/timePickerSlice";
 
 interface PrenotaProps {
@@ -33,14 +40,16 @@ interface PrenotaProps {
 const Prenota: React.FC<PrenotaProps> = (props): JSX.Element => {
 	const dispatch = useDispatch();
 	const { status } = useSession();
+	const startHour = useSelector(getStartHour);
+	const endHour = useSelector(getEndHour);
 
 	const { initialData, domain, domainList } = props;
 	const [fromTo, setFromTo] = useState<FromToHour>({ from: null, to: null });
 	const [action, setAction] = useState<number>(PRISTINE);
 
 	useEffect(() => {
-		const fromDate = createNewDate("09");
-		const toDate = createNewDate("10");
+		const fromDate = createNewDate(DEFAULT_START_HOUR);
+		const toDate = createNewDate(DEFAULT_END_HOUR);
 		setFromTo({ from: fromDate, to: toDate });
 		// Setta le prenotazioni al primo loading
 		dispatch(setReserves({ reserveData: initialData }));
@@ -50,6 +59,10 @@ const Prenota: React.FC<PrenotaProps> = (props): JSX.Element => {
 		const event = new Event("visibilitychange");
 		document.dispatchEvent(event);
 	}, [status]);
+
+	useEffect(() => {
+		console.log("HOURS", startHour, endHour);
+	}, [startHour, endHour]);
 
 	return (
 		<div className="room-create__container">
@@ -93,8 +106,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	// console.log("DOMAIN -> ", session.user?.role)
 	// console.log("DOMAIN -> ", domainList)
 
-	const fromDate = createNewDate("09");
-	const toDate = createNewDate("10");
+	const fromDate = createNewDate(DEFAULT_START_HOUR);
+	const toDate = createNewDate(DEFAULT_END_HOUR);
 	const initialData = await prisma.reserve.findMany({
 		include: {
 			seat: true,

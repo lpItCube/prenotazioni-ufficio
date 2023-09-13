@@ -15,6 +15,8 @@ import DatePicker from "./Calendar/DatePicker";
 // Type
 import { FromToHour, Reserve } from "../types";
 import { transformDate } from "../utils/datePharser";
+import { getEndHour, getStartHour } from "../features/timePickerSlice";
+import { DEFAULT_END_HOUR, DEFAULT_START_HOUR } from "../_shared";
 
 interface CalendarProps {
 	setFromTo: (data: { from: string; to: string }) => void;
@@ -26,11 +28,13 @@ const Calendar: React.FC<CalendarProps> = (props): JSX.Element => {
 	const { userData } = useAuthHook();
 	const reserveData: Reserve[] = useSelector(getReserves);
 	const username: string = userData.name;
+	const startHour = useSelector(getStartHour);
+	const endHour = useSelector(getEndHour);
 
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 	const [fromToHours, setFromToHours] = useState<FromToHour>({
-		from: "09",
-		to: "10",
+		from: DEFAULT_START_HOUR,
+		to: DEFAULT_END_HOUR,
 	});
 	const [openCalendar, setOpenCalendar] = useState<boolean>(false);
 
@@ -38,37 +42,28 @@ const Calendar: React.FC<CalendarProps> = (props): JSX.Element => {
 		setOpenCalendar(true);
 	};
 
-	const handleChangeHour = async (
-		startHour: string,
-		endHour: string
-	): Promise<void> => {
-		const fromDate: string = transformDate(startHour, selectedDate);
-		const toDate: string = transformDate(endHour, selectedDate);
-		setFromToHours({ from: startHour, to: endHour });
-		setFromTo({ from: fromDate, to: toDate });
-	};
-	console.log("FR", fromToHours);
+	// const handleChangeHour = async (
+	// 	startHour: string,
+	// 	endHour: string
+	// ): Promise<void> => {
+	// 	const fromDate: string = transformDate(startHour, selectedDate);
+	// 	const toDate: string = transformDate(endHour, selectedDate);
+	// 	setFromToHours({ from: startHour, to: endHour });
+	// 	setFromTo({ from: fromDate, to: toDate });
+	// };
+	// console.log("FR", fromToHours);
 
 	const handleConfirmDate = async (selDate: Date): Promise<void> => {
-		const fromDate: string = transformDate(
-			fromToHours.from as string,
-			selDate
-		);
-		const toDate: string = transformDate(fromToHours.to as string, selDate);
+		const fromDate: string = transformDate(startHour, selDate);
+		const toDate: string = transformDate(startHour, selDate);
 		setFromTo({ from: fromDate, to: toDate });
 	};
 
 	useEffect(() => {
-		const fromDate: string = transformDate(
-			fromToHours.from as string,
-			selectedDate
-		);
-		const toDate: string = transformDate(
-			fromToHours.to as string,
-			selectedDate
-		);
+		const fromDate: string = transformDate(startHour, selectedDate);
+		const toDate: string = transformDate(endHour, selectedDate);
 		setFromTo({ from: fromDate, to: toDate });
-	}, [selectedDate, fromToHours.from, fromToHours.to, setFromTo]);
+	}, [selectedDate, startHour, endHour, setFromTo]);
 
 	useEffect(() => {
 		const wholeRoom: Reserve | undefined = reserveData.find(
@@ -99,7 +94,7 @@ const Calendar: React.FC<CalendarProps> = (props): JSX.Element => {
 						setFromToHours={setFromToHours}
 					/>
 					<HourPicker
-						handleChangeHour={handleChangeHour}
+						// handleChangeHour={handleChangeHour}
 						selectedDate={selectedDate}
 					/>
 				</div>

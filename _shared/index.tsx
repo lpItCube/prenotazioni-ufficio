@@ -58,6 +58,9 @@ export enum ModalType {
 	DELETE,
 }
 
+export const DEFAULT_START_HOUR = "09";
+export const DEFAULT_END_HOUR = "10";
+
 export const AUTH_OK = "authenticated";
 export const AUTH_KO = "unauthenticated";
 
