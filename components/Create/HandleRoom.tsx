@@ -244,7 +244,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 
 		setCurrentlyBooked(currentlyBooked);
 		setCurrentSelected(selectedCell?.info);
-	}, [selectedCell, bookedSeat]);
+	}, [selectedCell, bookedSeat, grid]);
 
 	const handleClearSeat = async (action: number) => {
 		dispatch(toggleModal(true));
