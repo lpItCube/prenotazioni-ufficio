@@ -1,257 +1,279 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 // Axios
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from "axios";
 
 // Next
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 
 // Redux
-import { useDispatch } from "react-redux"
-import { setPendingNotification } from '../../features/notificationSlice'
+import { useDispatch } from "react-redux";
+import { setPendingNotification } from "../../features/notificationSlice";
 
 // Utils
-import { getStringDate, getStringHours } from '../../utils/datePharser'
+import { getStringDate, getStringHours } from "../../utils/datePharser";
 
-// Components 
-import { Table, TableHeader, TableBody, TableRow, TableCol } from '../../components/Ui/Table'
-import Button from '../../components/Ui/Button'
-import Spinner from '../../components/Ui/Spinner'
+// Components
+import {
+	Table,
+	TableHeader,
+	TableBody,
+	TableRow,
+	TableCol,
+} from "../../components/Ui/Table";
+import Button from "../../components/Ui/Button";
+import Spinner from "../../components/Ui/Spinner";
 
 // Icons
-import { RiDeleteBin3Line } from "react-icons/ri"
+import { RiDeleteBin3Line } from "react-icons/ri";
 import { TbClipboardCheck } from "react-icons/tb";
 
 // Types
-import { HitModalButton, Reserve, Room } from '../../types'
+import { HitModalButton, Reserve, Room } from "../../types";
 
 // Costants
-import { APPROVE, DISAPPROVE } from '../../_shared'
+import { APPROVE, DISAPPROVE } from "../../_shared";
+import Layout from "../../components/Layout";
 
 interface PendingProps {
-    setHitNotification: (nots: boolean) => void
+	setHitNotification: (nots: boolean) => void;
 }
-
 
 const Pending: React.FC<PendingProps> = (props): JSX.Element => {
+	const { setHitNotification } = props;
 
-    const { setHitNotification } = props
+	const session = useSession();
+	const dispatch = useDispatch();
 
-    const session = useSession()
-    const dispatch = useDispatch()
+	const [reserves, setReserves] = useState<Reserve[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [hitManageButton, setHitManageButton] = useState<HitModalButton>({
+		loading: false,
+		id: null,
+	});
 
-    const [reserves, setReserves] = useState<Reserve[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [hitManageButton, setHitManageButton] = useState<HitModalButton>({ loading: false, id: null })
+	useEffect(() => {
+		setIsLoading(true);
+		const getReserves = async () => {
+			const response: AxiosResponse<Reserve[]> = await axios.get(
+				`/api/reserve/pending`
+			);
+			const reorderData = response.data.sort((a: any, b: any) =>
+				a.seat.to > b.seat.to ? -1 : 1
+			);
+			setReserves(reorderData);
+			setIsLoading(false);
+		};
+		getReserves();
+	}, [session]);
 
+	useEffect(() => {
+		dispatch(setPendingNotification({ pending: reserves.length }));
+		setHitNotification(true);
+	}, [reserves, session, dispatch, setHitNotification]);
 
-    useEffect(() => {
-        setIsLoading(true)
-        const getReserves = async () => {
-            const response: AxiosResponse<Reserve[]> = await axios.get(`/api/reserve/pending`)
-            const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
-            setReserves(reorderData)
-            setIsLoading(false)
-        }
-        getReserves()
-    }, [session])
+	// const handleApprovation = async (status: number, id: string) => {
+	//     console.log('APPRO')
+	//     setHitManageButton({ loading: true, id })
+	//     if (status === APPROVE) {
+	//         const reserve: Reserve = await (await axios.get(`/api/reserve/${id}`)).data
 
-    useEffect(() => {
-        dispatch(setPendingNotification({ pending: reserves.length }))
-        setHitNotification(true)
-    }, [reserves, session, dispatch, setHitNotification])
+	//         const room = reserve?.seat?.room as Room
+	//         const reservesInRoom = await (await axios.get(`/api/roomReserves/${room.id}`)).data
 
+	//         const reserveToDelete: Reserve[] = reservesInRoom.filter((r: Reserve) =>
+	//             !((new Date(r.from) > new Date(reserve.to as string)) ||
+	//                 (r.to && new Date(r.to) < new Date(reserve.from as string)) && r.id !== id)
+	//         )
 
-    // const handleApprovation = async (status: number, id: string) => {
-    //     console.log('APPRO')
-    //     setHitManageButton({ loading: true, id })
-    //     if (status === APPROVE) {
-    //         const reserve: Reserve = await (await axios.get(`/api/reserve/${id}`)).data
-            
-    //         const room = reserve?.seat?.room as Room
-    //         const reservesInRoom = await (await axios.get(`/api/roomReserves/${room.id}`)).data
+	//         await reserveToDelete.forEach(async (r: any) => {
+	//             await axios.delete("/api/reserve/" + r.id)
+	//         })
+	//         await axios.patch("/api/reserve/approveReserve", {id})
 
-            
-    //         const reserveToDelete: Reserve[] = reservesInRoom.filter((r: Reserve) =>
-    //             !((new Date(r.from) > new Date(reserve.to as string)) ||
-    //                 (r.to && new Date(r.to) < new Date(reserve.from as string)) && r.id !== id)
-    //         )
+	//         // await axios.patch("/api/reserve/approveReserve", {id})
+	//         // const awaitDelete = reserveToDelete.map((r: Reserve) => {
+	//         //     return axios.delete("/api/reserve/" + r.id);
+	//         // });
 
-    //         await reserveToDelete.forEach(async (r: any) => {
-    //             await axios.delete("/api/reserve/" + r.id)
-    //         })
-    //         await axios.patch("/api/reserve/approveReserve", {id})
+	//         // console.log('ID',awaitDelete)
+	//         // await Promise.all(awaitDelete);
+	//         // await axios.patch("/api/reserve/approveReserve", { id });
 
-    //         // await axios.patch("/api/reserve/approveReserve", {id})
-    //         // const awaitDelete = reserveToDelete.map((r: Reserve) => {
-    //         //     return axios.delete("/api/reserve/" + r.id);
-    //         // });
+	//         const response: AxiosResponse<Reserve[]> = await axios.get(`/api/reserve/pending`)
+	//         const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
+	//         setReserves(reorderData)
+	//     } else {
+	//         await axios.delete("/api/reserve/" + id);
+	//         const response = await axios.get(`/api/reserve/pending`)
+	//         const reorderData: Reserve[] = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
+	//         setReserves(reorderData)
+	//     }
+	//     dispatch(setPendingNotification({ pending: reserves.length - 1 }))
+	//     setHitManageButton({ loading: false, id: null })
+	//     setHitNotification(true)
+	// }
 
-    //         // console.log('ID',awaitDelete)
-    //         // await Promise.all(awaitDelete);
-    //         // await axios.patch("/api/reserve/approveReserve", { id });
-            
+	const handleApprovation = async (status: any, id: any) => {
+		setHitManageButton({ loading: true, id });
+		if (status === APPROVE) {
+			const reserve = await (await axios.get(`/api/reserve/${id}`)).data;
+			const room = reserve!.seat!.room!;
+			const reservesInRoom = await (
+				await axios.get(`/api/roomReserves/${room.id}`)
+			).data;
+			const reserveToDelete = reservesInRoom.filter(
+				(r: any) =>
+					!(
+						new Date(r.from) > new Date(reserve.to as string) ||
+						new Date(r.to) < new Date(reserve.from as string)
+					) && r.id !== id
+			);
+			await reserveToDelete.forEach(async (r: any) => {
+				await axios.delete("/api/reserve/" + r.id);
+			});
+			await axios.patch("/api/reserve/approveReserve", { id });
 
-    //         const response: AxiosResponse<Reserve[]> = await axios.get(`/api/reserve/pending`)
-    //         const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
-    //         setReserves(reorderData)
-    //     } else {
-    //         await axios.delete("/api/reserve/" + id);
-    //         const response = await axios.get(`/api/reserve/pending`)
-    //         const reorderData: Reserve[] = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
-    //         setReserves(reorderData)
-    //     }
-    //     dispatch(setPendingNotification({ pending: reserves.length - 1 }))
-    //     setHitManageButton({ loading: false, id: null })
-    //     setHitNotification(true)
-    // }
+			const response = await axios.get(`/api/reserve/pending`);
+			const reorderData = response.data.sort((a: any, b: any) =>
+				a.seat.to > b.seat.to ? -1 : 1
+			);
+			setReserves(reorderData);
+		} else {
+			const deleteSeat = await axios.delete("/api/reserve/" + id);
+			const response = await axios.get(`/api/reserve/pending`);
+			const reorderData = response.data.sort((a: any, b: any) =>
+				a.seat.to > b.seat.to ? -1 : 1
+			);
+			setReserves(reorderData);
+		}
+		dispatch(setPendingNotification({ pending: reserves.length - 1 }));
+		setHitManageButton({ loading: false, id: null });
+		setHitNotification(true);
+	};
 
-    const handleApprovation = async (status: any, id: any) => {
-        setHitManageButton({ loading: true, id })
-        if (status === APPROVE) {
-            const reserve = await (await axios.get(`/api/reserve/${id}`)).data
-            const room = reserve!.seat!.room!
-            const reservesInRoom = await (await axios.get(`/api/roomReserves/${room.id}`)).data
-            const reserveToDelete = reservesInRoom.filter((r: any) => 
-                !(new Date(r.from) > new Date(reserve.to as string) || new Date(r.to) < new Date(reserve.from as string)) && r.id !== id
-            )
-            await reserveToDelete.forEach(async (r: any) => {
-                await axios.delete("/api/reserve/" + r.id)
-            })
-            await axios.patch("/api/reserve/approveReserve", {id})
+	let tableContent: JSX.Element;
 
-            const response = await axios.get(`/api/reserve/pending`)
-            const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
-            setReserves(reorderData)
-        } else {
-            const deleteSeat = await axios.delete("/api/reserve/" + id);
-            const response = await axios.get(`/api/reserve/pending`)
-            const reorderData = response.data.sort((a: any, b: any) => (a.seat.to > b.seat.to) ? -1 : 1)
-            setReserves(reorderData)
-        }
-        dispatch(setPendingNotification({ pending: reserves.length - 1 }))
-        setHitManageButton({ loading: false, id: null })
-        setHitNotification(true)
-    }
+	if (reserves.length > 0) {
+		tableContent = (
+			<>
+				{reserves.map((r: Reserve, index: number) => {
+					return (
+						<TableRow
+							key={index}
+							className={
+								r.status === "accepted"
+									? " reserve--accepted"
+									: " reserve--pending"
+							}
+						>
+							<TableCol className="">
+								<p>
+									{getStringDate(r.from).day}{" "}
+									{getStringDate(r.from).month}{" "}
+									{getStringDate(r.from).year}
+								</p>
+							</TableCol>
+							{r.to && r.from && (
+								<TableCol className="">
+									<p>
+										{getStringHours(r.from) as string} -{" "}
+										{getStringHours(r.to) as string}
+									</p>
+								</TableCol>
+							)}
+							<TableCol className="">{r?.seat?.name}</TableCol>
+							<TableCol className="">{r.user.username}</TableCol>
+							<TableCol className="">
+								{r.status === "accepted"
+									? "Accettato"
+									: "In attesa"}
+							</TableCol>
+							<TableCol className="prenotazioni__cta">
+								{hitManageButton.loading &&
+								hitManageButton.id === r.id ? (
+									<Spinner />
+								) : (
+									<div className="approve__row--cta">
+										<Button
+											className={`cta cta--secondary-ok cta--approve`}
+											onClick={() =>
+												handleApprovation(APPROVE, r.id)
+											}
+											type="button"
+											icon={
+												<TbClipboardCheck size={18} />
+											}
+											text=""
+										/>
+										<Button
+											className={`cta cta--secondary-delete`}
+											onClick={() =>
+												handleApprovation(
+													DISAPPROVE,
+													r.id
+												)
+											}
+											type="button"
+											icon={
+												<RiDeleteBin3Line size={18} />
+											}
+											text=""
+										/>
+									</div>
+								)}
+							</TableCol>
+						</TableRow>
+					);
+				})}
+			</>
+		);
+	} else {
+		tableContent = (
+			<>
+				<TableRow key={"not-found"} className="">
+					<TableCol className="prenotazioni__empty">
+						<p>Non sono presenti richieste da approvare.</p>
+					</TableCol>
+				</TableRow>
+			</>
+		);
+	}
 
-    let tableContent: JSX.Element
+	return (
+		<Layout>
+			<div className="prenotazioni__container">
+				<div className="prenotazioni__wrapper">
+					<div className="prenotazioni__header">
+						<h2 className="table__title txt-h3">Da approvare</h2>
+					</div>
+					<Table>
+						<TableHeader
+							headerColumns={[
+								"Data",
+								"Orario",
+								"Postazione",
+								"Utente",
+								"Stato",
+								"",
+							]}
+						/>
+						<TableBody>
+							{isLoading ? (
+								<TableRow key={"spinner"} className="">
+									<TableCol className="prenotazioni__spinner">
+										<Spinner />
+									</TableCol>
+								</TableRow>
+							) : (
+								tableContent
+							)}
+						</TableBody>
+					</Table>
+				</div>
+			</div>
+		</Layout>
+	);
+};
 
-    if (reserves.length > 0) {
-        tableContent = (
-            <>
-                {reserves.map((r: Reserve, index: number) => {
-                    return (
-                        <TableRow
-                            key={index}
-                            className={r.status === 'accepted' ? ' reserve--accepted' : ' reserve--pending'}
-                        >
-                            <TableCol
-                                className=''
-                            >
-                                <p>{getStringDate(r.from).day} {getStringDate(r.from).month} {getStringDate(r.from).year}</p>
-                            </TableCol>
-                            {r.to && r.from && 
-                                <TableCol
-                                    className=""
-                                >
-                                    <p>{getStringHours(r.from) as string} - {getStringHours(r.to) as string}</p>
-                                </TableCol>
-                            }
-                            <TableCol
-                                className=""
-                            >
-                                {r?.seat?.name}
-                            </TableCol>
-                            <TableCol
-                                className=""
-                            >
-                                {r.user.username}
-                            </TableCol>
-                            <TableCol
-                                className=""
-                            >
-                                {r.status === 'accepted' ? 'Accettato' : 'In attesa'}
-                            </TableCol>
-                            <TableCol
-                                className="prenotazioni__cta"
-                            >
-                                {hitManageButton.loading && hitManageButton.id === r.id
-                                    ? <Spinner />
-                                    : <div className='approve__row--cta'>
-
-                                        <Button
-                                            className={`cta cta--secondary-ok cta--approve`}
-                                            onClick={() => handleApprovation(APPROVE, r.id)}
-                                            type='button'
-                                            icon={<TbClipboardCheck size={18} />}
-                                            text=''
-                                        />
-                                        <Button
-                                            className={`cta cta--secondary-delete`}
-                                            onClick={() => handleApprovation(DISAPPROVE, r.id)}
-                                            type='button'
-                                            icon={<RiDeleteBin3Line size={18} />}
-                                            text=''
-                                        />
-                                    </div>
-                                }
-                            </TableCol>
-                        </TableRow>
-                    )
-                })}
-            </>
-        )
-    } else {
-        tableContent = <>
-            <TableRow
-                key={'not-found'}
-                className=''
-            >
-                <TableCol
-                    className="prenotazioni__empty"
-                >
-                    <p>Non sono presenti richieste da approvare.</p>
-                </TableCol>
-            </TableRow>
-        </>
-    }
-
-    return (
-        <div
-            className="prenotazioni__container"
-        >
-
-            <div className="prenotazioni__wrapper">
-                <div className="prenotazioni__header">
-
-                    <h2
-                        className="table__title txt-h3"
-                    >
-                        Da approvare
-                    </h2>
-                </div>
-                <Table>
-                    <TableHeader
-                        headerColumns={['Data', 'Orario', 'Postazione', 'Utente', 'Stato', '']}
-                    />
-                    <TableBody>
-                        {isLoading
-                            ? <TableRow
-                                key={'spinner'}
-                                className=''
-                            >
-                                <TableCol
-                                    className="prenotazioni__spinner"
-                                ><Spinner />
-                                </TableCol>
-                            </TableRow>
-                            : tableContent
-                        }
-                    </TableBody>
-                </Table>
-            </div>
-        </div>
-    )
-}
-
-export default Pending
+export default Pending;

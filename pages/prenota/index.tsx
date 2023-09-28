@@ -30,6 +30,7 @@ import {
 	USER,
 } from "../../_shared";
 import { getEndHour, getStartHour } from "../../features/timePickerSlice";
+import Layout from "../../components/Layout";
 
 interface PrenotaProps {
 	initialData: Reserve;
@@ -65,22 +66,24 @@ const Prenota: React.FC<PrenotaProps> = (props): JSX.Element => {
 	}, [startHour, endHour]);
 
 	return (
-		<div className="room-create__container">
-			<Calendar setFromTo={setFromTo} />
-			{status === AUTH_OK ? (
-				<HandleOffice
-					fromTo={fromTo}
-					action={action}
-					setAction={setAction}
-					domain={domain}
-					domainList={domainList}
-				/>
-			) : (
-				<div className="spinner__center">
-					<Spinner />
-				</div>
-			)}
-		</div>
+		<Layout>
+			<div className="room-create__container">
+				<Calendar setFromTo={setFromTo} />
+				{status === AUTH_OK ? (
+					<HandleOffice
+						fromTo={fromTo}
+						action={action}
+						setAction={setAction}
+						domain={domain}
+						domainList={domainList}
+					/>
+				) : (
+					<div className="spinner__center">
+						<Spinner />
+					</div>
+				)}
+			</div>
+		</Layout>
 	);
 };
 
