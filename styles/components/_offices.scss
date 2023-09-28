@@ -1,471 +1,494 @@
 .rooms {
-    &__recenter {
-        height: 100%;
-        display: flex;
-    }
-    &__external {
-        margin-top:32px;
-        margin-bottom:0px;
-        @media screen and (min-width:$md) {
-            padding:0;
-            margin-top: 48px;
-            margin-bottom: 48px;
-        }
-    }
-    &__book-all {
-        display: flex;
-        background-color: $light300;
-        padding: 16px;
-        position: sticky;
-        bottom: 0;
-        z-index: 50;
-        justify-content: flex-end;
-        box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
-        @media screen and (min-width:$md) {
-            display: none;
-        }
-        .cta {
-            &.your {
-                background-color: $warning500;
-            }
-        }
-    }
-    &__container {
-        position: relative;
-        width: $col12;
-        margin: auto;
-        padding:0 16px;
-        margin-bottom: 32px;
-        @media screen and (min-width:$md) {
-            width: calc(100% - 64px);
-            padding:0;
-            margin-bottom: 0;
-        }
-    }
-    &__navigator {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        width: $col12;
-        margin:auto;
-        margin-bottom: 16px;
-        padding:0 16px;
-        @media screen and (min-width:$md) {
-            padding:0 32px;
-        }
-        &--container {
-            cursor: pointer;
-            display: flex;
-            &:hover {
-                .rooms {
-                    &__navigator {
-                        &--text {
-                            color: $green500;
-                        }
-                    }
-                }
-            }
-        }
-        path {
-            stroke: $green500;
-        }
-        &--text {
-            padding-right: 16px;
-        }
-    }
+	&__recenter {
+		height: 100%;
+		display: flex;
+	}
+	&__external {
+		margin-top: 32px;
+		margin-bottom: 0px;
+		@media screen and (min-width: $md) {
+			padding: 0;
+			margin-top: 48px;
+			margin-bottom: 48px;
+		}
+	}
+	&__book-all {
+		display: flex;
+		background-color: $light300;
+		padding: 16px;
+		position: sticky;
+		bottom: 0;
+		z-index: 50;
+		justify-content: flex-end;
+		box-shadow: 0px 0px 11px 0px rgb(0 0 0 / 11%);
+		@media screen and (min-width: $md) {
+			display: none;
+		}
+		.cta {
+			&.your {
+				background-color: $warning500;
+			}
+		}
+	}
+	&__container {
+		position: relative;
+		width: $col12;
+		margin: auto;
+		padding: 0 16px;
+		margin-bottom: 32px;
+		@media screen and (min-width: $md) {
+			width: calc(100% - 64px);
+			padding: 0;
+			margin-bottom: 0;
+		}
+	}
+	&__navigator {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		width: $col12;
+		margin: auto;
+		margin-bottom: 16px;
+		padding: 0 16px;
+		@media screen and (min-width: $md) {
+			padding: 0 32px;
+		}
+		&--container {
+			cursor: pointer;
+			display: flex;
+			&:hover {
+				.rooms {
+					&__navigator {
+						&--text {
+							color: $green500;
+						}
+					}
+				}
+			}
+		}
+		path {
+			stroke: $green500;
+		}
+		&--text {
+			padding-right: 16px;
+		}
+	}
 }
-
 
 .room {
-    &__wrapper {
-        margin:auto;
-        position: absolute;
-        opacity: 0;
-        top: 0;
-        @include animate(0.4s ease-in-out);
-        // width: $col12;
-        &.active-room {
-            position: relative;
-            opacity: 1;
-            // top:0;
-        }
-        &.in-change {
-            opacity: 0;
-            // top: 8px;
-            pointer-events: none;
-            width: calc(100% - 32px);
-            left: 16px;
-            @media screen and (min-width:$md) {
-                width: $col12;
-                left: 0;
-            }
-        }
-    }
-    &__info {
-        width: $col12;
-        @media screen and (min-width:$md) {
-            @include childCol($col10,$col4);
-            padding-right: 24px;
-        }
-    }
-    &__container {
-        width: $col12;
-        position: relative;
-        margin-left: auto;
-        @media screen and (min-width:$md) {
-            @include childCol($col10,$col6);
-        }
-    }
-    &__body {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        @media screen and (min-width:$md) {
-            flex-direction: row;
-        }
-    }
+	&__wrapper {
+		margin: auto;
+		position: absolute;
+		opacity: 0;
+		top: 0;
+		@include animate(0.4s ease-in-out);
+		// width: $col12;
+		&.active-room {
+			position: relative;
+			opacity: 1;
+			// top:0;
+		}
+		&.in-change {
+			opacity: 0;
+			// top: 8px;
+			pointer-events: none;
+			width: calc(100% - 32px);
+			left: 16px;
+			@media screen and (min-width: $md) {
+				width: $col12;
+				left: 0;
+			}
+		}
+	}
+	&__info {
+		width: $col12;
+		@media screen and (min-width: $md) {
+			@include childCol($col10, $col4);
+			padding-right: 24px;
+		}
+	}
+	&__container {
+		width: $col12;
+		position: relative;
+		margin-left: auto;
+		@media screen and (min-width: $md) {
+			@include childCol($col10, $col6);
+		}
+	}
+	&__body {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		flex-direction: column;
+		@media screen and (min-width: $md) {
+			flex-direction: row;
+		}
+	}
 }
 
-
 .room-header {
-    &__container {
-        // border-bottom: solid 1px $dark500;
-        // display: flex;
-        // justify-content: space-between;
-        // align-items: center;
-        @media screen and (min-width:$md) {
-            padding:8px 0;
-        }
-        // .cta {
-        //     &.your {
-        //         background-color: $warning500;
-        //     }
-        // }
-    }
-    &__title {
-        @media screen and (min-width:$md) {
-            margin-bottom: 16px;
-        }
-    }
+	&__container {
+		// border-bottom: solid 1px $dark500;
+		// display: flex;
+		// justify-content: space-between;
+		// align-items: center;
+		@media screen and (min-width: $md) {
+			padding: 8px 0;
+		}
+		// .cta {
+		//     &.your {
+		//         background-color: $warning500;
+		//     }
+		// }
+	}
+	&__title {
+		@media screen and (min-width: $md) {
+			margin-bottom: 16px;
+		}
+	}
 }
 
 .isometric {
+	&__meeting-room {
+		position: relative;
+		svg {
+			width: $col12;
+		}
+	}
 
-    &__meeting-room {
-    position:relative;
-        svg {
-            width: $col12;
-        }
-    }
+	&__desk {
+		position: absolute;
+		pointer-events: none;
+		width: 40%;
+		z-index: 10;
+		&.meet-desk {
+			left: 27%;
+			top: 49%;
+		}
+		&.it-desk {
+			left: 28%;
+			top: 45%;
+			width: 50%;
+		}
+	}
 
-    &__desk {
-        position: absolute;
-        pointer-events: none;
-        width: 40%;
-        z-index: 10;
-        &.meet-desk {
-            left: 27%;
-            top: 49%;
-        }
-        &.it-desk {
-            left: 28%;
-            top:45%;
-            width: 50%;
-        }
-    }
+	&__chair {
+		position: absolute;
+		height: auto;
+		width: 12%;
+		&#meet-1 {
+			left: 23%;
+			top: 54%;
+			z-index: 8;
+		}
+		&#meet-2 {
+			left: 34%;
+			top: 47%;
+			z-index: 4;
+		}
+		&#meet-3 {
+			left: 44%;
+			top: 41%;
+			z-index: 0;
+		}
+		&#meet-5 {
+			left: 61%;
+			top: 41%;
+		}
+		&#meet-4 {
+			left: 22%;
+			top: 69%;
+			z-index: 11;
+		}
+		&#meet-6 {
+			left: 40%;
+			top: 67%;
+			z-index: 20;
+		}
+		&#meet-7 {
+			left: 50%;
+			top: 61%;
+			z-index: 18;
+		}
+		&#meet-8 {
+			left: 60%;
+			top: 55%;
+			z-index: 12;
+		}
+		&#it-1 {
+			left: 22%;
+			top: 56%;
+			z-index: 8;
+		}
+		&#it-2 {
+			left: 31%;
+			top: 51%;
+			z-index: 7;
+		}
+		&#it-3 {
+			left: 40%;
+			top: 46%;
+			z-index: 6;
+		}
+		&#it-4 {
+			left: 49%;
+			top: 41%;
+			z-index: 5;
+		}
+		&#it-5 {
+			left: 43%;
+			top: 71%;
+			z-index: 18;
+		}
+		&#it-6 {
+			left: 52.5%;
+			top: 65.5%;
+			z-index: 17;
+		}
+		&#it-7 {
+			left: 62%;
+			top: 60%;
+			z-index: 16;
+		}
+		&#it-8 {
+			left: 71%;
+			top: 55%;
+			z-index: 15;
+		}
+		.st368 {
+			fill: $statusNotAvailable;
+			transition: 0.2s ease-in-out;
+		}
+		.st369 {
+			fill: $notAvailableBorder;
+			transition: 0.2s ease-in-out;
+		}
 
-    &__chair {
-        position:absolute;
-        height: auto;
-        width: 12%;
-        &#meet-1 {
-            left:23%;
-            top:54%;
-            z-index: 8;
-        }
-        &#meet-2 {
-            left: 34%;
-            top: 47%;
-            z-index: 4;
-        }
-        &#meet-3 {
-            left: 44%;
-            top: 41%;
-            z-index: 0;
-        }
-        &#meet-5 {
-            left: 61%;
-            top: 41%;
-        }
-        &#meet-4 {
-            left: 22%;
-            top: 69%;
-            z-index: 11;
-        }
-        &#meet-6 {
-            left: 40%;
-            top: 67%;
-            z-index: 20;
-        }
-        &#meet-7 {
-            left: 50%;
-            top: 61%;
-            z-index: 18;
-        }
-        &#meet-8 {
-            left: 60%;
-            top: 55%;
-            z-index: 12;
-        }
-        &#it-1 {
-            left: 22%;
-            top: 56%;
-            z-index: 8;
-        }
-        &#it-2 {
-            left:31%;
-            top: 51%;
-            z-index: 7;
-        }
-        &#it-3 {
-            left: 40%;
-            top: 46%;
-            z-index: 6;
-        }
-        &#it-4 {
-            left: 49%;
-            top: 41%;
-            z-index: 5;
-        }
-        &#it-5 {
-            left: 43%;
-            top: 71%;
-            z-index: 18;
-        }
-        &#it-6 {
-            left: 52.5%;
-            top: 65.5%;
-            z-index: 17;
-        }
-        &#it-7 {
-            left: 62%;
-            top: 60%;
-            z-index: 16;
-        }
-        &#it-8 {
-            left: 71%;
-            top: 55%;
-            z-index: 15;
-        }
-        .st368 {
-            fill:$statusNotAvailable;
-            transition: 0.2s ease-in-out;
-        }
-        .st369 {
-            fill: $notAvailableBorder;
-            transition: 0.2s ease-in-out;
-        }
+		&.available {
+			.st368 {
+				fill: $statusAvailable;
+			}
+			.st369 {
+				fill: $availableBorder;
+			}
+		}
 
-        &.available {
-            .st368 {
-                fill:$statusAvailable;
-            }
-            .st369 {
-                fill: $availableBorder;
-            }
-        }
-
-        &.busy {
-            .st368 {
-                fill:$statusBuisy;
-            }
-            .st369 {
-                fill: $buisyBorder;
-            }
-        }
-        &.your {
-            .st368 {
-                fill:$statusYours;
-            }
-            .st369 {
-                fill: $yoursBorder;
-            }
-        }
-        &.pending {
-            .st368 {
-                fill:$statusPending;
-            }
-            .st369 {
-                fill: $pendingBorder;
-            }
-        }
-        &.available,
-        &.your {
-            cursor: pointer;
-            &:hover {
-                .st368 {
-                    fill:$chairBase;
-                    transition: 0.4s ease-in-out;
-                }
-            }
-        }
-        
-    }
+		&.busy {
+			.st368 {
+				fill: $statusBuisy;
+			}
+			.st369 {
+				fill: $buisyBorder;
+			}
+		}
+		&.your {
+			.st368 {
+				fill: $statusYours;
+			}
+			.st369 {
+				fill: $yoursBorder;
+			}
+		}
+		&.pending {
+			.st368 {
+				fill: $statusPending;
+			}
+			.st369 {
+				fill: $pendingBorder;
+			}
+		}
+		&.available,
+		&.your {
+			cursor: pointer;
+			&:hover {
+				.st368 {
+					fill: $chairBase;
+					transition: 0.4s ease-in-out;
+				}
+			}
+		}
+	}
 }
 
 .info-table {
-    &__button {
-        width: 32px;
-        height: 32px;
-        background-color: $green500;
-        border-radius: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        cursor: pointer;
-        top:0;
-        left: 0;
-        z-index: 1;
-        @include animate(0.4s ease-in-out);
-        &:hover {
-            background-color: $green700;
-        }
-    }
-    &__icon {
-        position: relative;
-        width: 32px;
-        height: 32px;
-        span {
-            width: 1px;
-            height: 16px;
-            display: table;
-            background-color: white;
-            position: absolute;
-            left: 50%;
-            top:50%;
-            &:nth-child(1) {
-                @include transform(-50% , -50%, -90deg)
-            }
-            &:nth-child(2) {
-                @include transform(-50% , -50%, 0)
-            }
-        }
-    }
-    &__body {
-        position: relative;
-        // padding:16px 24px 16px;
-        padding:0;
-        border-radius: 12px;
-        top:4px;
-        opacity: 0;
-        pointer-events: none;
-        @include animate(0.4s ease-in-out);
-    }
-    &__list {
-        list-style-type: none;
-        display: flex;
-        flex-direction: column;
-    }
-    &__item {
-        display: flex;
-        justify-content: space-between;
-        border-top: solid 1px $light500;
-        padding: 5px 0;
-    }
-    &__heading {
-        color: $dark300;
-        margin-bottom: 4px;
-    }
-    &__title {
-        flex:1;
-        padding-right:8px;
-        color: $dark300;
-    }
-    &__data {
-        flex:0;
-        color: $dark300;
-    }
-    &__container {
-        position: relative;
-        left: 0;
-        z-index: 50;
-        margin-top: 32px;
-        width: $col12;
-        @media screen and (min-width:$md) {
-            @include childCol($col4, $col3);
-        }
-        &.is-open {
-            .info-table {
-                &__button {
-                    @include transform(0, 0, -45deg);
-                    left: calc(100% - 16px);
-                    top: 16px;
-                }
-                &__body {
-                    top:0px;
-                    opacity: 1;
-                    pointer-events: all;
-                }
-            }
-        }
-        &.only-desk {
-            display: none;
-            @media screen and (min-width:$md) {
-                display: block;
-            }
-        }
-        &.only-smart {
-            display: block;
-            @media screen and (min-width:$md) {
-                display: none;
-            }
-        }
-    }
+	&__button {
+		width: 32px;
+		height: 32px;
+		background-color: $green500;
+		border-radius: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		@include animate(0.4s ease-in-out);
+		&:hover {
+			background-color: $green700;
+		}
+	}
+	&__icon {
+		position: relative;
+		width: 32px;
+		height: 32px;
+		span {
+			width: 1px;
+			height: 16px;
+			display: table;
+			background-color: white;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			&:nth-child(1) {
+				@include transform(-50%, -50%, -90deg);
+			}
+			&:nth-child(2) {
+				@include transform(-50%, -50%, 0);
+			}
+		}
+	}
+	&__body {
+		position: relative;
+		// padding:16px 24px 16px;
+		padding: 0;
+		border-radius: 12px;
+		top: 4px;
+		opacity: 0;
+		pointer-events: none;
+		@include animate(0.4s ease-in-out);
+	}
+	&__list {
+		list-style-type: none;
+		display: flex;
+		flex-direction: column;
+	}
+	&__item {
+		display: flex;
+		justify-content: space-between;
+		border-top: solid 1px $light500;
+		padding: 5px 0;
+	}
+	&__heading {
+		color: $dark300;
+		margin-bottom: 4px;
+	}
+	&__title {
+		flex: 1;
+		padding-right: 8px;
+		color: $dark300;
+	}
+	&__data {
+		flex: 0;
+		color: $dark300;
+	}
+	&__container {
+		position: relative;
+		left: 0;
+		z-index: 50;
+		margin-top: 32px;
+		width: $col12;
+		@media screen and (min-width: $md) {
+			@include childCol($col4, $col3);
+		}
+		&.is-open {
+			.info-table {
+				&__button {
+					@include transform(0, 0, -45deg);
+					left: calc(100% - 16px);
+					top: 16px;
+				}
+				&__body {
+					top: 0px;
+					opacity: 1;
+					pointer-events: all;
+				}
+			}
+		}
+		&.only-desk {
+			display: none;
+			@media screen and (min-width: $md) {
+				display: block;
+			}
+		}
+		&.only-smart {
+			display: block;
+			@media screen and (min-width: $md) {
+				display: none;
+			}
+		}
+	}
 }
 
 .legenda {
-    &__wrapper {
-        // display: none;
-        right: 0;
-        z-index: 1;
-        margin-top: 16px;
-        margin-bottom: 16px;
-        @media screen and (min-width:$md) {
-            margin-top: 48px;
-            
-        }
-    }
-    &__color {
-        width: 16px;
-        height: 8px;
-        border-radius: 16px;
-        margin-right: 8px;
-    }
-    &__element {
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        border-bottom: solid 1px $light500;
-        width: 50%;
-        &:nth-last-child(1) {
-            border-bottom: none;
-        }
-    }
-    &__name {
-        color:$dark300
-    }
-    &__button-wrapper {
-        .cta {
-            p {
-                width: calc(100% - 18px);
-                padding-right: 8px;
-            }
-        }
-    }
-    &__modal-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
+	&__cta {
+		position: absolute;
+		left: 16px;
+		bottom: 16px;
+	}
+	&-item {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+		&__container {
+			padding-bottom: 16px;
+			display: flex;
+			flex-grow: 1;
+			flex-basis: calc(50% - 16px);
+			align-items: center;
+			gap: 8px;
+			max-width: calc(50% - 16px);
+		}
+		&__selector {
+			width: 24px;
+			height: 24px;
+			border-radius: 100%;
+			flex-basis: 24px;
+			aspect-ratio: 1/1;
+		}
+	}
+	&__wrapper {
+		// display: none;
+		right: 0;
+		z-index: 1;
+		margin-top: 16px;
+		margin-bottom: 16px;
+		@media screen and (min-width: $md) {
+			margin-top: 48px;
+		}
+	}
+	&__color {
+		width: 16px;
+		height: 8px;
+		border-radius: 16px;
+		margin-right: 8px;
+	}
+	&__element {
+		display: flex;
+		align-items: center;
+		padding: 16px;
+		border-bottom: solid 1px $light500;
+		width: 50%;
+		&:nth-last-child(1) {
+			border-bottom: none;
+		}
+	}
+	&__name {
+		color: $dark300;
+	}
+	&__button-wrapper {
+		.cta {
+			p {
+				width: calc(100% - 18px);
+				padding-right: 8px;
+			}
+		}
+	}
+	&__modal-container {
+		display: flex;
+		flex-wrap: wrap;
+	}
 }

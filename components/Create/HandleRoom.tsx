@@ -46,6 +46,7 @@ import {
 	CLEAN_MODAL,
 	DELETE,
 	EDIT_MODAL,
+	LEGENDA_MODAL,
 	ModalType,
 	OPTION_CHAIR,
 	PRISTINE,
@@ -57,6 +58,9 @@ import Textarea from "../Ui/Textarea";
 import Button from "../Ui/Button";
 import Spinner from "../Ui/Spinner";
 import { getEndHour, getStartHour } from "../../features/timePickerSlice";
+import { TbNotebook } from "react-icons/tb";
+import { Colors } from "../Ui/Colors";
+import Legenda from "../Legenda/Legenda";
 
 interface HandleRoomProps {
 	fromTo?: FromToHour;
@@ -530,6 +534,24 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 							)}
 						</div>
 						<YourReserve reserves={reserveAllDay} />
+						<Button
+							onClick={() => {
+								dispatch(setModalType(LEGENDA_MODAL));
+								dispatch(toggleModal(true));
+							}}
+							className="cta cta--primary cta__icon--right legenda__cta"
+							type="submit"
+							icon={false}
+							text="Legenda"
+						/>
+						<ModalComponent
+							modalTitle={`Legenda`}
+							subTitle=""
+							refType={ModalType.LEGENDA}
+							handleCloseModal={handleCloseModal}
+						>
+							<Legenda />
+						</ModalComponent>
 					</div>
 					{room?.description && (
 						<ModalComponent
