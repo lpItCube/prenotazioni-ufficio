@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
   const { pathname } = request.nextUrl
   const superadminPaths = ["/create/user", "/api/users"]
   const adminPaths = ["/secure", "/prenotazioni/pending", "/create/room"]
-  const loggedPaths = [...adminPaths, ...superadminPaths, "/prenota", "/prenotazioni"]
+  const loggedPaths = [...adminPaths, ...superadminPaths, "/prenota", "/prenotazioni", "change-password"]
   // console.log(await getToken({ req: request }))
 
   // Prendere una rotta all volta, altrimenti il sistema fa il redirect alla login
@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
 
   const loggedInPath = currentPath.some((path) =>
     pathname.includes(path)
-  );
+  )
 
   const adminPath = adminPaths.some((path) =>
     pathname.includes(path)
