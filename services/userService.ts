@@ -1,5 +1,6 @@
 import { User } from "next-auth";
 import prisma from "../lib/prisma";
+import { comparePwd } from "../utils/hashPassword";
 
 const signInCredentials = async (email: string, password: string): Promise<User> => {
 
@@ -10,12 +11,19 @@ const signInCredentials = async (email: string, password: string): Promise<User>
   }
 
   const user = await prisma.user.findFirstOrThrow({
-    where: { username: email, password: password }
+    where: { username: email }
   })
 
+  const isSamePwd = await comparePwd(password, user.password)
+
   if (!user) {
-    throw new Error("Invalid email or password");
+    throw new Error("Invalid email");
   }
+
+  if (!isSamePwd) {
+    throw new Error("Invalid password")
+  }
+  
   return {
     id: user.id,
     name: user.username,

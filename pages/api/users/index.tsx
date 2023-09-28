@@ -1,5 +1,6 @@
 import prisma from "../../../lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
+import { hashPwd } from "../../../utils/hashPassword";
 
 enum Role {
   ADMIN = "ADMIN",
@@ -18,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const data: User = req.body
  
   if (req.method === "POST") {
+    data.password = await hashPwd(data.password)
     try {
       const result = await prisma.user.create({
         data: { ...data },

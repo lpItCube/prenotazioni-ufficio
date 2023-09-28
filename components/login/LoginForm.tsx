@@ -5,6 +5,7 @@ import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
 import Button from "../Ui/Button";
 import { Colors } from "../Ui/Colors";
 import Spinner from "../Ui/Spinner";
+import Link from "next/link";
 
 type LoginProps = {
     handleSubmit:any,
@@ -19,7 +20,7 @@ function LoginForm({
     userInfo,
     isLoading
 }: LoginProps ) {
-
+ 
     const handleEmail = (target:any) => {
         setUserInfo({ ...userInfo, email: target.value })
     }
@@ -47,6 +48,7 @@ function LoginForm({
                     name='psw'
                     required={true}
                 />
+                <Link href={"/forgot-password"}>Password dimenticata?</Link>
             </div>
             {isLoading 
                 ? <Spinner/>
