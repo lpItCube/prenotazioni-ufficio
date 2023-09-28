@@ -63,6 +63,13 @@ a {
 	}
 }
 
+.layout {
+	&-container {
+		min-height: 100%;
+		display: initial;
+	}
+}
+
 .quarter-circle-top-left {
 	width: 25px;
 	height: 25px;
