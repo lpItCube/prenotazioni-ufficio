@@ -95,6 +95,9 @@ const BookStepper: React.FC<BookStepperProps> = (props): JSX.Element => {
 			transition: {
 				duration: 0.3,
 				ease: "easeInOut",
+				type: "spring",
+				stiffness: 260,
+				damping: 20,
 			},
 		},
 		exit: {
@@ -103,6 +106,9 @@ const BookStepper: React.FC<BookStepperProps> = (props): JSX.Element => {
 			transition: {
 				duration: 0.3,
 				ease: "easeInOut",
+				type: "spring",
+				stiffness: 260,
+				damping: 20,
 			},
 		},
 	};
@@ -118,6 +124,9 @@ const BookStepper: React.FC<BookStepperProps> = (props): JSX.Element => {
 			transition: {
 				duration: 0.3,
 				ease: "easeInOut",
+				type: "spring",
+				stiffness: 260,
+				damping: 20,
 			},
 		},
 		exit: {
@@ -126,6 +135,9 @@ const BookStepper: React.FC<BookStepperProps> = (props): JSX.Element => {
 			transition: {
 				duration: 0.3,
 				ease: "easeInOut",
+				type: "spring",
+				stiffness: 260,
+				damping: 20,
 			},
 		},
 	};

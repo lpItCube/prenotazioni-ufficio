@@ -69,7 +69,6 @@ const YourReserve: React.FC<YourReserveProps> = (props): JSX.Element => {
 		setIsOpen(false);
 		dispatch(setStartHour(start.slice(0, 2)));
 		dispatch(setEndHour(end.slice(0, 2)));
-		console.log("SLICE", start.slice(0, 2), end.slice(0, 2));
 	};
 
 	return (

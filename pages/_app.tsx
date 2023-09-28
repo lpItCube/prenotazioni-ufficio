@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 // Animation
 import { AnimatePresence } from "framer-motion";
 import Spinner from "../components/Ui/Spinner";
+import Layout from "../components/Layout";
 
 export default function App({ Component, pageProps }: AppProps) {
 	const [appIsLoading, setAppIsLoading] = useState<boolean>(false);
