@@ -22,7 +22,6 @@ import { Domain, FromToHour, Reserve } from "../../types";
 // Utils
 import { createNewDate } from "../../utils/datePharser";
 import {
-	ADMIN,
 	AUTH_OK,
 	DEFAULT_END_HOUR,
 	DEFAULT_START_HOUR,
@@ -60,10 +59,6 @@ const Prenota: React.FC<PrenotaProps> = (props): JSX.Element => {
 		const event = new Event("visibilitychange");
 		document.dispatchEvent(event);
 	}, [status]);
-
-	useEffect(() => {
-		console.log("HOURS", startHour, endHour);
-	}, [startHour, endHour]);
 
 	return (
 		<Layout>
@@ -106,9 +101,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		});
 	}
 
-	// console.log("DOMAIN -> ", session.user?.role)
-	// console.log("DOMAIN -> ", domainList)
-
 	const fromDate = createNewDate(DEFAULT_START_HOUR);
 	const toDate = createNewDate(DEFAULT_END_HOUR);
 	const initialData = await prisma.reserve.findMany({
@@ -117,7 +109,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 			user: true,
 		},
 	});
-	// console.log("first appearance -> ", initialData)
 	const filteredReserveDate = initialData.filter(
 		(r) => !(r.from > new Date(toDate) || r.to < new Date(fromDate))
 	);

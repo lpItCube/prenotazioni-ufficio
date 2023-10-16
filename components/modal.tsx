@@ -118,24 +118,16 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		const reserves: Reserve[] = await (
 			await axios.get(`/api/roomReserves/${roomId}`)
 		).data;
-		const reloadData = reserves.filter(
-			(r: Reserve) =>
-				fromTo.from &&
-				fromTo.to &&
-				r.to &&
-				r.from &&
-				((new Date(fromTo.from) <= new Date(r.from) &&
-					new Date(fromTo.to) <= new Date(r.to) &&
-					new Date(fromTo.to) > new Date(r.from)) ||
-					(new Date(fromTo.from) >= new Date(r.from) &&
-						new Date(fromTo.to) <= new Date(r.to)) ||
-					(new Date(fromTo.from) <= new Date(r.from) &&
-						new Date(fromTo.to) >= new Date(r.to)) ||
-					(new Date(fromTo.from) >= new Date(r.from) &&
-						new Date(fromTo.to) >= new Date(r.to) &&
-						new Date(fromTo.from) < new Date(r.to))) &&
-				r.seat?.roomId === roomId
-		);
+
+		const currentReserves: Reserve[] = await (
+			await axios.get(`/api/roomReserves/timeSlice`, {
+				params: {
+					roomId,
+					from: fromTo.from,
+					to: fromTo.to,
+				},
+			})
+		).data;
 
 		const selectDate: string = fromTo.from ? getOnlyDate(fromTo.from) : "";
 		const allDayReserve = reserves.filter(
@@ -151,7 +143,7 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 			})
 		);
 		// Setta le prenotazioni all'ADD di una specifica
-		dispatch(setReserves({ reserveData: reloadData }));
+		dispatch(setReserves({ reserveData: currentReserves }));
 	}
 
 	async function requestRoom() {
@@ -186,7 +178,6 @@ const Modal: React.FC<ModalProps> = (props): JSX.Element => {
 		await Promise.all(
 			reserveData.map(async (reserve: Reserve) => {
 				await axios.delete(`/api/reserve/${reserve.id}`);
-				//TODO notify each user whose reservation has been cancelled
 			})
 		);
 

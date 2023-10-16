@@ -81,3 +81,5 @@ export const PENDING = "pending";
 export const APPROVED = "approved";
 export const ACCEPTED = "accepted";
 export const WHOLE = "whole";
+
+export const SLOT_RESERVES = "SLOT_RESERVES";
