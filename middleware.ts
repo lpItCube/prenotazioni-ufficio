@@ -10,6 +10,7 @@ export async function middleware(request: NextRequest, _next: NextFetchEvent) {
 		...superadminPaths,
 		"/prenota",
 		"/prenotazioni",
+		"change-password",
 	];
 	// console.log(await getToken({ req: request }))
 

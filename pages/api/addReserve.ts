@@ -20,39 +20,39 @@ type Data = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data: Data = req.body
 
-  const seat = await prisma.seat.findUnique({
-    where: { id: data.seatId }
-  })
+  // const seat = await prisma.seat.findUnique({
+  //   where: { id: data.seatId }
+  // })
 
   // controlli
   // const reservations = await (await axios.get(`/api/reserve?from=${data.from}&to=${data.to}`)).data
 
-  const reservations = await prisma.reserve.findMany({
-    include: {
-      seat: true,
-      user: true
-    },
-    where: {
-      NOT: {
-        OR: [
-          {
-            from: {
-              gte: data.to
-            }
-          },
-          {
-            to: {
-              lte: data.from
-            }
-          }
-        ]
-      }
-    }
-  })
+  // const reservations = await prisma.reserve.findMany({
+  //   include: {
+  //     seat: true,
+  //     user: true
+  //   },
+  //   where: {
+  //     NOT: {
+  //       OR: [
+  //         {
+  //           from: {
+  //             gte: data.to
+  //           }
+  //         },
+  //         {
+  //           to: {
+  //             lte: data.from
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   }
+  // })
 
   // console.log('RESERVE',reservations)
-  const yourReserved = reservations.find((reserve: any) => reserve.user.id === data.userId)
-  const roomReserved = reservations.find((reserve: any) => reserve.seat.type === "meet-whole")
+  // const yourReserved = reservations.find((reserve: any) => reserve.user.id === data.userId)
+  // const roomReserved = reservations.find((reserve: any) => reserve.seat.type === "meet-whole")
   let fromDate: any = ''
   let endDate: any = ''
 
@@ -75,8 +75,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // to:endDate
       }
     })
-    // console.log('CREA',result)
-    console.log('HERE', result)
     res.status(200).json(result)
   } catch (e) {
     console.log(e)

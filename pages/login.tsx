@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import { FormEventHandler, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+=======
+import { FormEventHandler, useEffect, useState } from "react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
+>>>>>>> main
 
 // Components
 import ErrorAlert from "../components/login/ErrorAlert";
