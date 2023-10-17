@@ -1,21 +1,15 @@
-<<<<<<< HEAD
 import { FormEventHandler, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-=======
-import { FormEventHandler, useEffect, useState } from "react"
-import { signIn } from "next-auth/react"
-import { useRouter } from "next/router"
-import { useSession } from "next-auth/react"
->>>>>>> main
 
 // Components
-import ErrorAlert from "../components/login/ErrorAlert";
-import LoginForm from "../components/login/LoginForm";
 import Logo from "../components/Ui/Logo";
 import Spinner from "../components/Ui/Spinner";
 import { AUTH_OK } from "../_shared";
+import Form from "../components/form/Form";
+import { getLoginLayout } from "../utils/layout";
+import ErrorAlert from "../components/form/ErrorAlert";
 
 function Login() {
 	const [userInfo, setUserInfo] = useState<{
@@ -63,17 +57,40 @@ function Login() {
 		return;
 	}
 
+	const handleEmail = (e: any) => {
+		setUserInfo({ ...userInfo, email: e.target.value });
+	};
+
+	const handlePassword = (e: any) => {
+		setUserInfo({ ...userInfo, password: e.target.value });
+	};
+
+	const handleLogin = () => {};
+
+	const layout = getLoginLayout(
+		handleEmail,
+		"Username or Email",
+		"uname",
+		handlePassword,
+		"Password",
+		"password",
+		"cta cta--primary cta__icon--right",
+		handleLogin,
+		userInfo.email,
+		userInfo.password
+	);
+
 	let loginForm;
 
 	if (session.status === "loading") {
 		loginForm = <Spinner />;
 	} else {
 		loginForm = (
-			<LoginForm
+			<Form
+				{...layout}
 				handleSubmit={handleSubmit}
-				setUserInfo={setUserInfo}
-				userInfo={userInfo}
 				isLoading={loadingLogin}
+				isLogin={true}
 			/>
 		);
 	}

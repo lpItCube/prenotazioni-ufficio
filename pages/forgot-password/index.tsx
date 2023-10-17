@@ -1,57 +1,65 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { hashPwd } from "../../utils/hashPassword"
+import axios from "axios";
+import { useState } from "react";
+import { getResetPasswordLayout } from "../../utils/layout";
+import Form from "../../components/form/Form";
+import ErrorAlert from "../../components/form/ErrorAlert";
 
-function ResetPassword () {
-  
-  const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [resetSuccess, setResetSuccess] = useState("null")
-  const [resetError, setResetError] = useState("null")
+function ResetPassword() {
+	const [email, setEmail] = useState<string>("");
+	const [isLoading, setLoading] = useState<boolean>(false);
+	const [sendMessage, setSendMessage] = useState<null | string>(null);
+	const [isValidate, setIsValidate] = useState<boolean>(false);
 
-  const handleForgot = async (e: any) => {
-    e.preventDefault()
-    try {
-      setLoading(true)
-      const response = await axios.post('api/reset_pwd', {
-        email: email
-      })
-      setResetSuccess(response.data.msg)
-      setLoading(false)
-      setResetError('')
-    } catch (err: any) {
-      setLoading(false)
-      const { data } = err.response
-      setResetError(data.msg)
-      setResetSuccess("null")
-    }
-  }
+	const handleForgot = async (e: React.MouseEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setSendMessage(null);
+		try {
+			setLoading(true);
+			const response = await axios.post("api/reset_pwd", {
+				email: email,
+			});
+			setIsValidate(true);
+			setSendMessage(response.data.msg);
+		} catch (err: any) {
+			const { message } = err;
 
-  return (
-    <div>
-      {resetError && <div>EDDAI</div>}
-      {resetSuccess && <div>UFFA</div>}
-      <form onSubmit={handleForgot} className="reset-password">
-        <h1>Forgot Password</h1>
-        <p>You are not alone. We've all been here at some point.</p>
-        <div>
-          <label htmlFor="email">Email address</label>
-          <input 
-            type="email"
-            name="email"
-            id="email"
-            placeholder="your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required 
-          />
-        </div>
-        <button name="reset-pwd-button" className="reset-pwd">
-          {!loading ? 'Get secure link' : 'Sending...'}
-        </button>
-      </form>
-    </div>
-  ) 
+			setSendMessage(message);
+			setIsValidate(false);
+		}
+		setLoading(false);
+	};
+
+	const handleEmail = (e: any) => {
+		console.log(e.target.value);
+		setEmail(e.target.value);
+	};
+
+	const handleSubmit = () => {};
+
+	const layout = getResetPasswordLayout(
+		"Il tuo indirizzo email",
+		handleEmail,
+		"email",
+		"cta cta--primary cta__icon--right",
+		handleSubmit,
+		email,
+		isLoading
+	);
+
+	return (
+		<div className="loginContainer">
+			<div className="loginModal">
+				{sendMessage && (
+					<ErrorAlert title={sendMessage} isValidate={isValidate} />
+				)}
+				<Form
+					{...layout}
+					handleSubmit={handleForgot}
+					isLoading={isLoading}
+				/>
+			</div>
+		</div>
+	);
 }
 
-export default ResetPassword
+export default ResetPassword;
