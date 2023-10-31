@@ -10,6 +10,7 @@ type FormProps = {
 	handleSubmit: any;
 	isLoading: boolean;
 	isLogin?: boolean;
+	theme?: "dark" | "light";
 };
 
 function Form({
@@ -18,6 +19,7 @@ function Form({
 	handleSubmit,
 	isLoading,
 	isLogin,
+	theme = "light",
 }: FormProps) {
 	return (
 		<form onSubmit={handleSubmit}>
@@ -25,7 +27,7 @@ function Form({
 				{fields.map((field: IFields) => {
 					const { id, Component } = field;
 
-					return <Component key={id} {...field} />;
+					return <Component key={id} {...field} theme={theme} />;
 				})}
 				{isLogin && (
 					<Link

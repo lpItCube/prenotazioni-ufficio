@@ -7,7 +7,7 @@ const ErrorAlert: React.FC<AlertProps> = (props): JSX.Element => {
 	const { title, text, isValidate } = props;
 
 	return (
-		<div className="alert">
+		<div className={`alert`}>
 			<p
 				className={`alert__title min ${
 					isValidate ? "valid" : "invalid"

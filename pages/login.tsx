@@ -91,6 +91,7 @@ function Login() {
 				handleSubmit={handleSubmit}
 				isLoading={loadingLogin}
 				isLogin={true}
+				theme="dark"
 			/>
 		);
 	}

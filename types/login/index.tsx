@@ -2,6 +2,7 @@ export interface AlertProps {
 	title: String;
 	text?: String;
 	isValidate?: boolean;
+	status?: "error" | "success";
 }
 
 export interface InputLoginProps {
@@ -12,6 +13,8 @@ export interface InputLoginProps {
 	name: string;
 	required: boolean;
 	value: any;
+	theme?: string;
+	label?: string;
 }
 
 export interface UserInfo {
@@ -32,6 +35,7 @@ export interface IFields {
 	href?: string;
 	className?: string;
 	value?: any;
+	label?: string;
 }
 
 export interface IActions {

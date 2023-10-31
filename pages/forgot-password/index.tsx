@@ -56,6 +56,7 @@ function ResetPassword() {
 					{...layout}
 					handleSubmit={handleForgot}
 					isLoading={isLoading}
+					theme="dark"
 				/>
 			</div>
 		</div>

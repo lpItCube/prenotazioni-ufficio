@@ -22,7 +22,11 @@ import { AnimatePresence } from "framer-motion";
 import Spinner from "../components/Ui/Spinner";
 import Layout from "../components/Layout";
 
-const excludeSidebar = ["/login", "/forgot-password"];
+const excludeSidebar = [
+	"/login",
+	"/forgot-password",
+	"/change-password/[token]",
+];
 
 export default function App({ Component, pageProps }: AppProps) {
 	const [appIsLoading, setAppIsLoading] = useState<boolean>(false);
@@ -52,12 +56,6 @@ export default function App({ Component, pageProps }: AppProps) {
 	const router = useRouter();
 
 	const containsLogin = excludeSidebar.includes(router.pathname);
-	// const handleMouseMove = (e: any) => {
-	// 	setCursorPos({
-	// 		x: e.clientX,
-	// 		y: e.clientY,
-	// 	});
-	// };
 
 	return (
 		<SessionProvider session={pageProps.session}>

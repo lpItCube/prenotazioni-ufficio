@@ -1,57 +1,94 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Input from "../Ui/Input";
+import Button from "../Ui/Button";
+import { getChangePasswordLayout } from "../../utils/layout";
+import Form from "../form/Form";
+import ErrorAlert from "../form/ErrorAlert";
 
 interface ChangePwdProps {
-  userId: string
+	userId: string;
+	theme: "dark" | "light";
+	onSuccess: () => void;
 }
 
-const ChangePwd : React.FC<ChangePwdProps> = (props) => {
+const ChangePwd: React.FC<ChangePwdProps> = (props) => {
+	const { userId, theme, onSuccess } = props;
 
-  const { userId } = props;
+	const [newPassword, setNewPassword] = useState<null | string>(null);
+	const [confirmPassword, setConfirmPassword] = useState<null | string>(null);
+	const [passwordChanged, setPasswordChanged] = useState<Boolean>(false);
+	const [passwordError, setPasswordError] = useState<string | null>(null);
 
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordChanged, setPasswordChanged] = useState(false);
+	const handlePasswordChange = async () => {
+		if (!newPassword) {
+			setPasswordError("La password è richiesta");
+			return;
+		}
+		if (!confirmPassword) {
+			setPasswordError("La conferma della password è richiesta");
+			return;
+		}
+		if (newPassword !== confirmPassword) {
+			setPasswordError("Le password non coincidono");
+			return;
+		}
+		try {
+			const response = await axios.post("/api/change_pwd", {
+				userId,
+				newPassword,
+			});
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+		}
+		setPasswordChanged(true);
+	};
 
-  const handlePasswordChange = async () => {
-    if (newPassword !== confirmPassword) {
-      alert('Password do not match')
-      return
-    }
-    try {
-      await axios.post('/api/change_pwd', { userId, newPassword }) 
-    } catch (error) {
-      console.log(error)
-    }
-    setPasswordChanged(true)
-  }
+	const handleNewPassword = (e: any) => {
+		setPasswordError(null);
+		setNewPassword(e.target.value);
+	};
 
-  return (
-    <div>
-      <h3>Reset Your Password</h3>
-      {passwordChanged ? (
-        <p>Password successfully changed!</p>
-      ) : (
-        <div>
-          <input
-            type="password"
-            placeholder="Enter your new password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirm your new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          <button onClick={handlePasswordChange}>Change Password</button>
-        </div>
-      )}
-  </div>
-  )
-}
+	const handleConfirmPassword = (e: any) => {
+		setPasswordError(null);
+		setConfirmPassword(e.target.value);
+	};
+
+	const layout = getChangePasswordLayout(
+		handleNewPassword,
+		newPassword,
+		handleConfirmPassword,
+		confirmPassword,
+		handlePasswordChange
+	);
+
+	const handleSubmit = (e: any) => {
+		e.preventDefault();
+	};
+
+	useEffect(() => {
+		if (passwordChanged) {
+			onSuccess();
+		}
+	}, [passwordChanged, onSuccess]);
+
+	return (
+		<>
+			<div>
+				{passwordError && (
+					<ErrorAlert title={"Attenzione"} text={passwordError} />
+				)}
+				<Form
+					{...layout}
+					handleSubmit={handleSubmit}
+					isLoading={false}
+					isLogin={false}
+					theme={theme}
+				/>
+			</div>
+		</>
+	);
+};
 
 export default ChangePwd;

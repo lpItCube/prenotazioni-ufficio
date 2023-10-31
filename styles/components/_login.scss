@@ -63,16 +63,31 @@
 	width: 100%;
 	display: flex;
 	align-items: center;
-	background: $dark700;
 	border-radius: 8px;
 	margin-bottom: 8px;
-
 	&__icon {
 		width: 48px;
 		height: 48px;
 		align-items: center;
 		justify-content: center;
 		display: flex;
+	}
+
+	&.theme {
+		&-dark {
+			background: $dark700;
+		}
+		&-light {
+			background-color: $light300;
+			input {
+				color: $dark500;
+			}
+		}
+	}
+
+	&.default-input {
+		min-height: 48px;
+		padding: 0 16px;
 	}
 
 	input {

@@ -103,3 +103,52 @@ export const getResetPasswordLayout = (
 		],
 	};
 };
+
+export const getChangePasswordLayout = (
+	handleNewPassword: any,
+	newPassword: string | null,
+	handleConfirmPassword: any,
+	confirmPassword: string | null,
+	handlePasswordChange: any
+): ILayout => {
+	return {
+		fields: [
+			{
+				id: "Password field",
+				Component: Input,
+				fieldType: FIELD_INPUT,
+				icon: null,
+				onChange: handleNewPassword,
+				type: PASSWORD,
+				placeholder: "Inserisci una nuova password",
+				name: "Password",
+				required: true,
+				value: newPassword,
+				// label: "Password",
+			},
+			{
+				id: "Confirm password field",
+				Component: Input,
+				fieldType: FIELD_INPUT,
+				icon: null,
+				onChange: handleConfirmPassword,
+				type: PASSWORD,
+				placeholder: "Conferma la password",
+				name: "Conferma password",
+				required: true,
+				value: confirmPassword,
+				// label: "Conferma password",
+			},
+		],
+		actions: [
+			{
+				id: "Submit change password",
+				className: "cta cta--primary",
+				buttonType: SUBMIT,
+				icon: null,
+				text: "Cambia password",
+				onClick: handlePasswordChange,
+			},
+		],
+	};
+};
