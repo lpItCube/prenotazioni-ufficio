@@ -76,6 +76,7 @@ interface OptionsBarProps {
 	currentSelected: string | undefined;
 	handleOptionChange: (e: string) => void;
 	handleClearSeat: (action: number) => void;
+	onDelete: () => void;
 	currentlyBooked?: Reserve;
 }
 
@@ -84,6 +85,7 @@ const OptionsBar: React.FC<OptionsBarProps> = (props): JSX.Element => {
 		currentSelected,
 		handleOptionChange,
 		handleClearSeat,
+		onDelete,
 		currentlyBooked,
 	} = props;
 
@@ -126,6 +128,7 @@ const OptionsBar: React.FC<OptionsBarProps> = (props): JSX.Element => {
 					}`}
 					onClick={() => {
 						handleOptionChange("");
+						onDelete();
 					}}
 				>
 					<RiDeleteBin3Line color={Colors.white} size={24} />

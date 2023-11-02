@@ -15,7 +15,6 @@ const Settings: React.FC<SettingsProp> = (props): JSX.Element => {
 	const [success, setSuccess] = useState<boolean>(false);
 
 	const handleSuccess = () => {
-		console.log("success");
 		setSuccess(true);
 	};
 

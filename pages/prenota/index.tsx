@@ -61,10 +61,6 @@ const Prenota: React.FC<PrenotaProps> = (props): JSX.Element => {
 		document.dispatchEvent(event);
 	}, [status]);
 
-	useEffect(() => {
-		console.log("HOURS", startHour, endHour);
-	}, [startHour, endHour]);
-
 	return (
 		<Layout>
 			<div className="room-create__container">

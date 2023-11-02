@@ -259,6 +259,10 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 	const handleClearBook = async () => {
 		await axios.delete(`/api/reserve/${currentlyBooked?.id}`);
 
+		if (lastSelected?.seatName) {
+			const seatName = lastSelected.seatName;
+			await axios.delete(`/api/seats?seatName=${seatName}`);
+		}
 		const reserves: Reserve[] = await (
 			await axios.get(`/api/roomReserves/${roomId}`)
 		).data;
@@ -306,13 +310,28 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 			console.log(e);
 		}
 		try {
-			await axios.delete(`/api/seats/${roomId}`);
 			if (seats.length > 0) {
-				await axios.post("/api/seats/", { seats });
+				const existingSeats = await axios.get("/api/seats/");
+
+				const filteredSeats = seats.filter((seat) => {
+					return !existingSeats.data.some(
+						(existingSeat: any) => existingSeat.name === seat.name
+					);
+				});
+				await axios.post("/api/seats/", { seats: filteredSeats });
 				setIsLoading(false);
 			}
 		} catch (e) {
 			console.log(e);
+		}
+	};
+
+	const handleDelete = async () => {
+		if (selectedCell?.seatName) {
+			const seatName = selectedCell.seatName;
+			const deleteItem = await axios.delete(
+				`/api/seats?seatName=${seatName}`
+			);
 		}
 	};
 
@@ -447,6 +466,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 													handleClearSeat={
 														handleClearSeat
 													}
+													onDelete={handleDelete}
 												/>
 											</div>
 										</motion.aside>

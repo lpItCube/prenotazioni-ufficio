@@ -34,11 +34,10 @@ const ChangePwd: React.FC<ChangePwdProps> = (props) => {
 			return;
 		}
 		try {
-			const response = await axios.post("/api/change_pwd", {
+			await axios.post("/api/change_pwd", {
 				userId,
 				newPassword,
 			});
-			console.log(response);
 		} catch (error) {
 			console.log(error);
 		}

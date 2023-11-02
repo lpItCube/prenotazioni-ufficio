@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		// Used for page transition
 		const start = () => {
 			setLoading(true);
-			console.log("LOADING TRUE");
+			// console.log("LOADING TRUE");
 		};
 		const end = () => {
 			setLoading(false);
