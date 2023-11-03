@@ -50,7 +50,9 @@ export default async function handler(
 		} catch (e) {
 			// console.log("ciao")
 			console.log(e);
-			res.status(404);
+			res.status(500).json({
+				error: "An error occurred while deleting the seat.",
+			});
 		}
 	}
 }
