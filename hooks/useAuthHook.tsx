@@ -38,7 +38,7 @@ export const useAuthHook = () => {
 			setRoleLoading(false);
 		};
 		loadUserRole();
-	}, [session]);
+	}, [session, dispatch]);
 
 	return {
 		roleLoading,
