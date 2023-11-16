@@ -52,7 +52,11 @@ import {
 	PRISTINE,
 } from "../../_shared";
 import ModalComponent from "../Ui/ModalComponent";
-import { setModalType, toggleModal } from "../../features/modalSlice";
+import {
+	getModalStatus,
+	setModalType,
+	toggleModal,
+} from "../../features/modalSlice";
 import Input from "../Ui/Input";
 import Textarea from "../Ui/Textarea";
 import Button from "../Ui/Button";
@@ -107,6 +111,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 	const userId: string = userData.id;
 	const startHour = useSelector(getStartHour);
 	const endHour = useSelector(getEndHour);
+	const isModalOpen = useSelector(getModalStatus);
 
 	const [room, setRoom] = useState<Room>();
 	const [xCells, setXCells] = useState<number>(0);
@@ -246,9 +251,13 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 			return book?.seat?.name === selectedCell?.seatName;
 		});
 
-		setCurrentlyBooked(currentlyBooked);
+		if (!isModalOpen) {
+			setCurrentlyBooked(currentlyBooked);
+		}
 		setCurrentSelected(selectedCell?.info);
-	}, [selectedCell, bookedSeat, grid]);
+		console.log(selectedCell);
+		console.log(currentlyBooked?.seatId);
+	}, [selectedCell, bookedSeat, grid, isModalOpen]);
 
 	const handleClearSeat = async (action: number) => {
 		dispatch(toggleModal(true));
@@ -257,7 +266,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 	};
 
 	const handleClearBook = async () => {
-		await axios.delete(`/api/reserve/${currentlyBooked?.id}`);
+		await axios.delete(`/api/reserve/seat/${currentlyBooked?.seatId}`);
 
 		if (lastSelected?.seatName) {
 			const seatName = lastSelected.seatName;
@@ -288,6 +297,25 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 		setShowOptions(true);
 
 		handleCloseModal();
+
+		const newRoom: Room = {
+			...(room as Room),
+			name: roomName,
+			description: roomDescription,
+			xSize: xCells,
+			ySize: yCells,
+			gridPoints: newGrid?.flat(),
+		};
+
+		setRoom(newRoom);
+		console.log(newRoom, roomId);
+		try {
+			await axios.put("/api/room/", { ...newRoom, id: roomId });
+			handleCloseModal();
+			setIsLoading(false);
+		} catch (e) {
+			console.log(e);
+		}
 	};
 
 	const handleSave = async () => {
@@ -302,6 +330,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 		};
 
 		setRoom(newRoom);
+		console.log(newRoom, roomId);
 		try {
 			await axios.put("/api/room/", { ...newRoom, id: roomId });
 			handleCloseModal();
@@ -392,12 +421,12 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 		setCurrentSelected(element);
 	};
 
-	const handleCloseModal = () => {
+	const handleCloseModal = async () => {
 		dispatch(toggleModal(false));
 		dispatch(setModalType(PRISTINE));
 	};
 
-	const handleSaveRoom = () => {
+	const handleSaveRoom = async () => {
 		setIsLoading(true);
 		if (setSelectedRoom) {
 			setSelectedRoom((prev: OptionItem) => ({
@@ -405,7 +434,7 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 				value: prev.value,
 			}));
 		}
-		handleSave();
+		await handleSave();
 	};
 
 	const handleCellClick = (point: GridPoint) => {
@@ -504,7 +533,9 @@ const HandleRoom: React.FC<HandleRoomProps> = (props): JSX.Element => {
 									icon={false}
 									text="Continua e cancella"
 									className="cta cta--primary"
-									onClick={() => handleClearBook()}
+									onClick={() => {
+										handleClearBook();
+									}}
 								/>
 							</ModalComponent>
 						</div>
